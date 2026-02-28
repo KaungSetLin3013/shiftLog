@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShiftLog</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a0f; --surface:#12121a; --surface2:#1c1c28;
+    --accent:#00e5ff; --text:#e8e8f0; --muted:#5a5a7a;
+    --border:#2a2a3a; --green:#00ff9d; --red:#ff4466;
+    --yellow:#ffd166; --purple:#b06cff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;}
+  body::before{content:'';position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,229,255,.04) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(176,108,255,.04) 0%,transparent 70%);pointer-events:none;z-index:0;}
+  .container{max-width:1000px;margin:0 auto;padding:36px 24px;position:relative;z-index:1;}
+
+  /* Loading */
+  .loading-bar{height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);background-size:200% 100%;position:fixed;top:0;left:0;right:0;z-index:999;display:none;animation:loadAnim 1.2s infinite;}
+  @keyframes loadAnim{0%{background-position:-200% 0}100%{background-position:200% 0}}
+  .loading-bar.show{display:block;}
+
+  /* Toast */
+  #toast{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;max-width:300px;}
+  #toast.show{opacity:1;}
+  #toast.ok{border-color:var(--green);color:var(--green);}
+  #toast.err{border-color:var(--red);color:var(--red);}
+
+  /* Splash */
+  #splash{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .4s;}
+  #splash.hide{opacity:0;pointer-events:none;}
+  .splash-logo{font-size:36px;font-weight:800;}
+  .splash-logo span{color:var(--accent);}
+  .splash-sub{color:var(--muted);font-size:13px;font-family:'JetBrains Mono',monospace;}
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:22px;flex-wrap:wrap;gap:12px;}
+  .logo{font-size:26px;font-weight:800;letter-spacing:-.5px;}
+  .logo span{color:var(--accent);}
+  .header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .offline-badge{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--muted);}
+  .offline-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .clock-disp{font-family:'JetBrains Mono',monospace;text-align:right;}
+  .clock-disp .big{font-size:18px;color:var(--text);display:block;}
+  .clock-disp .small{font-size:11px;color:var(--muted);}
+
+  /* Tabs */
+  .tab-nav{display:flex;gap:4px;margin-bottom:26px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:5px;width:fit-content;}
+  .tab-btn{padding:9px 20px;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);letter-spacing:.4px;}
+  .tab-btn.active{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+  .tab-btn:hover:not(.active){color:var(--text);}
+  .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:#000;border-radius:10px;font-size:10px;font-weight:800;padding:1px 6px;margin-left:5px;}
+  .page{display:none;}
+  .page.active{display:block;}
+
+  /* Panel */
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 30px;margin-bottom:22px;position:relative;overflow:hidden;}
+  .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+  .panel-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;}
+
+  /* Forms */
+  .row{display:flex;gap:13px;margin-bottom:13px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:110px;}
+  label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+  input,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
+  input:focus,select:focus{border-color:var(--accent);}
+  input[type="time"],input[type="number"]{font-family:'JetBrains Mono',monospace;}
+  input[type="color"]{padding:5px 7px;height:42px;cursor:pointer;}
+  select option{background:var(--surface2);}
+
+  /* Buttons */
+  .btn{padding:11px 22px;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.4px;transition:all .2s;white-space:nowrap;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+  .btn-primary{background:var(--accent);color:#000;}
+  .btn-primary:hover:not(:disabled){background:#33eeff;transform:translateY(-1px);}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+  .btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+  .btn-del{background:transparent;border:1px solid var(--red);color:var(--red);}
+  .btn-del:hover{background:var(--red);color:#fff;}
+  .btn-sm{padding:7px 13px;font-size:12px;}
+
+  /* Works Grid */
+  .works-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px;}
+  .work-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,transform .2s;animation:popIn .25s ease;}
+  @keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+  .work-card:hover{border-color:rgba(0,229,255,.35);transform:translateY(-2px);}
+  .wc-header{display:flex;align-items:center;gap:9px;}
+  .wc-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+  .wc-name{font-size:15px;font-weight:700;}
+  .wc-divider{height:1px;background:var(--border);}
+  .wc-row{display:flex;justify-content:space-between;align-items:center;}
+  .wc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .wc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;}
+  .wc-actions{display:flex;gap:8px;}
+  .empty-card{text-align:center;padding:44px;color:var(--muted);grid-column:1/-1;}
+  .empty-icon{font-size:34px;margin-bottom:10px;}
+
+  /* Modal */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:30px;width:100%;max-width:440px;position:relative;animation:slideUp .22s ease;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .modal-title{font-size:16px;font-weight:700;margin-bottom:20px;}
+  .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;}
+  .modal-close:hover{color:var(--text);}
+  .modal-fields{display:flex;flex-direction:column;gap:13px;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+
+  /* Shift form */
+  .dur-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--accent);text-align:center;}
+  .earn-preview{background:rgba(0,229,255,.04);border:1px dashed rgba(0,229,255,.2);border-radius:10px;padding:13px 17px;margin-bottom:13px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+  .ep{display:flex;flex-direction:column;gap:2px;}
+  .ep-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+  .ep-val{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--text);}
+  .ep-total .ep-val{color:var(--green);font-size:20px;}
+  .ep-div{color:var(--border);font-size:18px;}
+  .night-note{font-size:11px;color:var(--purple);font-family:'JetBrains Mono',monospace;}
+
+  /* Stats */
+  .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-bottom:26px;}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .stat-val{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:500;color:var(--text);margin-bottom:3px;}
+  .stat-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+  .stat-card.accent .stat-val{color:var(--accent);}
+  .stat-card.money .stat-val{color:var(--green);}
+
+  /* Work Picker */
+  .wp-wrap{margin-bottom:16px;}
+  .wp-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;display:block;}
+  .wp-row{display:flex;gap:9px;flex-wrap:wrap;}
+  .wp-btn{display:flex;flex-direction:column;gap:3px;padding:9px 14px;border-radius:9px;cursor:pointer;border:1px solid var(--border);background:var(--surface2);transition:all .2s;}
+  .wp-btn:hover{border-color:rgba(0,229,255,.5);}
+  .wp-btn.sel{border-color:var(--accent);background:rgba(0,229,255,.07);}
+  .wp-name{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;}
+  .wp-rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+
+  /* Filter */
+  .filter-bar{display:flex;gap:9px;margin-bottom:11px;flex-wrap:wrap;align-items:center;}
+  .filter-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+  .fw-btn{padding:6px 13px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
+  .fw-btn:hover{border-color:rgba(0,229,255,.4);color:var(--text);}
+  .fw-btn.sel{border-color:var(--accent);color:var(--accent);background:rgba(0,229,255,.07);}
+
+  /* Shift List */
+  .list-header{display:grid;grid-template-columns:90px 110px 1fr 75px 95px 95px 34px;gap:11px;padding:0 16px 8px;}
+  .col-h{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+  .col-h.r{text-align:right;}
+  .shift-list{display:flex;flex-direction:column;gap:7px;}
+  .shift-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;display:grid;grid-template-columns:90px 110px 1fr 75px 95px 95px 34px;align-items:center;gap:11px;transition:background .2s;animation:slideIn .22s ease;}
+  @keyframes slideIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+  .shift-item:hover{background:var(--surface2);}
+  .si-date{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);}
+  .si-time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);line-height:1.6;}
+  .si-work{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;}
+  .si-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+  .si-hrs{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);text-align:right;}
+  .si-wages{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--green);text-align:right;}
+  .si-transport{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow);text-align:right;}
+  .del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:4px;border-radius:4px;transition:color .2s;display:flex;align-items:center;justify-content:center;}
+  .del-btn:hover{color:var(--red);}
+  .empty-state{text-align:center;padding:44px;color:var(--muted);font-size:14px;}
+  .export-row{display:flex;gap:11px;justify-content:flex-end;margin-top:18px;}
+  .warn-box{background:rgba(255,212,100,.07);border:1px solid rgba(255,212,100,.25);border-radius:10px;padding:12px 16px;color:var(--yellow);font-size:13px;margin-bottom:14px;}
+  .warn-box a{color:var(--accent);cursor:pointer;text-decoration:underline;}
+  .settings-strip{display:flex;align-items:flex-end;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 18px;margin-bottom:20px;width:fit-content;flex-wrap:wrap;}
+
+  /* Monthly */
+  .month-controls{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+  .month-nav{display:flex;align-items:center;gap:10px;}
+  .month-nav-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;font-size:16px;cursor:pointer;transition:all .2s;}
+  .month-nav-btn:hover{border-color:var(--accent);}
+  .month-title{font-size:20px;font-weight:800;min-width:170px;text-align:center;}
+  .monthly-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:24px;}
+  .graph-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px 30px;margin-bottom:22px;}
+  .graph-title{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+  .graph-toggle{display:flex;gap:8px;margin-bottom:16px;}
+  .gtog{padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+  .gtog.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,255,.07);}
+  canvas{width:100%!important;display:block;}
+  .monthly-table{width:100%;border-collapse:collapse;}
+  .monthly-table th{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+  .monthly-table th.r{text-align:right;}
+  .monthly-table td{padding:11px 12px;border-bottom:1px solid rgba(42,42,58,.6);font-size:13px;}
+  .monthly-table td.r{text-align:right;font-family:'JetBrains Mono',monospace;}
+  .monthly-table tr:last-child td{border-bottom:none;}
+  .monthly-table tr:hover td{background:var(--surface2);}
+  .td-work{display:flex;align-items:center;gap:8px;font-weight:600;}
+  .td-total-row td{color:var(--accent);font-weight:700;border-top:1px solid var(--border);}
+
+  /* Backup/Restore */
+  .data-panel{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-top:8px;}
+  .data-info{font-size:12px;color:var(--muted);flex:1;min-width:200px;}
+  .data-info strong{color:var(--text);}
+
+  @media(max-width:700px){
+    .stats-row,.monthly-stats{grid-template-columns:1fr 1fr;}
+    .list-header{display:none;}
+    .shift-item{grid-template-columns:1fr 1fr;gap:8px;}
+    .works-grid{grid-template-columns:1fr;}
+    .tab-btn{padding:9px 14px;font-size:12px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loading-bar"></div>
+<div id="toast"></div>
+
+<!-- Splash -->
+<div id="splash">
+  <div class="splash-logo">Shift<span>Log</span></div>
+  <div class="splash-sub">Loading local database…</div>
+</div>
+
+<!-- ═══════════════════════════════════════ MAIN APP ═══════════════════════════════════════ -->
+<div class="container" id="main-app" style="display:none">
+  <header>
+    <div class="logo">Shift<span>Log</span></div>
+    <div class="header-right">
+      <div class="clock-disp">
+        <span class="small" id="date-str"></span>
+        <span class="big"   id="time-str"></span>
+      </div>
+      <div class="offline-badge">Saved Locally</div>
+    </div>
+  </header>
+
+  <div class="tab-nav">
+    <button class="tab-btn active"  onclick="switchTab('works')">Works <span class="tab-badge" id="badge-w">0</span></button>
+    <button class="tab-btn"         onclick="switchTab('shifts')">Shifts <span class="tab-badge" id="badge-s">0</span></button>
+    <button class="tab-btn"         onclick="switchTab('monthly')">Monthly</button>
+    <button class="tab-btn"         onclick="switchTab('data')">Data</button>
+  </div>
+
+  <!-- ═══ WORKS ═══ -->
+  <div class="page active" id="page-works">
+    <div class="settings-strip">
+      <div class="field" style="min-width:0">
+        <label>Currency</label>
+        <input type="text" id="currency-sym" value="$" maxlength="3" style="max-width:75px" oninput="saveSettings();updateStats();renderShifts();renderMonthly()">
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Create New Work</div>
+      <div class="row">
+        <div class="field">
+          <label>Work Name</label>
+          <input type="text" id="w-name" placeholder="e.g. Barista, Weekend Driver…" onkeydown="if(event.key==='Enter')addWork()">
+        </div>
+        <div class="field" style="max-width:165px">
+          <label>Hourly Rate</label>
+          <input type="number" id="w-rate" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="field" style="max-width:175px">
+          <label>Transport Fee / Day</label>
+          <input type="number" id="w-transport" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="field" style="max-width:90px">
+          <label>Color</label>
+          <input type="color" id="w-color" value="#00e5ff">
+        </div>
+        <div><button class="btn btn-primary" id="btn-add-work" onclick="addWork()">Add Work</button></div>
+      </div>
+      <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono',monospace;margin-top:4px">
+        ★ Night bonus: +25% auto-applied for hours between 10 PM – 6 AM
+      </div>
+    </div>
+
+    <div class="panel-label" style="padding:0 4px 13px">Your Works</div>
+    <div class="works-grid" id="works-grid"></div>
+  </div>
+
+  <!-- ═══ SHIFTS ═══ -->
+  <div class="page" id="page-shifts">
+    <div class="panel">
+      <div class="panel-label">+ Add Shift</div>
+      <div id="no-works-warn" class="warn-box" style="display:none">
+        No works yet. <a onclick="switchTab('works')">Create a work first →</a>
+      </div>
+      <div class="wp-wrap">
+        <span class="wp-label">Select Work</span>
+        <div class="wp-row" id="work-picker"></div>
+      </div>
+      <div class="row">
+        <div class="field" style="max-width:160px">
+          <label>Date</label>
+          <input type="date" id="shift-date">
+        </div>
+        <div class="field" style="max-width:140px">
+          <label>Start Time</label>
+          <input type="time" id="shift-start" oninput="recalcPreview()">
+        </div>
+        <div class="field" style="max-width:140px">
+          <label>End Time</label>
+          <input type="time" id="shift-end" oninput="recalcPreview()">
+        </div>
+        <div class="field" style="max-width:160px">
+          <label>Break</label>
+          <select id="shift-break" onchange="recalcPreview()">
+            <option value="0">No break</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="45">45 min</option>
+            <option value="60">1 hour</option>
+            <option value="90">1.5 hours</option>
+            <option value="120">2 hours</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:100px">
+          <label>Work Time</label>
+          <div class="dur-box" id="dur-box">—</div>
+        </div>
+      </div>
+      <div class="earn-preview" id="earn-preview" style="display:none">
+        <div class="ep"><span class="ep-lbl">Work Hrs</span><span class="ep-val" id="ep-h">—</span></div>
+        <span class="ep-div">×</span>
+        <div class="ep"><span class="ep-lbl">Rate</span><span class="ep-val" id="ep-r">—</span></div>
+        <span class="ep-div">=</span>
+        <div class="ep"><span class="ep-lbl">Wages</span><span class="ep-val" id="ep-w">—</span></div>
+        <span class="ep-div">+</span>
+        <div class="ep"><span class="ep-lbl">Transport</span><span class="ep-val" id="ep-t">—</span></div>
+        <span class="ep-div">=</span>
+        <div class="ep ep-total"><span class="ep-lbl">Total</span><span class="ep-val" id="ep-total">—</span></div>
+        <div id="night-note" class="night-note" style="display:none;width:100%"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-primary" id="btn-add-shift" onclick="addShift()">Add Shift</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card accent"><div class="stat-val" id="stat-today">0h 0m</div><div class="stat-lbl">Today</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-week-hrs">0h 0m</div><div class="stat-lbl">Week Hours</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-all-hrs">0h 0m</div><div class="stat-lbl">All Time</div></div>
+      <div class="stat-card money"><div class="stat-val" id="stat-week-earn">$0.00</div><div class="stat-lbl">Week Earnings</div></div>
+      <div class="stat-card money"><div class="stat-val" id="stat-all-earn">$0.00</div><div class="stat-lbl">Total Earnings</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <div id="filter-work-row" style="display:flex;gap:7px;flex-wrap:wrap"></div>
+    </div>
+    <div class="list-header">
+      <div class="col-h">Date</div><div class="col-h">Time</div><div class="col-h">Work</div>
+      <div class="col-h r">Hours</div><div class="col-h r">Wages</div><div class="col-h r">Transport</div>
+      <div></div>
+    </div>
+    <div class="shift-list" id="shift-list"></div>
+    <div class="export-row">
+      <button class="btn btn-ghost" onclick="exportCSV()">Export CSV</button>
+      <button class="btn btn-ghost" onclick="clearAllShifts()" style="color:var(--red);border-color:var(--red)">Clear All Shifts</button>
+    </div>
+  </div>
+
+  <!-- ═══ MONTHLY ═══ -->
+  <div class="page" id="page-monthly">
+    <div class="month-controls">
+      <div class="month-nav">
+        <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
+        <div class="month-title" id="month-title">—</div>
+        <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+      <div id="monthly-work-filter" style="display:flex;gap:7px;flex-wrap:wrap"></div>
+    </div>
+    <div class="monthly-stats">
+      <div class="stat-card accent"><div class="stat-val" id="m-shifts">0</div><div class="stat-lbl">Shifts</div></div>
+      <div class="stat-card"><div class="stat-val" id="m-hrs">0h 0m</div><div class="stat-lbl">Work Hours</div></div>
+      <div class="stat-card money"><div class="stat-val" id="m-wages">$0.00</div><div class="stat-lbl">Wages</div></div>
+      <div class="stat-card money"><div class="stat-val" id="m-total">$0.00</div><div class="stat-lbl">Total inc. Transport</div></div>
+    </div>
+    <div class="graph-panel">
+      <div class="graph-title">Daily Overview</div>
+      <div class="graph-toggle">
+        <button class="gtog active" id="gtog-earnings" onclick="setGraph('earnings')">Earnings</button>
+        <button class="gtog"        id="gtog-hours"    onclick="setGraph('hours')">Hours</button>
+      </div>
+      <canvas id="main-chart" height="220"></canvas>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Work Breakdown</div>
+      <table class="monthly-table">
+        <thead><tr>
+          <th>Work</th><th>Shifts</th><th class="r">Hours</th>
+          <th class="r">Wages</th><th class="r">Transport</th><th class="r">Total</th>
+        </tr></thead>
+        <tbody id="breakdown-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ DATA ═══ -->
+  <div class="page" id="page-data">
+    <div class="panel">
+      <div class="panel-label">Data & Backup</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">
+        All data is saved in your browser's <strong style="color:var(--text)">IndexedDB</strong> — it stays on this device permanently and works completely offline. Use the tools below to back up or restore your data.
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div class="data-panel">
+          <div class="data-info">
+            <strong>Export Backup</strong><br>
+            Download all your works and shifts as a JSON file. Save this file somewhere safe as a backup.
+          </div>
+          <button class="btn btn-ghost" onclick="exportBackup()">⬇ Export Backup</button>
+        </div>
+
+        <div class="data-panel">
+          <div class="data-info">
+            <strong>Import Backup</strong><br>
+            Restore data from a previously exported JSON backup file. <span style="color:var(--red)">This will replace all current data.</span>
+          </div>
+          <label class="btn btn-ghost" style="cursor:pointer">
+            ⬆ Import Backup
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importBackup(this)">
+          </label>
+        </div>
+
+        <div class="data-panel">
+          <div class="data-info">
+            <strong>Export CSV</strong><br>
+            Export all shifts as a CSV spreadsheet for use in Excel or Google Sheets.
+          </div>
+          <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+
+        <div class="data-panel" style="border-color:rgba(255,68,102,.25)">
+          <div class="data-info">
+            <strong style="color:var(--red)">Delete All Data</strong><br>
+            Permanently delete all works and shifts from this device. This cannot be undone.
+          </div>
+          <button class="btn btn-del" onclick="nukeAll()">Delete Everything</button>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding:14px 18px;background:var(--surface2);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);line-height:1.8" id="data-stats">
+        Loading…
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-app -->
+
+<!-- Edit Work Modal -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Edit Work</div>
+    <input type="hidden" id="edit-id">
+    <div class="modal-fields">
+      <div class="field"><label>Work Name</label><input type="text" id="edit-name"></div>
+      <div class="field"><label>Hourly Rate</label><input type="number" id="edit-rate" step="0.01" min="0"></div>
+      <div class="field"><label>Transport Fee / Day</label><input type="number" id="edit-transport" step="0.01" min="0"></div>
+      <div class="field"><label>Color</label><input type="color" id="edit-color"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditWork()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// IndexedDB wrapper
+// ═══════════════════════════════════════════════════════════════════
+const DB_NAME    = 'ShiftLogDB';
+const DB_VERSION = 1;
+let db;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('works')) {
+        const ws = d.createObjectStore('works', { keyPath: 'id' });
+        ws.createIndex('createdAt', 'createdAt');
+      }
+      if (!d.objectStoreNames.contains('shifts')) {
+        const ss = d.createObjectStore('shifts', { keyPath: 'id' });
+        ss.createIndex('clockIn', 'clockIn');
+        ss.createIndex('workId',  'workId');
+      }
+      if (!d.objectStoreNames.contains('settings')) {
+        d.createObjectStore('settings', { keyPath: 'key' });
+      }
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = e => reject(e.target.error);
+  });
+}
+
+function dbGetAll(store) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function dbPut(store, obj) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).put(obj);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function dbDelete(store, id) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function dbClear(store) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).clear();
+    req.onsuccess = () => resolve();
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// App State
+// ═══════════════════════════════════════════════════════════════════
+let works           = [];
+let shifts          = [];
+let settings        = { currency: '$' };
+let selectedWorkId  = null;
+let filterWorkId    = null;
+let monthlyFilterId = null;
+let graphMode       = 'earnings';
+let currentMonth    = new Date().getMonth();
+let currentYear     = new Date().getFullYear();
+
+// ── Helpers ────────────────────────────────────────────────────────
+const sym      = () => settings.currency || '$';
+const today    = () => new Date().toISOString().split('T')[0];
+const fmtMoney = n  => sym() + (n || 0).toFixed(2);
+const fmtDur   = ms => { const h=Math.floor(ms/3600000), m=Math.floor((ms%3600000)/60000); return h>0?`${h}h ${m}m`:`${m}m`; };
+const fmtTime  = ts => new Date(ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+const fmtDate  = ts => new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'});
+
+function loading(on) { document.getElementById('loading-bar').classList.toggle('show', on); }
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.className = '', 2800);
+}
+
+// ── Settings ───────────────────────────────────────────────────────
+async function saveSettings() {
+  settings.currency = document.getElementById('currency-sym').value || '$';
+  await dbPut('settings', { key: 'main', ...settings });
+}
+
+async function loadSettings() {
+  const all = await dbGetAll('settings');
+  const saved = all.find(s => s.key === 'main');
+  if (saved) settings = { ...settings, ...saved };
+  document.getElementById('currency-sym').value = settings.currency || '$';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Works
+// ═══════════════════════════════════════════════════════════════════
+async function loadWorks() {
+  const raw = await dbGetAll('works');
+  works = raw.sort((a,b) => a.createdAt - b.createdAt);
+}
+
+async function addWork() {
+  const name = document.getElementById('w-name').value.trim();
+  if (!name) { alert('Please enter a work name.'); return; }
+  const btn = document.getElementById('btn-add-work');
+  btn.disabled = true;
+  const w = {
+    id:        genId(),
+    name,
+    rate:      parseFloat(document.getElementById('w-rate').value)      || 0,
+    transport: parseFloat(document.getElementById('w-transport').value) || 0,
+    color:     document.getElementById('w-color').value,
+    createdAt: Date.now()
+  };
+  await dbPut('works', w);
+  works.push(w);
+  renderWorks(); renderWorkPicker(); renderFilterRow(); updateBadges();
+  toast('Work added ✓');
+  ['w-name','w-rate','w-transport'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('w-color').value = '#00e5ff';
+  btn.disabled = false;
+}
+
+async function saveEditWork() {
+  const id = document.getElementById('edit-id').value;
+  const w  = works.find(x => x.id === id);
+  if (!w) return;
+  w.name      = document.getElementById('edit-name').value.trim()            || w.name;
+  w.rate      = parseFloat(document.getElementById('edit-rate').value)        || 0;
+  w.transport = parseFloat(document.getElementById('edit-transport').value)   || 0;
+  w.color     = document.getElementById('edit-color').value;
+  await dbPut('works', w);
+  renderWorks(); renderWorkPicker(); renderFilterRow();
+  updateStats(); renderShifts(); renderMonthly();
+  toast('Work updated ✓'); closeModal();
+}
+
+async function deleteWork(id) {
+  if (!confirm('Delete this work? Shift history is kept.')) return;
+  await dbDelete('works', id);
+  works = works.filter(w => w.id !== id);
+  if (selectedWorkId === id) selectedWorkId = null;
+  renderWorks(); renderWorkPicker(); renderFilterRow(); updateBadges();
+  toast('Work deleted');
+}
+
+function renderWorks() {
+  const g = document.getElementById('works-grid');
+  if (!works.length) {
+    g.innerHTML = `<div class="empty-card"><div class="empty-icon">💼</div>No works yet.<br>Create your first work above.</div>`;
+    return;
+  }
+  g.innerHTML = works.map(w => `
+    <div class="work-card">
+      <div class="wc-header">
+        <div class="wc-dot" style="background:${w.color}"></div>
+        <div class="wc-name">${w.name}</div>
+      </div>
+      <div class="wc-divider"></div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div class="wc-row"><span class="wc-label">Hourly Rate</span><span class="wc-val" style="color:var(--green)">${sym()}${w.rate.toFixed(2)} / hr</span></div>
+        <div class="wc-row"><span class="wc-label">Night Rate (+25%)</span><span class="wc-val" style="color:var(--purple)">${sym()}${(w.rate*1.25).toFixed(2)} / hr</span></div>
+        <div class="wc-row"><span class="wc-label">Transport / Day</span><span class="wc-val" style="color:var(--yellow)">${sym()}${w.transport.toFixed(2)}</span></div>
+      </div>
+      <div class="wc-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('${w.id}')">Edit</button>
+        <button class="btn btn-del  btn-sm" onclick="deleteWork('${w.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function openEdit(id) {
+  const w = works.find(x => x.id === id); if (!w) return;
+  document.getElementById('edit-id').value        = w.id;
+  document.getElementById('edit-name').value      = w.name;
+  document.getElementById('edit-rate').value      = w.rate;
+  document.getElementById('edit-transport').value = w.transport;
+  document.getElementById('edit-color').value     = w.color;
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('edit-modal').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════════════════════════
+// Work Picker
+// ═══════════════════════════════════════════════════════════════════
+function renderWorkPicker() {
+  const warn   = document.getElementById('no-works-warn');
+  const picker = document.getElementById('work-picker');
+  if (!works.length) { warn.style.display='block'; picker.innerHTML=''; return; }
+  warn.style.display = 'none';
+  if (!selectedWorkId || !works.find(w => w.id === selectedWorkId)) selectedWorkId = works[0].id;
+  picker.innerHTML = works.map(w => `
+    <div class="wp-btn ${selectedWorkId===w.id?'sel':''}" onclick="selectWork('${w.id}')">
+      <span class="wp-name">
+        <span style="width:9px;height:9px;border-radius:50%;background:${w.color};display:inline-block"></span>
+        ${w.name}
+      </span>
+      <span class="wp-rate">${sym()}${w.rate.toFixed(2)}/h · night ${sym()}${(w.rate*1.25).toFixed(2)}/h</span>
+    </div>`).join('');
+  recalcPreview();
+}
+function selectWork(id) { selectedWorkId = id; renderWorkPicker(); recalcPreview(); }
+function getWork() { return works.find(w => w.id === selectedWorkId) || null; }
+
+// ═══════════════════════════════════════════════════════════════════
+// Wage Calculation (night bonus)
+// ═══════════════════════════════════════════════════════════════════
+function calcWages(startMs, endMs, rate) {
+  let wages = 0, cursor = startMs;
+  while (cursor < endMs) {
+    const h = new Date(cursor).getHours();
+    wages += rate * (1 + ((h >= 22 || h < 6) ? 0.25 : 0)) / 60;
+    cursor += 60000;
+  }
+  return wages;
+}
+function nightMinutes(startMs, endMs) {
+  let n = 0, cursor = startMs;
+  while (cursor < endMs) { const h=new Date(cursor).getHours(); if(h>=22||h<6)n++; cursor+=60000; }
+  return n;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Shift Preview
+// ═══════════════════════════════════════════════════════════════════
+function recalcPreview() {
+  const start = document.getElementById('shift-start').value;
+  const end   = document.getElementById('shift-end').value;
+  const brk   = parseInt(document.getElementById('shift-break').value) || 0;
+  const w     = getWork(), s = sym();
+  if (!start || !end) {
+    document.getElementById('dur-box').textContent = '—';
+    document.getElementById('earn-preview').style.display = 'none';
+    return;
+  }
+  const dateVal = document.getElementById('shift-date').value || today();
+  let ci = new Date(`${dateVal}T${start}`).getTime();
+  let co = new Date(`${dateVal}T${end}`).getTime();
+  if (co <= ci) co += 86400000;
+  const workMs = Math.max(0,(co-ci)-brk*60000), workEnd = co - brk*60000;
+  const h = Math.floor(workMs/3600000), m = Math.floor((workMs%3600000)/60000);
+  document.getElementById('dur-box').textContent = h>0?`${h}h ${m}m`:`${m}m`;
+  if (w && w.rate > 0) {
+    const wages = calcWages(ci, workEnd, w.rate);
+    const nm    = nightMinutes(ci, workEnd);
+    const total = wages + w.transport;
+    document.getElementById('earn-preview').style.display = 'flex';
+    document.getElementById('ep-h').textContent     = (workMs/3600000).toFixed(2)+'h';
+    document.getElementById('ep-r').textContent     = s+w.rate.toFixed(2);
+    document.getElementById('ep-w').textContent     = s+wages.toFixed(2);
+    document.getElementById('ep-t').textContent     = s+w.transport.toFixed(2);
+    document.getElementById('ep-total').textContent = s+total.toFixed(2);
+    const nn = document.getElementById('night-note');
+    nn.style.display = nm>0 ? 'block' : 'none';
+    if (nm>0) nn.textContent = `★ ${nm} night min (10PM–6AM) × +25% bonus included`;
+  } else {
+    document.getElementById('earn-preview').style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Shifts
+// ═══════════════════════════════════════════════════════════════════
+async function loadShifts() {
+  const raw = await dbGetAll('shifts');
+  shifts = raw.sort((a,b) => b.clockIn - a.clockIn);
+}
+
+async function addShift() {
+  const dateVal = document.getElementById('shift-date').value;
+  const start   = document.getElementById('shift-start').value;
+  const end     = document.getElementById('shift-end').value;
+  if (!dateVal||!start||!end) { alert('Please fill in date, start and end time.'); return; }
+  if (!selectedWorkId)         { alert('Please select a work.'); return; }
+
+  const w   = getWork();
+  const brk = parseInt(document.getElementById('shift-break').value) || 0;
+  let ci    = new Date(`${dateVal}T${start}`).getTime();
+  let co    = new Date(`${dateVal}T${end}`).getTime();
+  if (co <= ci) co += 86400000;
+
+  const workMs    = Math.max(0,(co-ci)-brk*60000);
+  const workEnd   = co - brk*60000;
+  const wages     = w ? calcWages(ci, workEnd, w.rate) : 0;
+  const transport = w ? w.transport : 0;
+  const nm        = w ? nightMinutes(ci, workEnd) : 0;
+
+  const btn = document.getElementById('btn-add-shift');
+  btn.disabled = true;
+
+  const shift = {
+    id:        genId(),
+    workId:    w ? w.id    : null,
+    workName:  w ? w.name  : 'Unknown',
+    workColor: w ? w.color : '#888',
+    rate:      w ? w.rate  : 0,
+    clockIn: ci, clockOut: co,
+    breakMin: brk, duration: workMs,
+    wages, transport, nightMin: nm,
+    createdAt: Date.now()
+  };
+  await dbPut('shifts', shift);
+  shifts.unshift(shift);
+  updateStats(); renderShifts(); updateBadges(); updateDataStats();
+  toast('Shift saved ✓');
+
+  ['shift-start','shift-end'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('shift-break').value = '0';
+  document.getElementById('dur-box').textContent = '—';
+  document.getElementById('earn-preview').style.display = 'none';
+  document.getElementById('shift-date').value = today();
+  if (document.getElementById('page-monthly').classList.contains('active')) renderMonthly();
+
+  btn.disabled = false;
+}
+
+async function deleteShift(id) {
+  if (!confirm('Delete this shift?')) return;
+  await dbDelete('shifts', id);
+  shifts = shifts.filter(s => s.id !== id);
+  updateStats(); renderShifts(); updateBadges(); updateDataStats();
+  toast('Shift deleted');
+}
+
+async function clearAllShifts() {
+  if (!confirm('Delete ALL shifts? This cannot be undone.')) return;
+  await dbClear('shifts');
+  shifts = [];
+  updateStats(); renderShifts(); updateBadges(); updateDataStats();
+  toast('All shifts cleared');
+}
+
+// ── Filter ─────────────────────────────────────────────────────────
+function renderFilterRow() {
+  const row = document.getElementById('filter-work-row');
+  row.innerHTML = `<div class="fw-btn ${filterWorkId===null?'sel':''}" onclick="setFilter(null)">All</div>`
+    + works.map(w=>`<div class="fw-btn ${filterWorkId===w.id?'sel':''}" onclick="setFilter('${w.id}')">
+        <span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${w.name}
+      </div>`).join('');
+}
+function setFilter(id) { filterWorkId=id; renderFilterRow(); renderShifts(); }
+
+// ── Stats ───────────────────────────────────────────────────────────
+function updateStats() {
+  const now = new Date();
+  const ds  = new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+  const ws  = new Date(now.getFullYear(),now.getMonth(),now.getDate()-now.getDay()).getTime();
+  let tm=0,wm=0,am=0,we=0,ae=0;
+  for (const s of shifts) {
+    const e=(s.wages||0)+(s.transport||0);
+    am+=s.duration; ae+=e;
+    if (s.clockIn>=ds) tm+=s.duration;
+    if (s.clockIn>=ws) { wm+=s.duration; we+=e; }
+  }
+  document.getElementById('stat-today').textContent     = fmtDur(tm);
+  document.getElementById('stat-week-hrs').textContent  = fmtDur(wm);
+  document.getElementById('stat-all-hrs').textContent   = fmtDur(am);
+  document.getElementById('stat-week-earn').textContent = fmtMoney(we);
+  document.getElementById('stat-all-earn').textContent  = fmtMoney(ae);
+}
+
+function renderShifts() {
+  const filtered = shifts.filter(s => filterWorkId===null || s.workId===filterWorkId);
+  const list = document.getElementById('shift-list');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty-state"><div style="font-size:30px;margin-bottom:10px">🕐</div>No shifts yet.<br>Add your first shift above.</div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(s=>`
+    <div class="shift-item">
+      <div class="si-date">${fmtDate(s.clockIn)}</div>
+      <div class="si-time">${fmtTime(s.clockIn)}<br><span style="color:var(--muted)">→ ${fmtTime(s.clockOut)}</span></div>
+      <div>
+        <div class="si-work">
+          <span style="width:8px;height:8px;border-radius:50%;background:${s.workColor||'#888'};display:inline-block;flex-shrink:0"></span>
+          ${s.workName}
+        </div>
+        ${s.breakMin>0  ? `<div class="si-meta">Break: ${s.breakMin}m</div>` : ''}
+        ${s.nightMin>0  ? `<div class="si-meta" style="color:var(--purple)">★ ${s.nightMin}min night</div>` : ''}
+      </div>
+      <div class="si-hrs">${fmtDur(s.duration)}</div>
+      <div class="si-wages">${s.wages?fmtMoney(s.wages):'—'}</div>
+      <div class="si-transport">${s.transport?'+'+fmtMoney(s.transport):'—'}</div>
+      <button class="del-btn" onclick="deleteShift('${s.id}')" title="Delete">✕</button>
+    </div>`).join('');
+}
+
+function updateBadges() {
+  document.getElementById('badge-w').textContent = works.length;
+  document.getElementById('badge-s').textContent = shifts.length;
+}
+
+function exportCSV() {
+  if (!shifts.length) { alert('No shifts to export.'); return; }
+  const s = sym();
+  const rows = [['Date','Work','Start','End','Break(min)','Work Hours','Rate','Night Min','Wages','Transport','Total']];
+  for (const sh of shifts) rows.push([
+    fmtDate(sh.clockIn), sh.workName, fmtTime(sh.clockIn), fmtTime(sh.clockOut),
+    sh.breakMin||0, (sh.duration/3600000).toFixed(2),
+    sh.rate ? s+sh.rate.toFixed(2) : '', sh.nightMin||0,
+    sh.wages ? s+sh.wages.toFixed(2) : '',
+    sh.transport ? s+sh.transport.toFixed(2) : '',
+    s+((sh.wages||0)+(sh.transport||0)).toFixed(2)
+  ]);
+  const csv = rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  dlFile(csv, `shiftlog_${today()}.csv`, 'text/csv');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Monthly
+// ═══════════════════════════════════════════════════════════════════
+function changeMonth(d) {
+  currentMonth += d;
+  if (currentMonth < 0)  { currentMonth=11; currentYear--; }
+  if (currentMonth > 11) { currentMonth=0;  currentYear++; }
+  renderMonthly();
+}
+
+function renderMonthly() {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('month-title').textContent = MONTHS[currentMonth]+' '+currentYear;
+
+  const ms = shifts.filter(s => {
+    const d=new Date(s.clockIn);
+    return d.getMonth()===currentMonth && d.getFullYear()===currentYear &&
+           (monthlyFilterId===null || s.workId===monthlyFilterId);
+  });
+
+  // Work filter buttons
+  const mwf = document.getElementById('monthly-work-filter');
+  mwf.innerHTML = `<div class="fw-btn ${monthlyFilterId===null?'sel':''}" onclick="setMonthlyFilter(null)">All</div>`
+    + works.map(w=>`<div class="fw-btn ${monthlyFilterId===w.id?'sel':''}" onclick="setMonthlyFilter('${w.id}')">
+        <span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${w.name}
+      </div>`).join('');
+
+  let td=0, tw=0, tt=0;
+  for (const s of ms) { td+=s.duration; tw+=(s.wages||0); tt+=(s.transport||0); }
+  document.getElementById('m-shifts').textContent = ms.length;
+  document.getElementById('m-hrs').textContent    = fmtDur(td);
+  document.getElementById('m-wages').textContent  = fmtMoney(tw);
+  document.getElementById('m-total').textContent  = fmtMoney(tw+tt);
+
+  // Graph data
+  const days = new Date(currentYear, currentMonth+1, 0).getDate();
+  const dE = new Array(days).fill(0), dH = new Array(days).fill(0);
+  for (const s of ms) {
+    const day = new Date(s.clockIn).getDate()-1;
+    dE[day] += (s.wages||0)+(s.transport||0);
+    dH[day] += s.duration/3600000;
+  }
+  drawChart(days, dE, dH);
+
+  // Breakdown table
+  const wmap = {};
+  for (const s of ms) {
+    const k = s.workId||'?';
+    if (!wmap[k]) wmap[k]={name:s.workName,color:s.workColor||'#888',shifts:0,dur:0,wages:0,transport:0};
+    wmap[k].shifts++; wmap[k].dur+=s.duration; wmap[k].wages+=(s.wages||0); wmap[k].transport+=(s.transport||0);
+  }
+  const rows   = Object.values(wmap);
+  const tbody  = document.getElementById('breakdown-body');
+  if (!rows.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">No shifts this month.</td></tr>`; return; }
+  let ts=0,tDur=0,tW=0,tT=0;
+  tbody.innerHTML = rows.map(r=>{
+    ts+=r.shifts; tDur+=r.dur; tW+=r.wages; tT+=r.transport;
+    return `<tr>
+      <td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${r.name}</div></td>
+      <td>${r.shifts}</td><td class="r">${fmtDur(r.dur)}</td>
+      <td class="r">${fmtMoney(r.wages)}</td><td class="r">${fmtMoney(r.transport)}</td>
+      <td class="r" style="color:var(--green);font-weight:600">${fmtMoney(r.wages+r.transport)}</td>
+    </tr>`;
+  }).join('') + `<tr class="td-total-row">
+    <td style="font-weight:700">Total</td><td>${ts}</td><td class="r">${fmtDur(tDur)}</td>
+    <td class="r">${fmtMoney(tW)}</td><td class="r">${fmtMoney(tT)}</td>
+    <td class="r">${fmtMoney(tW+tT)}</td>
+  </tr>`;
+}
+
+function setMonthlyFilter(id) { monthlyFilterId=id; renderMonthly(); }
+function setGraph(mode) {
+  graphMode=mode;
+  document.getElementById('gtog-earnings').classList.toggle('active',mode==='earnings');
+  document.getElementById('gtog-hours').classList.toggle('active',mode==='hours');
+  renderMonthly();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Canvas Chart
+// ═══════════════════════════════════════════════════════════════════
+function drawChart(days, earnings, hours) {
+  const canvas = document.getElementById('main-chart'), ctx = canvas.getContext('2d');
+  const data = graphMode==='earnings' ? earnings : hours;
+  const W = canvas.parentElement.clientWidth||800, H = 220;
+  canvas.width=W; canvas.height=H;
+  const P={top:20,right:20,bottom:36,left:62}, cW=W-P.left-P.right, cH=H-P.top-P.bottom;
+  ctx.clearRect(0,0,W,H);
+  const maxVal = Math.max(...data, 0.01);
+  for (let i=0;i<=4;i++) {
+    const y=P.top+cH-(i/4)*cH;
+    ctx.strokeStyle='rgba(42,42,58,.8)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(P.left,y); ctx.lineTo(P.left+cW,y); ctx.stroke();
+    ctx.fillStyle='rgba(90,90,122,.8)'; ctx.font='11px JetBrains Mono,monospace'; ctx.textAlign='right';
+    ctx.fillText(graphMode==='earnings'?sym()+(maxVal/4*i).toFixed(0):(maxVal/4*i).toFixed(1)+'h', P.left-6, y+4);
+  }
+  const barW=Math.max(4,(cW/days)*.62), barGap=cW/days;
+  for (let i=0;i<days;i++) {
+    const x=P.left+i*barGap+barGap/2-barW/2, barH=data[i]>0?Math.max(2,(data[i]/maxVal)*cH):0, y=P.top+cH-barH;
+    const grad=ctx.createLinearGradient(0,y,0,P.top+cH);
+    grad.addColorStop(0, graphMode==='earnings'?'rgba(0,255,157,.9)':'rgba(0,229,255,.9)');
+    grad.addColorStop(1, graphMode==='earnings'?'rgba(0,255,157,.2)':'rgba(0,229,255,.2)');
+    ctx.fillStyle=grad; ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x,y,barW,barH,[3,3,0,0]); else ctx.rect(x,y,barW,barH);
+    ctx.fill();
+    ctx.fillStyle='rgba(90,90,122,.7)'; ctx.font='10px Syne,sans-serif'; ctx.textAlign='center';
+    if (days<=20||(i+1)%2===0||i===0) ctx.fillText(i+1, P.left+i*barGap+barGap/2, H-P.bottom+14);
+  }
+  ctx.strokeStyle='rgba(42,42,58,1)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(P.left,P.top); ctx.lineTo(P.left,P.top+cH); ctx.lineTo(P.left+cW,P.top+cH); ctx.stroke();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Data page
+// ═══════════════════════════════════════════════════════════════════
+function updateDataStats() {
+  const el = document.getElementById('data-stats');
+  if (!el) return;
+  const totalEarn = shifts.reduce((a,s)=>a+(s.wages||0)+(s.transport||0),0);
+  const totalHrs  = shifts.reduce((a,s)=>a+s.duration,0);
+  el.innerHTML =
+    `Works:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${works.length} saved<br>`+
+    `Shifts:&nbsp;&nbsp;&nbsp;&nbsp;${shifts.length} saved<br>`+
+    `Total hrs: ${fmtDur(totalHrs)}<br>`+
+    `Total earn: ${fmtMoney(totalEarn)}<br>`+
+    `Storage:&nbsp;&nbsp;&nbsp;IndexedDB (browser-local, persistent)`;
+}
+
+async function exportBackup() {
+  const backup = { version:1, exportedAt:new Date().toISOString(), works, shifts, settings };
+  dlFile(JSON.stringify(backup, null, 2), `shiftlog_backup_${today()}.json`, 'application/json');
+  toast('Backup exported ✓');
+}
+
+async function importBackup(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.works || !data.shifts) throw new Error('Invalid backup file.');
+      if (!confirm(`Import ${data.works.length} works and ${data.shifts.length} shifts? This will REPLACE all current data.`)) return;
+      loading(true);
+      await dbClear('works'); await dbClear('shifts');
+      for (const w of data.works) await dbPut('works', w);
+      for (const s of data.shifts) await dbPut('shifts', s);
+      if (data.settings) await dbPut('settings', {key:'main',...data.settings});
+      works  = data.works.sort((a,b)=>a.createdAt-b.createdAt);
+      shifts = data.shifts.sort((a,b)=>b.clockIn-a.clockIn);
+      if (data.settings) { settings={...settings,...data.settings}; document.getElementById('currency-sym').value=settings.currency||'$'; }
+      renderWorks(); renderWorkPicker(); renderFilterRow();
+      updateStats(); renderShifts(); updateBadges(); updateDataStats();
+      loading(false);
+      toast(`Imported ${works.length} works, ${shifts.length} shifts ✓`);
+    } catch(err) {
+      loading(false);
+      toast('Import failed: '+err.message, 'err');
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+async function nukeAll() {
+  if (!confirm('⚠️ This will permanently delete ALL works and shifts.\n\nType "delete" to confirm.') ) return;
+  const typed = prompt('Type "delete" to confirm:');
+  if (typed !== 'delete') { toast('Cancelled.'); return; }
+  loading(true);
+  await dbClear('works'); await dbClear('shifts');
+  works=[]; shifts=[];
+  renderWorks(); renderWorkPicker(); renderFilterRow();
+  updateStats(); renderShifts(); updateBadges(); updateDataStats();
+  loading(false);
+  toast('All data deleted');
+}
+
+function dlFile(content, filename, mime) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download = filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Tab switching
+// ═══════════════════════════════════════════════════════════════════
+function switchTab(tab) {
+  ['works','shifts','monthly','data'].forEach((t,i) => {
+    document.querySelectorAll('.tab-btn')[i].classList.toggle('active', t===tab);
+    document.getElementById('page-'+t).classList.toggle('active', t===tab);
+  });
+  if (tab==='shifts')  { renderWorkPicker(); renderFilterRow(); }
+  if (tab==='monthly') renderMonthly();
+  if (tab==='data')    updateDataStats();
+}
+
+// Clock
+function tick() {
+  const n = new Date();
+  document.getElementById('time-str').textContent = n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('date-str').textContent = n.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+}
+setInterval(tick, 1000);
+
+// ═══════════════════════════════════════════════════════════════════
+// Startup
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('edit-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+window.addEventListener('resize', () => { if(document.getElementById('page-monthly').classList.contains('active')) renderMonthly(); });
+
+(async function startup() {
+  try {
+    db = await openDB();
+    await loadSettings();
+    await loadWorks();
+    await loadShifts();
+    document.getElementById('shift-date').value = today();
+    renderWorks(); renderWorkPicker(); renderFilterRow();
+    updateStats(); renderShifts(); renderMonthly(); updateBadges(); updateDataStats();
+    tick();
+    // Hide splash
+    const splash = document.getElementById('splash');
+    splash.classList.add('hide');
+    setTimeout(()=>splash.style.display='none', 450);
+    document.getElementById('main-app').style.display = 'block';
+  } catch(e) {
+    document.querySelector('#splash .splash-sub').textContent = 'Error: '+e.message;
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>
