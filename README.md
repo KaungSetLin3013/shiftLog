@@ -44,11 +44,11 @@ ShiftLog
 
 📱 Usage
   Add Works: Go to the 'Works' tab to define your different jobs and their respective hourly rates.
-  ![Visitor Count](https://komarev.com/ghpvc/?username=KaungSetLin3013)
+
   
   Log Shifts: Use the 'Add' tab to enter shift times. You can select multiple dates at once for recurring schedules.
   
   View Stats: Check the 'Monthly' and 'Stats' tabs to see your financial progress and work history.
 
 📄 License
-  This project is licensed under the MIT License - see the LICENSE file for details.
+  This project is licensed under the MIT License - see the LICENSE file for details.  ![Visitor Count](https://komarev.com/ghpvc/?username=KaungSetLin3013)
