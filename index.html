@@ -32,7 +32,24 @@ body.light-theme .cal-day.has-shift{background:rgba(0,136,187,.14);}
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;transition:background .25s,color .25s;}
 body::before{content:'';position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,229,255,.04) 0%,transparent 70%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(176,108,255,.04) 0%,transparent 70%);pointer-events:none;z-index:0;}
-.container{max-width:1040px;margin:0 auto;padding:32px 24px;position:relative;z-index:1;}
+.container{max-width:100%;margin:0 auto;padding:24px 32px;position:relative;z-index:1;}
+@media(min-width:641px){
+  .container{padding:28px 40px;}
+  .works-grid{grid-template-columns:repeat(3,1fr);}
+  .monthly-layout{grid-template-columns:1fr 340px;}
+  .stats-row{grid-template-columns:repeat(5,1fr);}
+  .monthly-stats{grid-template-columns:repeat(4,1fr);}
+  /* Tax/summary top cards */
+  #tax-stats-grid,#sum-top-cards{grid-template-columns:repeat(3,1fr)!important;}
+  /* Bills summary bar */
+  #page-bills > div[style*="display:flex"]{flex-wrap:nowrap;}
+}
+@media(min-width:1200px){
+  .container{padding:28px 56px;}
+  .works-grid{grid-template-columns:repeat(4,1fr);}
+  .monthly-layout{grid-template-columns:1fr 400px;}
+  .stats-row{grid-template-columns:repeat(5,1fr);}
+}
 
 /* Loading */
 .loading-bar{height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);background-size:200% 100%;position:fixed;top:0;left:0;right:0;z-index:999;display:none;animation:loadAnim 1.2s infinite;}
@@ -120,7 +137,7 @@ select option{background:var(--surface2);}
 /* Modal */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;width:100%;max-width:460px;position:relative;animation:slideUp .22s ease;max-height:90vh;overflow-y:auto;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;width:100%;max-width:520px;position:relative;animation:slideUp .22s ease;max-height:90vh;overflow-y:auto;}
 .modal-wide{max-width:560px;}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .modal-title{font-size:16px;font-weight:700;margin-bottom:18px;}
@@ -306,18 +323,18 @@ canvas{width:100%!important;display:block;}
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   background:var(--surface);border-top:1px solid var(--border);
   padding:8px 0 max(8px, env(safe-area-inset-bottom));
-  grid-template-columns:repeat(6,1fr);
+  grid-template-columns:repeat(5,1fr);
   backdrop-filter:blur(12px);
 }
 .bn-item{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding:5px 2px;cursor:pointer;transition:color .2s;color:var(--muted);
-  font-family:'Syne',sans-serif;font-size:9px;font-weight:600;letter-spacing:.3px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 4px;cursor:pointer;transition:color .2s;color:var(--muted);
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;
   position:relative;border:none;background:none;
 }
 .bn-item.active{color:var(--accent);}
 .bn-item.active .bn-icon{color:var(--accent);}
-.bn-icon{font-size:18px;line-height:1;margin-bottom:1px;}
+.bn-icon{font-size:20px;line-height:1;margin-bottom:1px;}
 .bn-badge{
   position:absolute;top:4px;right:calc(50% - 18px);
   background:var(--accent);color:#000;border-radius:8px;
@@ -555,7 +572,6 @@ canvas{width:100%!important;display:block;}
         <span class="small" id="date-str"></span>
         <span class="big"   id="time-str"></span>
       </div>
-      <div class="offline-badge" id="offline-badge">Saved Locally</div>
       <div class="icon-btn" onclick="openSettings()" title="Settings">⚙</div>
     </div>
   </header>
@@ -566,7 +582,6 @@ canvas{width:100%!important;display:block;}
     <button class="tab-btn"         onclick="switchTab('monthly')"id="tab-monthly">Monthly</button>
     <button class="tab-btn"         onclick="switchTab('bills')"  id="tab-bills">Bills</button>
     <button class="tab-btn"         onclick="switchTab('summary')"id="tab-summary">Summary</button>
-    <button class="tab-btn"         onclick="switchTab('data')"   id="tab-data">Data</button>
   </div>
 
   <!-- Mobile bottom nav -->
@@ -592,10 +607,6 @@ canvas{width:100%!important;display:block;}
     <button class="bn-item" id="bn-summary" onclick="switchTab('summary')">
       <span class="bn-icon">💰</span>
       <span id="bn-lbl-summary">Summary</span>
-    </button>
-    <button class="bn-item" id="bn-data" onclick="switchTab('data')">
-      <span class="bn-icon">💾</span>
-      <span id="bn-lbl-data">Data</span>
     </button>
   </nav>
 
@@ -1060,56 +1071,8 @@ canvas{width:100%!important;display:block;}
     </div>
   </div>
 
-  <!-- ═══ DATA ═══ -->
-  <div class="page" id="page-data">
-    <div class="panel" style="border-color:rgba(0,229,255,.25);background:linear-gradient(135deg,rgba(0,229,255,.03),transparent)">
-      <div class="panel-label" style="color:var(--accent)">☁ Google Drive Sync</div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">
-        Sign in with your Google account using the <strong style="color:var(--text)">profile button</strong> in the top-left corner to save and load your data from Google Drive.
-      </p>
-      <div id="gdrive-data-status" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:12px">
-        <div id="gdrive-data-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">G</div>
-        <div>
-          <div style="font-size:13px;font-weight:600" id="gdrive-data-name">Not signed in</div>
-          <div style="font-size:11px;color:var(--muted)" id="gdrive-data-email">Tap the G button in the top-left to sign in</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="saveToDrive()" id="btn-gdrive-save" style="flex:1">☁ Save to Drive</button>
-        <button class="btn btn-ghost" onclick="loadFromDrive()" id="btn-gdrive-load" style="flex:1;border-color:var(--accent);color:var(--accent)">☁ Load from Drive</button>
-      </div>
-      <div id="gdrive-status" style="margin-top:10px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-height:18px"></div>
-    </div>
-
-    <div class="panel">
-      <div class="panel-label" id="lbl-data-backup">Local Backup</div>
-      <p style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.7" id="lbl-data-desc">
-        All data is saved in your browser's <strong style="color:var(--text)">IndexedDB</strong> — stays on this device permanently, works completely offline.
-      </p>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div class="data-panel">
-          <div class="data-info"><strong id="lbl-export-bk">Export Backup</strong><br><span id="lbl-export-bk-sub">Download all data as a JSON backup file.</span></div>
-          <button class="btn btn-ghost" onclick="exportBackup()" id="btn-export-bk">⬇ Export Backup</button>
-        </div>
-        <div class="data-panel">
-          <div class="data-info"><strong id="lbl-import-bk">Import Backup</strong><br><span id="lbl-import-bk-sub">Restore from a JSON backup. Replaces all data.</span></div>
-          <label class="btn btn-ghost" style="cursor:pointer" id="btn-import-bk">
-            ⬆ Import Backup
-            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importBackup(this)">
-          </label>
-        </div>
-        <div class="data-panel">
-          <div class="data-info"><strong id="lbl-export-csv">Export CSV</strong><br><span id="lbl-export-csv-sub">All shifts as a spreadsheet file.</span></div>
-          <button class="btn btn-ghost" onclick="exportCSV()" id="btn-export-csv2">⬇ Export CSV</button>
-        </div>
-        <div class="data-panel" style="border-color:rgba(255,68,102,.25)">
-          <div class="data-info"><strong style="color:var(--red)" id="lbl-delete-all">Delete All Data</strong><br><span id="lbl-delete-all-sub">Permanently delete everything. Cannot be undone.</span></div>
-          <button class="btn btn-del" onclick="nukeAll()" id="btn-nuke">Delete Everything</button>
-        </div>
-      </div>
-      <div style="margin-top:18px;padding:13px 16px;background:var(--surface2);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);line-height:1.9" id="data-stats">Loading…</div>
-    </div>
-  </div>
+  <!-- ═══ DATA (hidden — content moved to Settings modal) ═══ -->
+  <div class="page" id="page-data" style="display:none!important"></div>
 </div><!-- /main-app -->
 
 <!-- Google Account Dropdown -->
@@ -1224,6 +1187,46 @@ canvas{width:100%!important;display:block;}
           oninput="saveSettings();recalcSummary()">
         <span style="font-size:18px;font-weight:800;color:var(--purple)">%</span>
       </div>
+    </div>
+
+    <!-- Data & Backup section inside settings -->
+    <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Data &amp; Backup</div>
+
+      <!-- Google Drive -->
+      <div style="background:linear-gradient(135deg,rgba(0,229,255,.04),transparent);border:1px solid rgba(0,229,255,.2);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">☁ Google Drive</div>
+        <div id="set-gdrive-status-row" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--muted)" id="set-gdrive-info">Not signed in — use the G button in the top-left</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="saveToDrive();closeSettings()" class="btn btn-primary" style="font-size:12px;padding:8px 14px;flex:1">☁ Save</button>
+          <button onclick="loadFromDrive();closeSettings()" class="btn btn-ghost" style="font-size:12px;padding:8px 14px;flex:1;border-color:var(--accent);color:var(--accent)">☁ Load</button>
+        </div>
+      </div>
+
+      <!-- Local backup -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="font-size:12px;color:var(--muted)">Download JSON backup</span>
+          <button onclick="exportBackup()" class="btn btn-ghost" style="font-size:12px;padding:7px 12px">⬇ Export</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="font-size:12px;color:var(--muted)">Restore from JSON backup</span>
+          <label class="btn btn-ghost" style="font-size:12px;padding:7px 12px;cursor:pointer">
+            ⬆ Import
+            <input type="file" id="import-file-s" accept=".json" style="display:none" onchange="importBackup(this)">
+          </label>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <span style="font-size:12px;color:var(--muted)">Export all shifts as CSV</span>
+          <button onclick="exportCSV()" class="btn btn-ghost" style="font-size:12px;padding:7px 12px">⬇ CSV</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px">
+          <span style="font-size:12px;color:var(--red);font-weight:600">Delete all data</span>
+          <button onclick="nukeAll()" class="btn btn-del" style="font-size:12px;padding:7px 12px">Delete All</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
     </div>
   </div>
 </div>
@@ -1498,6 +1501,14 @@ function openSettings(){
   document.getElementById('theme-dark').classList.toggle('active', th==='dark');
   document.getElementById('theme-light').classList.toggle('active', th==='light');
   updateNightPreview();
+  // Refresh data stats in settings panel
+  const te=shifts.reduce((a,s)=>a+(s.wages||0)+(s.transport||0),0);
+  const th2=shifts.reduce((a,s)=>a+s.duration,0);
+  const ds=document.getElementById('data-stats-s');
+  if(ds) ds.innerHTML=`Works: ${works.length} &nbsp;·&nbsp; Shifts: ${shifts.length} &nbsp;·&nbsp; Bills: ${bills.length}<br>Hours: ${fmtDur(th2)} &nbsp;·&nbsp; Earnings: ${fmtMoney(te)}`;
+  // Refresh drive status in settings panel
+  const srow=document.getElementById('set-gdrive-status-row');
+  if(srow) srow.textContent=gUser?`Signed in as ${gUser.email}`:'Not signed in — use the G button in the top-left';
   document.getElementById('settings-modal').classList.add('open');
 }
 function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
@@ -2508,12 +2519,15 @@ function recalcSummary(){
 // Data page
 // ════════════════════════════════════════════════
 function updateDataStats(){
-  const el=document.getElementById('data-stats');if(!el)return;
   const te=shifts.reduce((a,s)=>a+(s.wages||0)+(s.transport||0),0);
   const th=shifts.reduce((a,s)=>a+s.duration,0);
-  el.innerHTML=(lang==='ja'
-    ?`仕事：${works.length}件<br>シフト：${shifts.length}件<br>請求書：${bills.length}件<br>累計時間：${fmtDur(th)}<br>累計収入：${fmtMoney(te)}<br>ストレージ：IndexedDB（ブラウザローカル）`
-    :`Works: ${works.length}<br>Shifts: ${shifts.length}<br>Bills: ${bills.length}<br>Total hours: ${fmtDur(th)}<br>Total earnings: ${fmtMoney(te)}<br>Storage: IndexedDB (browser-local, persistent)`);
+  const statsHtml=lang==='ja'
+    ?`仕事：${works.length}件 · シフト：${shifts.length}件 · 請求書：${bills.length}件<br>累計時間：${fmtDur(th)} · 累計収入：${fmtMoney(te)}`
+    :`Works: ${works.length} · Shifts: ${shifts.length} · Bills: ${bills.length}<br>Hours: ${fmtDur(th)} · Earnings: ${fmtMoney(te)}`;
+  const el=document.getElementById('data-stats');
+  if(el) el.innerHTML=statsHtml;
+  const els=document.getElementById('data-stats-s');
+  if(els) els.innerHTML=statsHtml;
 }
 
 // ════════════════════════════════════════════════
@@ -2521,7 +2535,7 @@ function updateDataStats(){
 // ════════════════════════════════════════════════
 const DRIVE_FILENAME='shiftlog_backup.json';
 // Replace with your own Google OAuth Client ID from console.cloud.google.com
-const GOOGLE_CLIENT_ID='1071295354470-3ds0mp2hv3n4n7kng02hbriph0oeglo9.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID='YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 let gToken=null;   // access token
@@ -2774,7 +2788,7 @@ function dlFile(content,filename,mime){
 // Tab switching
 // ════════════════════════════════════════════════
 function switchTab(tab){
-  ['works','shifts','monthly','bills','summary','data'].forEach((t,i)=>{
+  ['works','shifts','monthly','bills','summary'].forEach((t,i)=>{
     const topBtn=document.querySelectorAll('.tab-btn')[i];
     if(topBtn) topBtn.classList.toggle('active',t===tab);
     const pg=document.getElementById('page-'+t);
@@ -2782,9 +2796,11 @@ function switchTab(tab){
     const bnItem=document.getElementById('bn-'+t);
     if(bnItem) bnItem.classList.toggle('active',t===tab);
   });
-  // also handle tax page toggle (accessible via mobile/direct call only)
+  // also handle tax/data page toggle (accessible directly)
   const taxPg=document.getElementById('page-tax');
   if(taxPg) taxPg.classList.toggle('active',tab==='tax');
+  const dataPg=document.getElementById('page-data');
+  if(dataPg) dataPg.classList.toggle('active',tab==='data');
   if(tab==='shifts'){renderWorkPicker();renderFilterRow();}
   if(tab==='monthly')renderMonthly();
   if(tab==='bills')renderBills();
