@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShiftLog</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root{
   --bg:#0a0a0f;--surface:#12121a;--surface2:#1c1c28;--surface3:#242434;
@@ -270,9 +271,36 @@ canvas{width:100%!important;display:block;}
 
 @media(max-width:860px){.monthly-layout{grid-template-columns:1fr;}}
 
-/* ══════════════════════════════════════════
-   BOTTOM NAV BAR — phone only
-══════════════════════════════════════════ */
+/* Google account profile button */
+#g-profile{
+  display:flex;align-items:center;cursor:pointer;flex-shrink:0;
+}
+#g-avatar-wrap{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:24px;padding:5px 11px 5px 5px;
+  transition:border-color .2s;
+}
+#g-profile:hover #g-avatar-wrap{border-color:var(--accent);}
+.g-avatar-placeholder{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,#4285F4,#34A853);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:13px;font-weight:800;flex-shrink:0;
+}
+#g-avatar-photo{
+  width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;
+  border:2px solid var(--accent);
+}
+#g-signin-label{
+  font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;
+}
+#g-user-short{
+  font-size:12px;font-weight:700;color:var(--text);max-width:90px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+
 .bottom-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;z-index:100;
@@ -513,6 +541,14 @@ canvas{width:100%!important;display:block;}
 
 <div class="container" id="main-app" style="display:none">
   <header>
+    <!-- Google account profile (left) -->
+    <div id="g-profile" onclick="handleGoogleProfileClick()" title="Google Drive">
+      <div id="g-avatar-wrap">
+        <div id="g-avatar" class="g-avatar-placeholder">G</div>
+        <div id="g-signin-label">Sign in</div>
+      </div>
+    </div>
+
     <div class="logo">Shift<span>Log</span></div>
     <div class="header-right">
       <div class="clock-disp">
@@ -1029,25 +1065,20 @@ canvas{width:100%!important;display:block;}
     <div class="panel" style="border-color:rgba(0,229,255,.25);background:linear-gradient(135deg,rgba(0,229,255,.03),transparent)">
       <div class="panel-label" style="color:var(--accent)">☁ Google Drive Sync</div>
       <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">
-        Save all your data to <strong style="color:var(--text)">Google Drive</strong> as <code style="background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:12px">shiftlog_backup.json</code> — accessible from any device.
+        Sign in with your Google account using the <strong style="color:var(--text)">profile button</strong> in the top-left corner to save and load your data from Google Drive.
       </p>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="data-panel" style="border-color:rgba(0,229,255,.3)">
-          <div class="data-info">
-            <strong style="color:var(--accent)">Save to Drive</strong><br>
-            <span>Upload your current data to Google Drive. Overwrites any previous backup.</span>
-          </div>
-          <button class="btn btn-primary" onclick="saveToDrive()" id="btn-gdrive-save">☁ Save to Drive</button>
-        </div>
-        <div class="data-panel" style="border-color:rgba(0,229,255,.3)">
-          <div class="data-info">
-            <strong style="color:var(--accent)">Load from Drive</strong><br>
-            <span>Restore your data from the Google Drive backup. Replaces local data.</span>
-          </div>
-          <button class="btn btn-ghost" onclick="loadFromDrive()" id="btn-gdrive-load" style="border-color:var(--accent);color:var(--accent)">☁ Load from Drive</button>
+      <div id="gdrive-data-status" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:12px">
+        <div id="gdrive-data-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">G</div>
+        <div>
+          <div style="font-size:13px;font-weight:600" id="gdrive-data-name">Not signed in</div>
+          <div style="font-size:11px;color:var(--muted)" id="gdrive-data-email">Tap the G button in the top-left to sign in</div>
         </div>
       </div>
-      <div id="gdrive-status" style="margin-top:12px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-height:18px"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="saveToDrive()" id="btn-gdrive-save" style="flex:1">☁ Save to Drive</button>
+        <button class="btn btn-ghost" onclick="loadFromDrive()" id="btn-gdrive-load" style="flex:1;border-color:var(--accent);color:var(--accent)">☁ Load from Drive</button>
+      </div>
+      <div id="gdrive-status" style="margin-top:10px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-height:18px"></div>
     </div>
 
     <div class="panel">
@@ -1080,6 +1111,44 @@ canvas{width:100%!important;display:block;}
     </div>
   </div>
 </div><!-- /main-app -->
+
+<!-- Google Account Dropdown -->
+<div id="g-dropdown" style="display:none;position:fixed;top:70px;left:16px;z-index:300;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:280px;box-shadow:0 8px 32px var(--shadow)">
+  <div id="g-dropdown-signed-out">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px">G</div>
+      <div>
+        <div style="font-size:14px;font-weight:700">Google Drive Sync</div>
+        <div style="font-size:12px;color:var(--muted)">Not signed in</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Sign in with Google to save your ShiftLog data to Drive and access it from any device.</p>
+    <button onclick="signInWithGoogle()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:box-shadow .2s" onmouseenter="this.style.boxShadow='0 2px 8px rgba(0,0,0,.15)'" onmouseleave="this.style.boxShadow='none'">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+  </div>
+  <div id="g-dropdown-signed-in" style="display:none">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <img id="g-user-photo" src="" alt="" width="44" height="44" style="border-radius:50%;border:2px solid var(--accent)">
+      <div style="min-width:0">
+        <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="g-user-name">—</div>
+        <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="g-user-email">—</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+      <button onclick="saveToDrive()" style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+        ☁ Save to Drive
+      </button>
+      <button onclick="loadFromDrive()" style="width:100%;padding:11px;background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+        ☁ Load from Drive
+      </button>
+    </div>
+    <div id="g-dropdown-status" style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-height:16px;margin-bottom:12px"></div>
+    <button onclick="signOutGoogle()" style="width:100%;padding:8px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer">Sign out</button>
+  </div>
+</div>
+<div id="g-dropdown-backdrop" style="display:none;position:fixed;inset:0;z-index:299" onclick="closeGoogleDropdown()"></div>
 
 <!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal">
@@ -2448,81 +2517,180 @@ function updateDataStats(){
 }
 
 // ════════════════════════════════════════════════
-// Google Drive Sync
+// Google OAuth + Drive API
 // ════════════════════════════════════════════════
 const DRIVE_FILENAME='shiftlog_backup.json';
+// Replace with your own Google OAuth Client ID from console.cloud.google.com
+const GOOGLE_CLIENT_ID='1071295354470-3ds0mp2hv3n4n7kng02hbriph0oeglo9.apps.googleusercontent.com';
+const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
-function gdriveStatus(msg, isErr=false){
-  const el=document.getElementById('gdrive-status');
-  if(el){el.textContent=msg;el.style.color=isErr?'var(--red)':'var(--muted)';}
+let gToken=null;   // access token
+let gUser=null;    // {name, email, picture}
+let gTokenClient=null;
+
+function initGoogleAuth(){
+  // Load GIS (Google Identity Services)
+  if(typeof google==='undefined'||!google.accounts){
+    setTimeout(initGoogleAuth,500);
+    return;
+  }
+  gTokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:GOOGLE_CLIENT_ID,
+    scope:DRIVE_SCOPE+' https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    callback:(resp)=>{
+      if(resp.error){gdriveStatus('Auth error: '+resp.error,true);return;}
+      gToken=resp.access_token;
+      fetchGoogleUserInfo();
+    }
+  });
+  // Try to restore token from sessionStorage
+  const saved=sessionStorage.getItem('gToken');
+  if(saved){gToken=saved;fetchGoogleUserInfo();}
 }
 
-async function callDriveAPI(prompt){
-  const response=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      model:'claude-sonnet-4-20250514',
-      max_tokens:1000,
-      system:'You are a Google Drive file assistant. Use the Google Drive MCP tools to perform the requested file operation. Return only the result as JSON with no extra text. For file content operations, return the raw file content string in a "content" field. For upload/create operations, return {"success":true,"fileId":"..."} or {"success":false,"error":"..."}.',
-      messages:[{role:'user',content:prompt}],
-      mcp_servers:[{type:'url',url:'https://drivemcp.googleapis.com/mcp/v1',name:'gdrive'}]
-    })
+async function fetchGoogleUserInfo(){
+  if(!gToken)return;
+  try{
+    const r=await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{
+      headers:{Authorization:'Bearer '+gToken}
+    });
+    if(!r.ok){gToken=null;sessionStorage.removeItem('gToken');updateGoogleUI();return;}
+    gUser=await r.json();
+    sessionStorage.setItem('gToken',gToken);
+    updateGoogleUI();
+  }catch{gToken=null;updateGoogleUI();}
+}
+
+function updateGoogleUI(){
+  const isIn=!!gUser;
+  // Header profile button
+  const wrap=document.getElementById('g-avatar-wrap');
+  const label=document.getElementById('g-signin-label');
+  if(!wrap)return;
+  if(isIn){
+    wrap.innerHTML=`<img src="${gUser.picture||''}" alt="" class="g-avatar-photo" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);object-fit:cover">
+      <span id="g-user-short" style="font-size:12px;font-weight:700;color:var(--text);max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${(gUser.given_name||gUser.name||'').split(' ')[0]}</span>`;
+  } else {
+    wrap.innerHTML=`<div class="g-avatar-placeholder">G</div><div id="g-signin-label" style="font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap">Sign in</div>`;
+  }
+  // Dropdown
+  document.getElementById('g-dropdown-signed-out').style.display=isIn?'none':'block';
+  document.getElementById('g-dropdown-signed-in').style.display=isIn?'block':'none';
+  if(isIn){
+    document.getElementById('g-user-name').textContent=gUser.name||'';
+    document.getElementById('g-user-email').textContent=gUser.email||'';
+    const photo=document.getElementById('g-user-photo');
+    if(photo)photo.src=gUser.picture||'';
+  }
+  // Data page status
+  const dpName=document.getElementById('gdrive-data-name');
+  const dpEmail=document.getElementById('gdrive-data-email');
+  const dpAv=document.getElementById('gdrive-data-avatar');
+  if(dpName) dpName.textContent=isIn?(gUser.name||'Signed in'):'Not signed in';
+  if(dpEmail) dpEmail.textContent=isIn?(gUser.email||''):'Tap the G button in the top-left to sign in';
+  if(dpAv){
+    if(isIn&&gUser.picture) dpAv.innerHTML=`<img src="${gUser.picture}" style="width:32px;height:32px;border-radius:50%;object-fit:cover">`;
+    else dpAv.textContent='G';
+  }
+}
+
+function signInWithGoogle(){
+  if(!gTokenClient){toast('Google Auth not ready yet','err');return;}
+  closeGoogleDropdown();
+  gTokenClient.requestAccessToken({prompt:'consent'});
+}
+
+function signOutGoogle(){
+  if(gToken&&typeof google!=='undefined')
+    google.accounts.oauth2.revoke(gToken,()=>{});
+  gToken=null;gUser=null;
+  sessionStorage.removeItem('gToken');
+  updateGoogleUI();
+  closeGoogleDropdown();
+  toast('Signed out of Google');
+}
+
+function handleGoogleProfileClick(){
+  const dd=document.getElementById('g-dropdown');
+  const bd=document.getElementById('g-dropdown-backdrop');
+  if(dd.style.display==='none'||!dd.style.display){
+    dd.style.display='block';bd.style.display='block';
+  } else {
+    closeGoogleDropdown();
+  }
+}
+function closeGoogleDropdown(){
+  document.getElementById('g-dropdown').style.display='none';
+  document.getElementById('g-dropdown-backdrop').style.display='none';
+}
+
+function gdriveStatus(msg,isErr=false){
+  [document.getElementById('gdrive-status'),document.getElementById('g-dropdown-status')].forEach(el=>{
+    if(el){el.textContent=msg;el.style.color=isErr?'var(--red)':'var(--muted)';}
   });
-  if(!response.ok) throw new Error(`API error ${response.status}`);
-  return await response.json();
+}
+
+async function driveRequest(method,url,body,contentType){
+  if(!gToken) throw new Error('Not signed in to Google');
+  const opts={method,headers:{Authorization:'Bearer '+gToken}};
+  if(body){opts.body=body;opts.headers['Content-Type']=contentType||'application/json';}
+  const r=await fetch(url,opts);
+  if(r.status===401){gToken=null;gUser=null;sessionStorage.removeItem('gToken');updateGoogleUI();throw new Error('Session expired — please sign in again');}
+  return r;
+}
+
+async function findDriveFile(){
+  const r=await driveRequest('GET',`https://www.googleapis.com/drive/v3/files?q=name='${DRIVE_FILENAME}'+and+trashed=false&fields=files(id,name,modifiedTime)&spaces=drive`);
+  const data=await r.json();
+  return data.files?.[0]||null;
 }
 
 async function saveToDrive(){
-  const btn=document.getElementById('btn-gdrive-save');
-  btn.disabled=true;btn.textContent='Saving…';
-  gdriveStatus('Connecting to Google Drive…');
-  loading(true);
+  if(!gToken){signInWithGoogle();return;}
+  const btns=[document.getElementById('btn-gdrive-save')].filter(Boolean);
+  btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Saving…';}});
+  gdriveStatus('Uploading to Google Drive…');loading(true);
   try{
-    const backup=JSON.stringify({version:2,exportedAt:new Date().toISOString(),works,shifts,bills,settings},null,2);
-    const escaped=backup.replace(/`/g,'\\`');
-    const data=await callDriveAPI(
-      `Search for a file named "${DRIVE_FILENAME}" in the user's Google Drive root. If it exists, update its content with this JSON. If it doesn't exist, create it. The file content is:\n\`\`\`\n${escaped}\n\`\`\`\nReturn JSON: {"success":true,"fileId":"..."} or {"success":false,"error":"..."}`
-    );
-    // Parse response
-    const textBlocks=data.content?.filter(c=>c.type==='text')||[];
-    const text=textBlocks.map(c=>c.text).join('').trim();
-    let result;
-    try{result=JSON.parse(text.replace(/```json?|```/g,'').trim());}catch{result={success:true};}
-    if(result.success===false) throw new Error(result.error||'Drive error');
-    gdriveStatus(`✓ Saved to Drive at ${new Date().toLocaleTimeString()} — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills`);
+    const content=JSON.stringify({version:2,exportedAt:new Date().toISOString(),works,shifts,bills,settings},null,2);
+    const existing=await findDriveFile();
+    if(existing){
+      // Update existing file content
+      await driveRequest('PATCH',
+        `https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=media`,
+        content,'application/json');
+    } else {
+      // Create new file with metadata
+      const meta=JSON.stringify({name:DRIVE_FILENAME,mimeType:'application/json'});
+      const boundary='shift_log_boundary';
+      const body=`--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${content}\r\n--${boundary}--`;
+      await driveRequest('POST',
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        body,`multipart/related; boundary=${boundary}`);
+    }
+    gdriveStatus(`✓ Saved at ${new Date().toLocaleTimeString()} — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills`);
     toast('Saved to Google Drive ✓');
+    closeGoogleDropdown();
   }catch(e){
-    gdriveStatus('✗ Save failed: '+e.message, true);
+    gdriveStatus('✗ '+e.message,true);
     toast('Drive save failed: '+e.message,'err');
   }finally{
-    btn.disabled=false;btn.textContent='☁ Save to Drive';
+    btns.forEach(b=>{if(b){b.disabled=false;b.textContent='☁ Save to Drive';}});
     loading(false);
   }
 }
 
 async function loadFromDrive(){
+  if(!gToken){signInWithGoogle();return;}
   if(!confirm('Load from Google Drive? This will replace all local data.'))return;
-  const btn=document.getElementById('btn-gdrive-load');
-  btn.disabled=true;btn.textContent='Loading…';
-  gdriveStatus('Searching Google Drive…');
-  loading(true);
+  const btns=[document.getElementById('btn-gdrive-load')].filter(Boolean);
+  btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Loading…';}});
+  gdriveStatus('Searching Google Drive…');loading(true);
   try{
-    const data=await callDriveAPI(
-      `Find the file named "${DRIVE_FILENAME}" in the user's Google Drive and return its full text content. Return JSON: {"success":true,"content":"<full file text>"} or {"success":false,"error":"File not found or error message"}`
-    );
-    const textBlocks=data.content?.filter(c=>c.type==='text')||[];
-    const text=textBlocks.map(c=>c.text).join('').trim();
-    let result;
-    try{result=JSON.parse(text.replace(/```json?|```/g,'').trim());}
-    catch{throw new Error('Could not parse Drive response');}
-    if(result.success===false) throw new Error(result.error||'File not found in Drive');
-    // Parse the backup content
-    let bk;
-    try{bk=JSON.parse(result.content);}
-    catch{throw new Error('Backup file is corrupted or invalid JSON');}
-    if(!bk.works||!bk.shifts) throw new Error('Invalid backup structure');
-    // Restore to IndexedDB
+    const file=await findDriveFile();
+    if(!file) throw new Error(`"${DRIVE_FILENAME}" not found in your Drive. Save first.`);
+    const r=await driveRequest('GET',`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
+    const bk=await r.json();
+    if(!bk.works||!bk.shifts) throw new Error('Backup file is invalid');
     await dbClear('works');await dbClear('shifts');await dbClear('bills');
     for(const w of bk.works)await dbPut('works',w);
     for(const s of bk.shifts)await dbPut('shifts',s);
@@ -2538,13 +2706,14 @@ async function loadFromDrive(){
     }
     renderWorks();renderWorkPicker();renderFilterRow();
     updateStats();renderShifts();renderBills();updateBadges();updateDataStats();
-    gdriveStatus(`✓ Loaded from Drive — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills (saved ${bk.exportedAt?new Date(bk.exportedAt).toLocaleString():'unknown'})`);
+    gdriveStatus(`✓ Loaded — ${shifts.length} shifts, ${works.length} works (saved ${new Date(bk.exportedAt).toLocaleString()})`);
     toast('Loaded from Google Drive ✓');
+    closeGoogleDropdown();
   }catch(e){
-    gdriveStatus('✗ Load failed: '+e.message, true);
+    gdriveStatus('✗ '+e.message,true);
     toast('Drive load failed: '+e.message,'err');
   }finally{
-    btn.disabled=false;btn.textContent='☁ Load from Drive';
+    btns.forEach(b=>{if(b){b.disabled=false;b.textContent='☁ Load from Drive';}});
     loading(false);
   }
 }
@@ -2675,6 +2844,7 @@ window.addEventListener('resize',()=>{
     updateBadges();
     updateDataStats();
     renderMonthly();
+    initGoogleAuth();
     tick();
   }catch(e){
     document.getElementById('splash-msg').textContent='Error: '+e.message;
