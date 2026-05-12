@@ -6,6 +6,8 @@
 <title>ShiftLog</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
 <style>
 :root{
   --bg:#0a0a0f;--surface:#12121a;--surface2:#1c1c28;--surface3:#242434;
@@ -440,38 +442,50 @@ canvas{width:100%!important;display:block;}
   .export-row{gap:8px;flex-wrap:wrap;}
   .export-row .btn{flex:1;font-size:12px;padding:10px;}
 
-  /* Monthly stats */
-  .monthly-stats{grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
-  .monthly-stats .stat-card{padding:10px 11px;}
-  .monthly-stats .stat-val{font-size:14px;}
+  /* Monthly stats — 2x2 tight */
+  .monthly-stats{grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+  .monthly-stats .stat-card{padding:9px 10px;border-radius:10px;}
+  .monthly-stats .stat-val{font-size:13px;}
   .monthly-stats .stat-lbl{font-size:9px;}
 
-  /* Calendar — compact */
-  .calendar-wrap{padding:12px;border-radius:12px;}
-  .cal-day{border-radius:6px;font-size:11px;}
-  .cal-day-name{font-size:9px;padding:2px 0 6px;}
-  .cal-legend{font-size:10px;gap:8px;margin-top:8px;}
-  .day-detail{padding:10px;margin-top:8px;}
-  .day-detail-title{font-size:11px;}
-  .day-shift-row{font-size:11px;padding:5px 0;}
-
   /* Month controls — tight */
-  .month-controls{gap:6px;margin-bottom:10px;}
-  .month-title{font-size:15px;min-width:120px;}
+  .month-controls{gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+  .month-title{font-size:15px;min-width:110px;}
   .month-nav-btn{padding:5px 10px;font-size:14px;}
+  /* Hide print button label on small screens */
+  #lbl-print-timesheet{display:none;}
 
-  /* Graph panel — smaller */
-  .graph-panel{padding:12px;border-radius:12px;margin-bottom:12px;}
-  .graph-title{font-size:10px;margin-bottom:8px;}
-  .graph-toggle{gap:6px;margin-bottom:10px;}
-  .gtog{padding:4px 11px;font-size:11px;}
-  #main-chart{height:150px!important;}
+  /* Monthly layout: single column, reorder so calendar comes first on mobile */
+  .monthly-layout{display:flex;flex-direction:column;gap:10px;}
+  .monthly-layout > div:last-child{order:-1;}  /* Calendar moves to top */
 
-  /* Monthly table — compact */
-  .monthly-table th{font-size:9px;padding:5px 7px;letter-spacing:1px;}
-  .monthly-table td{padding:7px;font-size:11px;}
-  .panel{padding:12px 13px;border-radius:13px;margin-bottom:12px;}
-  .panel-label{font-size:10px;margin-bottom:10px;}
+  /* Calendar — very compact */
+  .calendar-wrap{padding:10px;border-radius:12px;}
+  .cal-month-lbl{font-size:13px;margin-bottom:8px;}
+  .cal-grid{gap:2px;}
+  .cal-day{border-radius:5px;font-size:10px;aspect-ratio:1;}
+  .cal-day-name{font-size:8px;padding:1px 0 5px;letter-spacing:0;}
+  .cal-legend{font-size:9px;gap:8px;margin-top:6px;}
+  .day-detail{padding:8px 10px;margin-top:6px;border-radius:8px;}
+  .day-detail-title{font-size:11px;margin-bottom:6px;}
+  .day-shift-row{font-size:11px;padding:4px 0;}
+
+  /* Graph panel — smaller chart */
+  .graph-panel{padding:10px;border-radius:12px;margin-bottom:10px;}
+  .graph-title{font-size:10px;margin-bottom:6px;}
+  .graph-toggle{gap:5px;margin-bottom:8px;}
+  .gtog{padding:4px 10px;font-size:10px;}
+  #main-chart{height:120px!important;}
+
+  /* Work breakdown table — scrollable horizontal */
+  .panel{padding:10px 11px;border-radius:12px;margin-bottom:10px;}
+  .panel-label{font-size:10px;margin-bottom:8px;}
+  .monthly-table{font-size:10px;width:100%;}
+  .monthly-table th{font-size:8px;padding:4px 5px;letter-spacing:0.5px;white-space:nowrap;}
+  .monthly-table td{padding:5px 5px;font-size:10px;}
+  /* Hide transport column on mobile to save space */
+  .monthly-table th:nth-child(5),
+  .monthly-table td:nth-child(5){display:none;}
 
   /* Settings modal */
   .modal{padding:22px 18px;border-radius:16px;max-height:85vh;}
@@ -792,6 +806,9 @@ canvas{width:100%!important;display:block;}
         <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
       </div>
       <div id="monthly-work-filter" style="display:flex;gap:7px;flex-wrap:wrap"></div>
+      <button class="btn btn-ghost" onclick="openTimesheetModal()" style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;flex-shrink:0">
+        🖨 <span id="lbl-print-timesheet">Print Timesheet</span>
+      </button>
     </div>
 
     <div class="monthly-stats">
@@ -1227,6 +1244,76 @@ canvas{width:100%!important;display:block;}
       </div>
 
       <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- Timesheet Print Modal -->
+<div class="modal-overlay" id="timesheet-modal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeTimesheetModal()">✕</button>
+    <div class="modal-title">🖨 Print Timesheet</div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <!-- Work selector -->
+      <div class="field">
+        <label style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Work / 勤務先</label>
+        <select id="ts-work-select" style="font-size:15px;font-weight:600">
+          <option value="">— Select Work —</option>
+        </select>
+      </div>
+
+      <!-- Month selector -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div class="field" style="flex:1;min-width:120px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Year / 年</label>
+          <input type="number" id="ts-year" min="2020" max="2099" style="font-family:'JetBrains Mono',monospace;font-size:16px;text-align:center">
+        </div>
+        <div class="field" style="flex:1;min-width:120px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Month / 月</label>
+          <select id="ts-month" style="font-size:15px">
+            <option value="1">1月 January</option><option value="2">2月 February</option>
+            <option value="3">3月 March</option><option value="4">4月 April</option>
+            <option value="5">5月 May</option><option value="6">6月 June</option>
+            <option value="7">7月 July</option><option value="8">8月 August</option>
+            <option value="9">9月 September</option><option value="10">10月 October</option>
+            <option value="11">11月 November</option><option value="12">12月 December</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Staff name / company name -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div class="field" style="flex:1;min-width:140px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Staff Name / 氏名</label>
+          <input type="text" id="ts-staff-name" placeholder="氏名">
+        </div>
+        <div class="field" style="flex:1;min-width:140px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Company / 会社名</label>
+          <input type="text" id="ts-company" placeholder="会社名">
+        </div>
+      </div>
+
+      <!-- Break time -->
+      <div class="field">
+        <label style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Break Type / 休憩</label>
+        <select id="ts-break-type" style="font-size:14px">
+          <option value="45">45分休憩 (45 min)</option>
+          <option value="60">60分休憩 (60 min)</option>
+        </select>
+      </div>
+
+      <!-- Preview info -->
+      <div id="ts-preview-info" style="padding:12px 14px;background:var(--surface2);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.8">
+        Select a work and month to preview shift count.
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:4px">
+        <button class="btn btn-ghost" onclick="closeTimesheetModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="generateTimesheet()" id="btn-gen-ts">
+          🖨 Generate PDF
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -2535,7 +2622,7 @@ function updateDataStats(){
 // ════════════════════════════════════════════════
 const DRIVE_FILENAME='shiftlog_backup.json';
 // Replace with your own Google OAuth Client ID from console.cloud.google.com
-const GOOGLE_CLIENT_ID='1071295354470-3ds0mp2hv3n4n7kng02hbriph0oeglo9.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID='YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 
 let gToken=null;   // access token
@@ -2867,6 +2954,308 @@ window.addEventListener('resize',()=>{
     console.error(e);
   }
 })();
+
+// ════════════════════════════════════════════════
+// Timesheet PDF Generator
+// ════════════════════════════════════════════════
+function openTimesheetModal(){
+  // Populate work selector
+  const sel=document.getElementById('ts-work-select');
+  sel.innerHTML='<option value="">— Select Work —</option>'+
+    works.map(w=>`<option value="${w.id}">${w.name}</option>`).join('');
+  // Default to current monthly view
+  document.getElementById('ts-year').value=currentYear;
+  document.getElementById('ts-month').value=currentMonth+1;
+  if(monthlyFilterId) sel.value=monthlyFilterId;
+  // Load saved staff name / company
+  const sn=localStorage.getItem('ts-staff-name')||'';
+  const sc=localStorage.getItem('ts-company')||'';
+  document.getElementById('ts-staff-name').value=sn;
+  document.getElementById('ts-company').value=sc;
+  updateTsPreview();
+  ['ts-work-select','ts-year','ts-month'].forEach(id=>
+    document.getElementById(id)?.addEventListener('change',updateTsPreview));
+  document.getElementById('timesheet-modal').classList.add('open');
+}
+
+function closeTimesheetModal(){
+  document.getElementById('timesheet-modal').classList.remove('open');
+}
+
+function updateTsPreview(){
+  const wid=document.getElementById('ts-work-select').value;
+  const yr=parseInt(document.getElementById('ts-year').value);
+  const mo=parseInt(document.getElementById('ts-month').value);
+  const info=document.getElementById('ts-preview-info');
+  if(!wid||!yr||!mo){info.textContent='Select a work and month to preview.';return;}
+  const work=works.find(w=>w.id===wid);
+  const sl=shifts.filter(s=>{
+    const d=new Date(s.clockIn);
+    return s.workId===wid&&d.getFullYear()===yr&&d.getMonth()===mo-1;
+  });
+  const totalH=sl.reduce((a,s)=>a+s.duration,0);
+  const totalW=sl.reduce((a,s)=>a+(s.wages||0),0);
+  info.innerHTML=`<strong style="color:var(--text)">${work?.name||''}</strong> — ${yr}年${mo}月<br>
+    ${sl.length} shifts &nbsp;·&nbsp; ${fmtDur(totalH)} &nbsp;·&nbsp; ${fmtMoney(totalW)}`;
+}
+
+function generateTimesheet(){
+  try{
+    const wid=document.getElementById('ts-work-select').value;
+    const yr=parseInt(document.getElementById('ts-year').value);
+    const mo=parseInt(document.getElementById('ts-month').value);
+    const staffName=document.getElementById('ts-staff-name').value.trim();
+    const company=document.getElementById('ts-company').value.trim();
+    const breakType=parseInt(document.getElementById('ts-break-type').value);
+
+    if(!wid){toast('Please select a work','err');return;}
+    const work=works.find(w=>w.id===wid);
+    if(!work){toast('Work not found','err');return;}
+
+    // Check jsPDF loaded
+    if(!window.jspdf||!window.jspdf.jsPDF){
+      toast('PDF library not loaded yet. Please wait and try again.','err');return;
+    }
+
+    localStorage.setItem('ts-staff-name',staffName);
+    localStorage.setItem('ts-company',company);
+
+    // Shifts indexed by day
+    const dayShifts={};
+    shifts.filter(s=>{
+      const d=new Date(s.clockIn);
+      return s.workId===wid&&d.getFullYear()===yr&&d.getMonth()===mo-1;
+    }).forEach(s=>{ dayShifts[new Date(s.clockIn).getDate()]=s; });
+
+    const daysInMonth=new Date(yr,mo,0).getDate();
+    // English day abbreviations (safe for Helvetica)
+    const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    const W=297,H=210;
+
+    // Helpers — no chaining
+    const sf=(size,style)=>{doc.setFontSize(size);doc.setFont('helvetica',style||'normal');};
+    const tx=(t,x,y,opts)=>doc.text(String(t),x,y,opts||{});
+    const ln=(x1,y1,x2,y2)=>doc.line(x1,y1,x2,y2);
+    const rc=(x,y,w,h,style)=>doc.rect(x,y,w,h,style||'S');
+    const fr=(x,y,w,h,r,g,b)=>{doc.setFillColor(r,g,b);doc.rect(x,y,w,h,'F');};
+    const tc=(r,g,b)=>doc.setTextColor(r,g,b);
+    const dc=(r,g,b)=>doc.setDrawColor(r,g,b);
+    const lw=(w)=>doc.setLineWidth(w);
+
+    // ── Header bar ──
+    fr(0,0,W,13,28,28,45);
+    tc(255,255,255); sf(13,'bold');
+    tx(`TIMESHEET  ${yr} / ${MONTHS[mo-1].toUpperCase()} (${mo})`,W/2,9,{align:'center'});
+    tc(40,40,40);
+
+    // ── Meta info row ──
+    const mY=17; sf(8,'normal'); dc(150,150,170); lw(0.2);
+    // Work
+    rc(8,mY,68,7); tc(120,120,140); tx('Work:',10,mY+5);
+    sf(9,'bold'); tc(20,20,20); tx(work.name.substring(0,20),24,mY+5);
+    // Staff
+    sf(8,'normal'); dc(150,150,170); rc(80,mY,55,7);
+    tc(120,120,140); tx('Name:',82,mY+5);
+    sf(8,'bold'); tc(20,20,20); tx((staffName||'-').substring(0,14),96,mY+5);
+    // Company
+    sf(8,'normal'); dc(150,150,170); rc(139,mY,55,7);
+    tc(120,120,140); tx('Company:',141,mY+5);
+    sf(8,'bold'); tc(20,20,20); tx((company||'-').substring(0,14),158,mY+5);
+    // Break
+    sf(8,'normal'); dc(150,150,170); rc(198,mY,38,7);
+    tc(120,120,140); tx('Break:',200,mY+5);
+    sf(8,'bold'); tc(20,20,20); tx(`${breakType} min`,213,mY+5);
+    // Summary placeholder
+    rc(240,mY,49,7);
+
+    // ── Table setup ──
+    const tY=28; const rowH=5.0; const hdrH=6;
+    const C={
+      day: {x:8,  w:12},
+      dow: {x:20, w:9},
+      type:{x:29, w:11},
+      st:  {x:40, w:18},
+      en:  {x:58, w:18},
+      hrs: {x:76, w:16},
+      brk: {x:92, w:12},
+      ot:  {x:104,w:12},
+      pay: {x:116,w:22},
+      note:{x:138,w:38},
+    };
+    const tableW=176; // 8 to 184
+
+    // Table header
+    fr(8,tY,tableW,hdrH,42,48,70);
+    tc(255,255,255); sf(7,'bold');
+    const heads=[
+      [C.day,'Date'],[C.dow,'Day'],[C.type,'Type'],
+      [C.st,'Start'],[C.en,'End'],
+      [C.hrs,'Hours'],[C.brk,'Break'],[C.ot,'OT'],
+      [C.pay,'Wages'],[C.note,'Notes'],
+    ];
+    heads.forEach(([c,l])=>tx(l,c.x+c.w/2,tY+4,{align:'center'}));
+    tc(40,40,40);
+
+    // ── Rows ──
+    let totalH=0,totalW=0,workedDays=0;
+
+    for(let d=1;d<=daysInMonth;d++){
+      const ry=tY+hdrH+(d-1)*rowH;
+      const dow=new Date(yr,mo-1,d).getDay();
+      const isSun=dow===0, isSat=dow===6, isWknd=isSun||isSat;
+      const shift=dayShifts[d];
+
+      // Row bg
+      if(isSun)       fr(8,ry,tableW,rowH,255,235,235);
+      else if(isSat)  fr(8,ry,tableW,rowH,235,240,255);
+      else if(d%2===0)fr(8,ry,tableW,rowH,248,248,252);
+
+      // Vertical column dividers
+      dc(190,190,210); lw(0.1);
+      Object.values(C).forEach(c=>ln(c.x,ry,c.x,ry+rowH));
+      ln(8+tableW,ry,8+tableW,ry+rowH);
+      ln(8,ry,8+tableW,ry); // top line
+
+      sf(7,'normal');
+
+      // Date
+      tc(60,60,80);
+      tx(`${mo}/${d}`,C.day.x+C.day.w/2,ry+3.6,{align:'center'});
+
+      // Day of week
+      tc(isSun?190:isSat?60:80, isSat?60:80, 80);
+      tx(DOW[dow].substring(0,2),C.dow.x+C.dow.w/2,ry+3.6,{align:'center'});
+      tc(40,40,40);
+
+      if(shift){
+        workedDays++;
+        const ci=new Date(shift.clockIn), co=new Date(shift.clockOut);
+        const stStr=`${ci.getHours().toString().padStart(2,'0')}:${ci.getMinutes().toString().padStart(2,'0')}`;
+        const enStr=`${co.getHours().toString().padStart(2,'0')}:${co.getMinutes().toString().padStart(2,'0')}`;
+        const rawH=shift.duration/3600000;
+        const brkH=breakType/60;
+        const netH=Math.max(0,rawH-brkH);
+        const otH=Math.max(0,netH-8);
+        totalH+=netH; totalW+=(shift.wages||0);
+
+        sf(7,'bold'); tc(0,130,80);
+        tx('W',C.type.x+C.type.w/2,ry+3.6,{align:'center'});
+
+        sf(7,'normal'); tc(40,40,40);
+        tx(stStr,C.st.x+C.st.w/2,ry+3.6,{align:'center'});
+        tx(enStr,C.en.x+C.en.w/2,ry+3.6,{align:'center'});
+        tx(netH.toFixed(2),C.hrs.x+C.hrs.w/2,ry+3.6,{align:'center'});
+        tx(brkH.toFixed(2),C.brk.x+C.brk.w/2,ry+3.6,{align:'center'});
+        if(otH>0){tc(200,80,0);tx(otH.toFixed(2),C.ot.x+C.ot.w/2,ry+3.6,{align:'center'});tc(40,40,40);}
+
+        tc(0,110,0);
+        tx(sym()+(shift.wages||0).toFixed(0),C.pay.x+C.pay.w/2,ry+3.6,{align:'center'});
+        tc(40,40,40);
+
+        // Night bonus note
+        if(shift.nightMin>0){
+          tc(130,60,180); sf(6,'normal');
+          tx('*night',C.note.x+1,ry+3.6);
+          sf(7,'normal'); tc(40,40,40);
+        }
+      } else {
+        sf(7,'normal');
+        tc(isWknd?160:180,isWknd?160:180,200);
+        tx(isWknd?'OFF':'-',C.type.x+C.type.w/2,ry+3.6,{align:'center'});
+        tc(40,40,40);
+      }
+    }
+
+    // Bottom border of table
+    const botY=tY+hdrH+daysInMonth*rowH;
+    dc(80,80,120); lw(0.4);
+    ln(8,botY,8+tableW,botY);
+
+    // ── Totals row ──
+    fr(8,botY,tableW,7,225,235,255);
+    dc(80,80,160); lw(0.3); rc(8,botY,tableW,7);
+    sf(7,'bold'); tc(40,40,80);
+    tx('TOTAL',C.day.x+1,botY+5);
+    tx(`${workedDays} days`,C.dow.x+1,botY+5);
+    tx(totalH.toFixed(2)+'h',C.hrs.x+C.hrs.w/2,botY+5,{align:'center'});
+    tc(0,100,0);
+    tx(sym()+totalW.toFixed(0),C.pay.x+C.pay.w/2,botY+5,{align:'center'});
+    tc(40,40,40);
+
+    // Fill summary box in meta row
+    fr(240,mY,49,7,245,248,255);
+    dc(150,150,200); lw(0.2); rc(240,mY,49,7);
+    sf(7,'bold'); tc(40,40,100);
+    tx(`${workedDays}d  ${totalH.toFixed(1)}h`,264,mY+5,{align:'center'});
+    tc(40,40,40);
+
+    // ── Right panel: Legend + Stamp ──
+    const pX=188, pW=101;
+
+    // Legend header
+    fr(pX,tY,pW,hdrH,42,48,70);
+    tc(255,255,255); sf(7,'bold');
+    tx('LEGEND',pX+pW/2,tY+4,{align:'center'});
+    tc(40,40,40); sf(7,'normal');
+
+    const legItems=[
+      ['W','Working (Shift day)'],
+      ['OFF','Day off / Weekend'],
+      ['A','Absent'],
+      ['H','Holiday work'],
+      ['S','Sub holiday'],
+      ['PL','Paid leave'],
+      ['*night','Night bonus applied'],
+    ];
+    legItems.forEach(([code,desc],i)=>{
+      const ly=tY+hdrH+i*7+5;
+      fr(pX,tY+hdrH+i*7,pW,7,(i%2===0?248:255),(i%2===0?250:255),(i%2===0?255:255));
+      sf(7,'bold'); tc(0,130,80); tx(code,pX+3,ly);
+      sf(7,'normal'); tc(60,60,80); tx(desc,pX+18,ly);
+    });
+
+    // Stamp / sign area
+    const sY=tY+hdrH+legItems.length*7+2;
+    fr(pX,sY,pW,10,210,220,240);
+    dc(120,130,170); lw(0.2); rc(pX,sY,pW,10);
+    sf(7,'bold'); tc(50,50,90);
+    tx('SUPERVISOR APPROVAL',pX+pW/2,sY+4,{align:'center'});
+    rc(pX,sY+10,pW,25);
+    sf(6,'normal'); tc(160,160,180);
+    tx('Signature / Stamp',pX+2,sY+14);
+    tx('Date: ___________',pX+2,sY+20);
+
+    // ── Notes / instructions ──
+    const ntY=sY+37;
+    if(ntY<H-8){
+      fr(pX,ntY,pW,H-ntY-4,252,252,255);
+      dc(180,180,200); rc(pX,ntY,pW,H-ntY-4);
+      sf(6,'normal'); tc(100,100,130);
+      tx('NOTES:',pX+2,ntY+5);
+      tx('W=Working  OFF=Day off',pX+2,ntY+10);
+      tx('Hours in decimal (7h45m=7.75)',pX+2,ntY+15);
+      tx(`Break: ${breakType}min deducted auto`,pX+2,ntY+20);
+    }
+
+    // ── Footer ──
+    sf(6,'normal'); tc(150,150,170);
+    tx(`Generated by ShiftLog  |  ${yr}/${mo}  |  ${work.name}  |  ${new Date().toLocaleDateString()}`,8,H-3);
+
+    // ── Save ──
+    const fname=`timesheet_${yr}-${String(mo).padStart(2,'0')}_${work.name.replace(/[^\w]/g,'_')}.pdf`;
+    doc.save(fname);
+    toast('Timesheet PDF downloaded!');
+    closeTimesheetModal();
+
+  } catch(err){
+    console.error('Timesheet error:',err);
+    toast('PDF error: '+err.message,'err');
+  }
+}
 </script>
 </body>
 </html>
