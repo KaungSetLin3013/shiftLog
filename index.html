@@ -8,23 +8,31 @@
 <meta name="keywords" content="shift tracker, timesheet app, hourly wage calculator, part-time job tracker, night shift bonus calculator, tax calculator, timesheet PDF, work hours tracker, ShiftLog">
 <meta name="author" content="Kaung Set Lin">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://kaungsetlin3013.github.io/shiftLog/">
+<link rel="canonical" href="https://kaungsetlinn.com/shiftLog/">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://kaungsetlin3013.github.io/shiftLog/">
+<meta property="og:url" content="https://kaungsetlinn.com/shiftLog/">
 <meta property="og:title" content="ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker">
 <meta property="og:description" content="Log shifts across multiple jobs, auto-calculate wages with night-shift bonuses, track bills, estimate take-home pay after tax, and export a timesheet PDF. Free and works offline.">
+<meta property="og:image" content="https://kaungsetlinn.com/shiftLog/icon-512.png">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ja_JP">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:url" content="https://kaungsetlin3013.github.io/shiftLog/">
+<meta name="twitter:url" content="https://kaungsetlinn.com/shiftLog/">
+<meta name="twitter:image" content="https://kaungsetlinn.com/shiftLog/icon-512.png">
 <meta name="twitter:title" content="ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker">
 <meta name="twitter:description" content="Log shifts across multiple jobs, auto-calculate wages with night-shift bonuses, track bills, estimate take-home pay after tax, and export a timesheet PDF. Free and works offline.">
 
 <meta name="theme-color" content="#0a0a0f">
+<!-- Website icon -->
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
@@ -32,8 +40,9 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "ShiftLog",
-    "url": "https://kaungsetlin3013.github.io/shiftLog/",
+    "url": "https://kaungsetlinn.com/shiftLog/",
     "description": "A bilingual (English/Japanese) shift-work tracker for logging hours across multiple jobs, calculating wages with night-shift bonuses, tracking recurring bills, estimating take-home pay after tax, and exporting timesheet PDFs.",
+    "image": "https://kaungsetlinn.com/shiftLog/icon-512.png",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -1955,6 +1964,8 @@ async function addShift(){
   updateStats();renderShifts();updateBadges();updateDataStats();
   if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
   loading(false);btn.disabled=false;
+  // Auto-save to Google Drive (only if signed in)
+  if(gToken)saveToDrive({silent:true});
 }
 
 // ════════════════════════════════════════════════
@@ -2682,7 +2693,10 @@ function initGoogleAuth(){
     callback:(resp)=>{
       if(resp.error){gdriveStatus('Auth error: '+resp.error,true);return;}
       gToken=resp.access_token;
-      fetchGoogleUserInfo();
+      fetchGoogleUserInfo().then(()=>{
+        // Auto-load data from Drive right after a fresh sign-in
+        if(gUser) loadFromDrive({auto:true});
+      });
     }
   });
   // Try to restore token from sessionStorage
@@ -2787,11 +2801,19 @@ async function findDriveFile(){
   return data.files?.[0]||null;
 }
 
-async function saveToDrive(){
-  if(!gToken){signInWithGoogle();return;}
+let driveSaving=false,drivePending=false;
+async function saveToDrive(opts){
+  const silent=!!(opts&&opts.silent);   // silent = auto-save after adding shifts
+  if(!gToken){if(!silent)signInWithGoogle();return;}
+  // If a save is already running, queue one more run so the latest data always wins
+  if(driveSaving){drivePending=true;return;}
+  driveSaving=true;
   const btns=[document.getElementById('btn-gdrive-save')].filter(Boolean);
-  btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Saving…';}});
-  gdriveStatus('Uploading to Google Drive…');loading(true);
+  if(!silent){
+    btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Saving…';}});
+    loading(true);
+  }
+  gdriveStatus('Uploading to Google Drive…');
   try{
     const content=JSON.stringify({version:2,exportedAt:new Date().toISOString(),works,shifts,bills,settings},null,2);
     const existing=await findDriveFile();
@@ -2809,27 +2831,39 @@ async function saveToDrive(){
         'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
         body,`multipart/related; boundary=${boundary}`);
     }
-    gdriveStatus(`✓ Saved at ${new Date().toLocaleTimeString()} — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills`);
-    toast('Saved to Google Drive ✓');
-    closeGoogleDropdown();
+    gdriveStatus(`✓ ${silent?'Auto-saved':'Saved'} at ${new Date().toLocaleTimeString()} — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills`);
+    if(!silent){toast('Saved to Google Drive ✓');closeGoogleDropdown();}
   }catch(e){
     gdriveStatus('✗ '+e.message,true);
     toast('Drive save failed: '+e.message,'err');
   }finally{
-    btns.forEach(b=>{if(b){b.disabled=false;b.textContent='☁ Save to Drive';}});
-    loading(false);
+    driveSaving=false;
+    if(!silent){
+      btns.forEach(b=>{if(b){b.disabled=false;b.textContent='☁ Save to Drive';}});
+      loading(false);
+    }
+    if(drivePending){drivePending=false;saveToDrive({silent:true});}
   }
 }
 
-async function loadFromDrive(){
-  if(!gToken){signInWithGoogle();return;}
-  if(!confirm('Load from Google Drive? This will replace all local data.'))return;
+async function loadFromDrive(opts){
+  const auto=!!(opts&&opts.auto);   // auto = right after sign-in, no confirm popup
+  if(!gToken){if(!auto)signInWithGoogle();return;}
+  if(!auto&&!confirm('Load from Google Drive? This will replace all local data.'))return;
   const btns=[document.getElementById('btn-gdrive-load')].filter(Boolean);
   btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Loading…';}});
   gdriveStatus('Searching Google Drive…');loading(true);
   try{
     const file=await findDriveFile();
-    if(!file) throw new Error(`"${DRIVE_FILENAME}" not found in your Drive. Save first.`);
+    if(!file){
+      if(auto){
+        // First sign-in with no backup yet: upload current local data instead of replacing it
+        gdriveStatus('No Drive backup yet — creating one from local data…');
+        saveToDrive({silent:true});
+        return;
+      }
+      throw new Error(`"${DRIVE_FILENAME}" not found in your Drive. Save first.`);
+    }
     const r=await driveRequest('GET',`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
     const bk=await r.json();
     if(!bk.works||!bk.shifts) throw new Error('Backup file is invalid');
@@ -2848,6 +2882,7 @@ async function loadFromDrive(){
     }
     renderWorks();renderWorkPicker();renderFilterRow();
     updateStats();renderShifts();renderBills();updateBadges();updateDataStats();
+    if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
     gdriveStatus(`✓ Loaded — ${shifts.length} shifts, ${works.length} works (saved ${new Date(bk.exportedAt).toLocaleString()})`);
     toast('Loaded from Google Drive ✓');
     closeGoogleDropdown();
