@@ -15,14 +15,19 @@
 <meta property="og:url" content="https://kaungsetlinn.com/shiftLog/">
 <meta property="og:title" content="ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker">
 <meta property="og:description" content="Log shifts across multiple jobs, auto-calculate wages with night-shift bonuses, track bills, estimate take-home pay after tax, and export a timesheet PDF. Free and works offline.">
-<meta property="og:image" content="https://kaungsetlinn.com/shiftLog/icon-512.png">
+<meta property="og:image" content="https://kaungsetlinn.com/shiftLog/og-cover.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ShiftLog app showing the Works tab with the Create New Work form">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ja_JP">
 
 <!-- Twitter -->
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://kaungsetlinn.com/shiftLog/">
-<meta name="twitter:image" content="https://kaungsetlinn.com/shiftLog/icon-512.png">
+<meta name="twitter:image" content="https://kaungsetlinn.com/shiftLog/og-cover.png">
+<meta name="twitter:image:alt" content="ShiftLog app showing the Works tab with the Create New Work form">
 <meta name="twitter:title" content="ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker">
 <meta name="twitter:description" content="Log shifts across multiple jobs, auto-calculate wages with night-shift bonuses, track bills, estimate take-home pay after tax, and export a timesheet PDF. Free and works offline.">
 
@@ -610,11 +615,59 @@ canvas{width:100%!important;display:block;}
   .tab-btn{font-size:11px;padding:7px 10px;}
   .month-title{font-size:15px;min-width:110px;}
 }
+
+/* ---- Playbook pass: button spec + motion (transform and opacity only) ---- */
+:root{--spring:cubic-bezier(.34,1.56,.64,1);--out:cubic-bezier(.2,.8,.2,1)}
+:where(button,a,[tabindex],input,select):focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+/* Buttons: 48px tall; press sinks fast (80ms), release springs back (400ms) */
+.icon-btn{width:48px;height:48px;font-family:inherit;padding:0}
+.btn:not(.btn-sm){min-height:48px;padding-left:24px;padding-right:24px}
+.tab-btn{min-height:48px}
+.modal-close{width:48px;height:48px;top:8px;right:8px;display:flex;align-items:center;justify-content:center}
+.field input,.field select{min-height:48px}
+.field input[type="color"]{height:48px}
+.bn-item{min-height:56px;justify-content:center}
+@media (pointer:coarse){.btn-sm,.lang-btn,.mode-btn,.fw-btn,.wp-btn{min-height:48px}}
+.btn{transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms,opacity 150ms}
+.icon-btn,.tab-btn,.lang-btn,.mode-btn,.wp-btn,.fw-btn,.modal-close{transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+.btn:active:not(:disabled),.icon-btn:active,.tab-btn:active,.lang-btn:active,.mode-btn:active,.wp-btn:active,.fw-btn:active,.modal-close:active{transform:scale(.95);transition-duration:80ms}
+/* Selected states pop when they turn on */
+@keyframes pop{0%{transform:scale(.92)}60%{transform:scale(1.06)}100%{transform:none}}
+.tab-btn.active,.lang-btn.active,.mode-btn.active,.wp-btn.sel,.fw-btn.sel{animation:pop 320ms var(--spring)}
+/* Bottom nav: the bar grows out from the centre, the icon pops, the icon sinks when pressed */
+.bn-icon{display:block;transition:transform 400ms var(--spring)}
+.bn-item:active .bn-icon{transform:scale(.86);transition-duration:80ms}
+.bn-item.active::before{content:'';position:absolute;top:-8px;left:50%;width:32px;height:3px;border-radius:2px;background:var(--accent);transform:translateX(-50%);animation:barIn 280ms var(--out)}
+.bn-item.active .bn-icon{animation:iconPop 380ms var(--spring)}
+@keyframes barIn{from{transform:translateX(-50%) scaleX(0);opacity:0}to{transform:translateX(-50%) scaleX(1);opacity:1}}
+@keyframes iconPop{0%{transform:translateY(4px) scale(.8)}60%{transform:translateY(-2px) scale(1.12)}100%{transform:none}}
+/* Pages and stat cards: fade in and rise whenever a tab opens, cards 60ms apart */
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.page.active{animation:rise 300ms var(--out)}
+.page.active .stat-card{animation:rise 420ms var(--out) backwards}
+.page.active .stat-card:nth-child(2){animation-delay:60ms}
+.page.active .stat-card:nth-child(3){animation-delay:120ms}
+.page.active .stat-card:nth-child(4){animation-delay:180ms}
+.page.active .stat-card:nth-child(5){animation-delay:240ms}
+.work-card{animation:popIn 300ms var(--out) backwards}
+.work-card:nth-child(2){animation-delay:60ms}.work-card:nth-child(3){animation-delay:120ms}
+.work-card:nth-child(4){animation-delay:180ms}.work-card:nth-child(n+5){animation-delay:240ms}
+/* Dialogs and toast */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-overlay.open{animation:fadeIn 200ms ease}
+.modal{animation:slideUp 260ms var(--out)}
+#toast{transform:translateY(12px);transition:opacity 220ms,transform 220ms var(--out)}
+#toast.show{transform:none}
+/* Motion off when asked; the loading bar keeps sweeping slowly so waiting is still visible */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .loading-bar.show{animation-duration:2.4s!important;animation-iteration-count:infinite!important}
+}
 </style>
 </head>
 <body>
  <div class="loading-bar" id="loading-bar"></div>
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <div id="splash">
   <div class="splash-logo">Shift<span>Log</span></div>
@@ -624,7 +677,7 @@ canvas{width:100%!important;display:block;}
 <div class="container" id="main-app" style="display:none">
   <header>
     <!-- Google account profile (left) -->
-    <div id="g-profile" onclick="handleGoogleProfileClick()" title="Google Drive">
+    <div id="g-profile" onclick="handleGoogleProfileClick()" title="Google Drive" role="button" tabindex="0" aria-label="Google Drive account">
       <div id="g-avatar-wrap">
         <div id="g-avatar" class="g-avatar-placeholder">G</div>
         <div id="g-signin-label">Sign in</div>
@@ -636,7 +689,7 @@ canvas{width:100%!important;display:block;}
         <span class="small" id="date-str"></span>
         <span class="big"   id="time-str"></span>
       </div>
-      <div class="icon-btn" onclick="openSettings()" title="Settings">⚙</div>
+      <button type="button" class="icon-btn" onclick="openSettings()" title="Settings" aria-label="Settings">⚙</button>
     </div>
   </header>
 
@@ -1183,7 +1236,7 @@ canvas{width:100%!important;display:block;}
 <!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal">
-    <button class="modal-close" onclick="closeSettings()">✕</button>
+    <button type="button" class="modal-close" onclick="closeSettings()" aria-label="Close">✕</button>
     <div class="modal-title" id="lbl-settings-title">Settings</div>
 
     <div class="setting-row">
@@ -1301,7 +1354,7 @@ canvas{width:100%!important;display:block;}
 <!-- Timesheet Print Modal -->
 <div class="modal-overlay" id="timesheet-modal">
   <div class="modal modal-wide">
-    <button class="modal-close" onclick="closeTimesheetModal()">✕</button>
+    <button type="button" class="modal-close" onclick="closeTimesheetModal()" aria-label="Close">✕</button>
     <div class="modal-title">🖨 Print Timesheet</div>
 
     <div style="display:flex;flex-direction:column;gap:16px">
@@ -1371,7 +1424,7 @@ canvas{width:100%!important;display:block;}
 <!-- Edit Work Modal -->
 <div class="modal-overlay" id="edit-modal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
     <div class="modal-title" id="lbl-edit-work-title">Edit Work</div>
     <input type="hidden" id="edit-id">
     <div class="modal-fields">
@@ -3332,6 +3385,22 @@ function generateTimesheet(){
     toast('PDF error: '+err.message,'err');
   }
 }
+</script>
+<script>
+/* Keyboard and dialog basics */
+(function(){
+  var gp=document.getElementById('g-profile');
+  if(gp)gp.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();gp.click();}});
+  document.querySelectorAll('.modal-overlay').forEach(function(o,i){
+    o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+    var t=o.querySelector('.modal-title');if(t){t.id=t.id||('modal-title-'+i);o.setAttribute('aria-labelledby',t.id);}
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape')return;
+    var o=document.querySelector('.modal-overlay.open'),c=o&&o.querySelector('.modal-close');
+    if(c)c.click();
+  });
+})();
 </script>
 </body>
 </html>
