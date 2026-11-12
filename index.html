@@ -936,6 +936,68 @@ canvas{width:100%!important;display:block;}
 }
 #g-profile:active #g-avatar-wrap{transform:scale(.93,.9);transition-duration:80ms}
 @media (prefers-reduced-motion:reduce){#g-avatar-wrap::after{display:none}}
+
+/* Collapsible settings sections */
+.setting-collapse{margin:8px 0}
+.setting-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-height:48px;cursor:pointer;color:var(--text);font-family:inherit;text-align:left;transition:border-color .2s,background .2s}
+.setting-toggle:hover,.setting-toggle[aria-expanded="true"]{border-color:var(--accent)}
+.setting-toggle .st-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.setting-toggle .setting-label,.setting-toggle .setting-sub{display:block}
+.setting-toggle .st-chev{font-size:20px;line-height:1;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.setting-toggle[aria-expanded="true"] .st-chev{transform:rotate(90deg);color:var(--accent)}
+.setting-detail{display:none;padding:14px 2px 4px}
+.setting-detail.open{display:flex;animation:rise 220ms var(--out)}
+#sd-bills.open{display:block}
+
+/* Dark-theme palettes: colors from "A Dictionary of Color Combinations" (Sanzo Wada); pale accents on deep backgrounds */
+html[data-palette="indigo"]{--bg:#04102a;--accent:#97acc8;--text:#d3d9da;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="mint"]{--bg:#0d1113;--accent:#b5decc;--text:#d3ebe0;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="olive"]{--bg:#0e120c;--accent:#eeb480;--text:#f9f4da;--green:#96d1aa;--red:#f48067;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="plum"]{--bg:#20081b;--accent:#c0a9b3;--text:#fed9a4;--green:#96d1aa;--red:#f37f94;--yellow:#fdbf68;--purple:#c0a9b3;}
+html[data-palette="wine"]{--bg:#250611;--accent:#f9c1ce;--text:#d3d9da;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="teal"]{--bg:#071312;--accent:#fbe6a0;--text:#fdf0c6;--green:#96d1aa;--red:#da525d;--yellow:#e2b540;--purple:#97acc8;}
+html[data-palette="poel"]{--bg:#01131a;--accent:#a7d4e4;--text:#dacebe;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="violet"]{--bg:#120e1d;--accent:#bce4e5;--text:#d7efef;--green:#62c6bf;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette]{--surface:color-mix(in srgb,var(--bg) 95%,var(--text));--surface2:color-mix(in srgb,var(--bg) 90%,var(--text));--surface3:color-mix(in srgb,var(--bg) 84%,var(--text));--border:color-mix(in srgb,var(--bg) 82%,var(--text));--muted:color-mix(in srgb,var(--text) 58%,var(--bg));}
+html[data-palette] body:not(.light-theme) .btn-primary,html[data-palette] body:not(.light-theme) .tab-badge{color:var(--bg);}
+.palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.palette-opt{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;text-align:left;transition:border-color .2s,transform .2s}
+.palette-opt:hover{border-color:var(--accent)}
+.palette-opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.palette-opt .pal-dots{display:flex;gap:0;border-radius:8px;overflow:hidden;width:100%;height:22px;border:1px solid rgba(128,128,128,.25)}
+.palette-opt .pal-dots i{flex:1;display:block}
+
+/* Summary period bar: nav-style segmented control (sliding bubble + pop on the selected one) */
+.mode-toggle.fit-x{overflow:hidden;margin-bottom:8px;width:100%}
+.mode-toggle.fit-x .mode-btn{flex:1 1 0;min-width:0;white-space:normal;line-height:1.15;padding:9px 4px;font-size:clamp(10px,2.9vw,13px);display:flex;align-items:center;justify-content:center}
+@media (min-width:641px){.mode-toggle.fit-x .mode-btn{padding:9px 14px;font-size:13px}}
+/* custom month row: smooth open/close so the page below doesn't jump */
+.sum-collapse{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;visibility:hidden}
+.sum-collapse.open{grid-template-rows:1fr;visibility:visible}
+.sum-collapse-in{min-height:0;overflow:hidden}
+@media (prefers-reduced-motion:reduce){.sum-collapse{transition:none}}
+
+/* ---- Bottom nav: one fluid layout from small phones to wide desktops (no breakpoint jumps) ---- */
+.bottom-nav{
+  --s:clamp(44px,11.5vw,56px);      /* size of the raised bubble; everything else scales from it */
+  --px:clamp(8px,4.4vw,28px);       /* side padding */
+  display:grid!important;
+  left:0;right:0;margin-inline:auto;transform:none;
+  width:min(640px,calc(100% - clamp(16px,4vw,32px)));
+  padding:6px var(--px);
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+.bn-pill{left:var(--px);width:calc((100% - 2*var(--px)) / 5)}
+.bn-pill::after{width:var(--s);height:var(--s);margin-left:calc(var(--s) / -2);top:calc(var(--s) * -.39);border-width:calc(var(--s) * .09)}
+.bn-bump{width:calc(var(--s) * 1.43);height:calc(var(--s) * .75);left:calc(50% - var(--s) * .715);top:calc(var(--s) * -.73)}
+.bn-icon{font-size:calc(var(--s) * .36)}
+.bn-item{min-width:0;padding:6px 2px;letter-spacing:.2px}
+.bn-item:not(.active){font-size:clamp(8px,2.3vw,9px)}
+.bn-item.active{font-size:clamp(9px,2.8vw,11px)}
+.bn-item>span:not(.bn-icon):not(.bn-badge){max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes iconBump{0%{transform:translateY(0) scale(.8)}60%{transform:translateY(calc(var(--s) * -.48)) scale(1.3)}100%{transform:translateY(calc(var(--s) * -.39)) scale(1.18)}}
+.bn-item.active:active .bn-icon{transform:translateY(calc(var(--s) * -.375)) scale(1)}
+@media (prefers-reduced-motion:reduce){.bn-item.active .bn-icon{transform:translateY(calc(var(--s) * -.39)) scale(1.18)}}
 </style>
 </head>
 <body>
@@ -1411,15 +1473,15 @@ canvas{width:100%!important;display:block;}
       <div class="panel-label" id="lbl-summary-title">Total Income Summary</div>
       <div style="margin-bottom:12px">
         <div style="font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px" id="lbl-summary-period">Period</div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
-          <button class="fw-btn sel" id="sump-month"        onclick="setSumPeriod('month')">This Month</button>
-          <button class="fw-btn"     id="sump-last-month"   onclick="setSumPeriod('last-month')">Last Month</button>
-          <button class="fw-btn"     id="sump-year"         onclick="setSumPeriod('year')">This Year</button>
-          <button class="fw-btn"     id="sump-all"          onclick="setSumPeriod('all')">All Time</button>
-          <button class="fw-btn"     id="sump-custom-month" onclick="setSumPeriod('custom-month')">Custom Month</button>
+        <div class="mode-toggle fit-x" id="sump-toggle" role="tablist" aria-label="Period">
+          <button type="button" class="mode-btn"        id="sump-last-month"   onclick="setSumPeriod('last-month')">Last Month</button>
+          <button type="button" class="mode-btn active" id="sump-month"        onclick="setSumPeriod('month')">This Month</button>
+          <button type="button" class="mode-btn"        id="sump-year"         onclick="setSumPeriod('year')">This Year</button>
+          <button type="button" class="mode-btn"        id="sump-all"          onclick="setSumPeriod('all')">All Time</button>
+          <button type="button" class="mode-btn"        id="sump-custom-month" onclick="setSumPeriod('custom-month')">Custom Month</button>
         </div>
         <!-- Custom month picker — shown only when Custom Month selected -->
-        <div id="sump-custom-month-row" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px">
+        <div class="sum-collapse" id="sump-cm-wrap"><div class="sum-collapse-in"><div id="sump-custom-month-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:6px">
           <div class="field" style="max-width:120px;margin-bottom:0">
             <label style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Month</label>
             <select id="sump-cm-month" onchange="recalcSummary()" style="font-family:'JetBrains Mono',monospace;font-size:14px">
@@ -1435,6 +1497,7 @@ canvas{width:100%!important;display:block;}
               style="font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center" oninput="recalcSummary()">
           </div>
         </div>
+        </div></div>
       </div>
       <!-- Work filter -->
       <div style="margin-bottom:12px">
@@ -1554,6 +1617,16 @@ canvas{width:100%!important;display:block;}
       </div>
     </div>
 
+    <div class="setting-collapse" id="sc-palette">
+      <button type="button" class="setting-toggle" id="st-palette" aria-expanded="false" aria-controls="sd-palette" onclick="toggleSettingSection('palette')">
+        <span class="st-text"><span class="setting-label" id="lbl-palette-title">Color Palette</span><span class="setting-sub" id="lbl-palette-sub">Pale color schemes for dark mode</span></span>
+        <span class="st-chev" aria-hidden="true">›</span>
+      </button>
+      <div class="setting-detail" id="sd-palette" style="flex-direction:column;gap:10px">
+        <div class="palette-grid" id="palette-grid"></div>
+      </div>
+    </div>
+
     <div class="setting-row">
       <div>
         <div class="setting-label" id="lbl-currency-title">Currency Symbol</div>
@@ -1564,11 +1637,12 @@ canvas{width:100%!important;display:block;}
         oninput="saveSettings();updateStats();renderShifts();renderMonthly()">
     </div>
 
-    <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px">
-      <div>
-        <div class="setting-label" id="lbl-night-title">Night Bonus</div>
-        <div class="setting-sub" id="lbl-night-sub">Set the time range and bonus % for night hours</div>
-      </div>
+    <div class="setting-collapse" id="sc-night">
+      <button type="button" class="setting-toggle" id="st-night" aria-expanded="false" aria-controls="sd-night" onclick="toggleSettingSection('night')">
+        <span class="st-text"><span class="setting-label" id="lbl-night-title">Night Bonus</span><span class="setting-sub" id="lbl-night-sub">Set the time range and bonus % for night hours</span></span>
+        <span class="st-chev" aria-hidden="true">›</span>
+      </button>
+      <div class="setting-detail" id="sd-night" style="flex-direction:column;gap:10px">
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:90px">
           <label style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)" id="lbl-night-from">From</label>
@@ -1587,6 +1661,8 @@ canvas{width:100%!important;display:block;}
         </div>
       </div>
       <div style="font-size:11px;color:var(--purple);font-family:'JetBrains Mono',monospace;padding:6px 10px;background:color-mix(in srgb,var(--purple) 7%,transparent);border-radius:7px;border:1px solid color-mix(in srgb,var(--purple) 20%,transparent)" id="night-preview-text">★ Night bonus: +25% from 22:00 to 06:00</div>
+    
+      </div>
     </div>
 
     <div class="setting-row">
@@ -1602,9 +1678,13 @@ canvas{width:100%!important;display:block;}
       </div>
     </div>
 
-    <!-- Monthly bills (moved here from its own tab) -->
-    <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
-      <div class="panel-label" id="lbl-bills-title" style="margin-bottom:12px">Monthly Bills</div>
+    <!-- Monthly bills (collapsed; click to show) -->
+    <div class="setting-collapse" id="sc-bills">
+      <button type="button" class="setting-toggle" id="st-bills" aria-expanded="false" aria-controls="sd-bills" onclick="toggleSettingSection('bills')">
+        <span class="st-text"><span class="setting-label" id="lbl-bills-title">Monthly Bills</span></span>
+        <span class="st-chev" aria-hidden="true">›</span>
+      </button>
+      <div class="setting-detail" id="sd-bills">
       <div class="bills-form">
         <div class="field" style="grid-column:1/-1">
           <label id="lbl-bill-name-lbl">Bill Name</label>
@@ -1640,6 +1720,7 @@ canvas{width:100%!important;display:block;}
         </div>
       </div>
       <div id="bills-list"></div>
+      </div>
     </div>
 
     <!-- Data & Backup section inside settings -->
@@ -1786,6 +1867,14 @@ function dbGetAll(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'r
 function dbPut(s,o){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).put(o);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
 function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
 function dbClear(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).clear();r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+function toggleSettingSection(k){
+  const btn=document.getElementById('st-'+k),box=document.getElementById('sd-'+k);
+  if(!btn||!box)return;
+  const open=btn.getAttribute('aria-expanded')!=='true';
+  btn.setAttribute('aria-expanded',open?'true':'false');
+  box.classList.toggle('open',open);
+}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
 // ════════════════════════════════════════════════
@@ -1820,7 +1909,7 @@ const T={
     'lbl-delete-all':'Delete All Data','lbl-delete-all-sub':'Permanently delete everything. Cannot be undone.',
     'btn-export-bk':'⬇ Export Backup','btn-import-bk':'⬆ Import Backup','btn-export-csv2':'⬇ Export CSV','btn-nuke':'Delete Everything',
     'lbl-settings-title':'Settings','lbl-lang-title':'Language','lbl-lang-sub':'Display language / 表示言語',
-    'lbl-theme-title':'Theme','lbl-theme-sub':'Dark or light mode',
+    'lbl-theme-title':'Theme','lbl-theme-sub':'Dark or light mode','lbl-palette-title':'Color Palette','lbl-palette-sub':'Pale color schemes for dark mode',
     'lbl-currency-title':'Currency Symbol','lbl-currency-sub':'Used in all earnings displays',
     'lbl-night-title':'Night Bonus','lbl-night-sub':'Set the time range and bonus % for night hours',
     'lbl-night-from':'From','lbl-night-to':'To','lbl-night-pct':'Bonus %',
@@ -1843,7 +1932,7 @@ const T={
     'alert-no-name':'Please enter a work name.','alert-fill-date':'Please fill in date, start and end time.',
     'alert-select-work':'Please select a work.','alert-no-dates':'Please add at least one date.',
     'alert-no-shifts':'No shifts to export.',
-    'lbl-m-night-note':'★ night min (10PM–6AM) × +25% bonus included',
+    'lbl-m-night-note':'★ night min × night bonus included',
     'lbl-break-display':'Break:',
   },
   ja:{
@@ -1874,7 +1963,7 @@ const T={
     'lbl-delete-all':'全データ削除','lbl-delete-all-sub':'すべてのデータを完全に削除します。元に戻せません。',
     'btn-export-bk':'⬇ バックアップ出力','btn-import-bk':'⬆ バックアップ読込','btn-export-csv2':'⬇ CSV 出力','btn-nuke':'全て削除する',
     'lbl-settings-title':'設定','lbl-lang-title':'言語','lbl-lang-sub':'Display language / 表示言語',
-    'lbl-theme-title':'テーマ','lbl-theme-sub':'ダークまたはライトモード',
+    'lbl-theme-title':'テーマ','lbl-theme-sub':'ダークまたはライトモード','lbl-palette-title':'カラーパレット','lbl-palette-sub':'ダークモード用の淡いカラー',
     'lbl-currency-title':'通貨記号','lbl-currency-sub':'収入表示に使用されます',
     'lbl-night-title':'深夜割増','lbl-night-sub':'深夜割増の時間帯と割増率を設定',
     'lbl-night-from':'開始','lbl-night-to':'終了','lbl-night-pct':'割増率 %',
@@ -1897,7 +1986,7 @@ const T={
     'alert-no-name':'仕事名を入力してください。','alert-fill-date':'日付・開始時刻・終了時刻を入力してください。',
     'alert-select-work':'仕事を選択してください。','alert-no-dates':'日付を1つ以上追加してください。',
     'alert-no-shifts':'出力するシフトがありません。',
-    'lbl-m-night-note':'★ 深夜分（午後10時〜午前6時）×+25%ボーナス適用',
+    'lbl-m-night-note':'★ 深夜分 × 深夜割増適用',
     'lbl-break-display':'休憩：',
   }
 };
@@ -1945,11 +2034,36 @@ function setLang(l){
   applyLang(true);
 }
 
+const PALETTES=[{"id": "default", "label": "Default", "colors": ["#121016", "#ffc233", "#f6efe2", "#7fd1ae"]}, {"id": "indigo", "label": "Deep Indigo", "colors": ["#04102a", "#97acc8", "#d3d9da", "#96d1aa"]}, {"id": "mint", "label": "Slate Mint", "colors": ["#0d1113", "#b5decc", "#d3ebe0", "#96d1aa"]}, {"id": "olive", "label": "Olive Cream", "colors": ["#0e120c", "#eeb480", "#f9f4da", "#96d1aa"]}, {"id": "plum", "label": "Plum Lavender", "colors": ["#20081b", "#c0a9b3", "#fed9a4", "#96d1aa"]}, {"id": "wine", "label": "Wine Pink", "colors": ["#250611", "#f9c1ce", "#d3d9da", "#96d1aa"]}, {"id": "teal", "label": "Teal Naples", "colors": ["#071312", "#fbe6a0", "#fdf0c6", "#96d1aa"]}, {"id": "poel", "label": "Poel's Blue", "colors": ["#01131a", "#a7d4e4", "#dacebe", "#96d1aa"]}, {"id": "violet", "label": "Violet Nile", "colors": ["#120e1d", "#bce4e5", "#d7efef", "#62c6bf"]}];
+function syncThemeColor(){
+  const m=document.querySelector('meta[name="theme-color"]');if(!m)return;
+  const light=document.body.classList.contains('light-theme');
+  const pl=PALETTES.find(x=>x.id===settings.palette);
+  m.setAttribute('content',light?'#f5efe3':(pl?pl.colors[0]:'#121016'));
+}
+function applyPalette(){
+  const id=settings.palette||'default';
+  if(id==='default'||!PALETTES.some(x=>x.id===id))document.documentElement.removeAttribute('data-palette');
+  else document.documentElement.setAttribute('data-palette',id);
+  syncThemeColor();
+}
+function renderPalettePicker(){
+  const g=document.getElementById('palette-grid');if(!g)return;
+  const cur=settings.palette||'default';
+  g.innerHTML=PALETTES.map(x=>`<button type="button" class="palette-opt" aria-pressed="${cur===x.id}" onclick="setPalette('${x.id}')"><span class="pal-dots">${x.colors.map(c=>`<i style="background:${c}"></i>`).join('')}</span>${esc(x.label)}</button>`).join('');
+}
+function setPalette(id){
+  settings.palette=id;
+  if(document.body.classList.contains('light-theme'))setTheme('dark');
+  applyPalette();renderPalettePicker();saveSettings();
+  if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
+}
 function setTheme(th){
   settings.theme=th;
   document.body.classList.toggle('light-theme', th==='light');
   document.getElementById('theme-dark').classList.toggle('active', th==='dark');
   document.getElementById('theme-light').classList.toggle('active', th==='light');
+  syncThemeColor();
   saveSettings();
   // Redraw chart with correct colors
   if(document.getElementById('page-monthly').classList.contains('active')) renderMonthly();
@@ -1964,7 +2078,7 @@ let graphMode='earnings', currentMonth=new Date().getMonth(), currentYear=new Da
 let shiftMode='single', multiDates=[], calSelectedDay=null;
 
 const sym=()=>settings.currency||'$';
-const today=()=>new Date().toISOString().split('T')[0];
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const fmtMoney=n=>sym()+(n||0).toFixed(2);
 const fmtDur=ms=>{const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}h ${m}m`:`${m}m`;};
 const fmtTime=ts=>new Date(ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
@@ -2000,6 +2114,7 @@ async function loadSettings(){
   const btnLight=document.getElementById('theme-light');
   if(btnDark) btnDark.classList.toggle('active', th==='dark');
   if(btnLight) btnLight.classList.toggle('active', th==='light');
+  applyPalette();
   updateNightPreview();
 }
 function openSettings(){
@@ -2012,6 +2127,7 @@ function openSettings(){
   const th=settings.theme||'dark';
   document.getElementById('theme-dark').classList.toggle('active', th==='dark');
   document.getElementById('theme-light').classList.toggle('active', th==='light');
+  renderPalettePicker();
   updateNightPreview();
   renderBills();
   // Refresh data stats in settings panel
@@ -2063,7 +2179,7 @@ function renderWorks(){
   if(!works.length){g.innerHTML=`<div class="empty-card"><div class="empty-icon">💼</div>${t('lbl-your-works')}<br>—</div>`;return;}
   g.innerHTML=works.map(w=>`
     <div class="work-card">
-      <div class="wc-header"><div class="wc-dot" style="background:${w.color}"></div><div class="wc-name">${w.name}</div></div>
+      <div class="wc-header"><div class="wc-dot" style="background:${w.color}"></div><div class="wc-name">${esc(w.name)}</div></div>
       <div class="wc-divider"></div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <div class="wc-row"><span class="wc-label">${t('lbl-hourly-rate')}</span><span class="wc-val" style="color:var(--green)">${sym()}${w.rate.toFixed(2)}/h</span></div>
@@ -2198,7 +2314,7 @@ function recalcMultiPreview(){
     document.getElementById('ep-total').textContent=multiDates.length>1?`${s}${(wages+w.transport).toFixed(2)} × ${multiDates.length}`:s+(wages+w.transport).toFixed(2);
     const nn=document.getElementById('night-note');
     nn.style.display=nm>0?'block':'none';
-    if(nm>0)nn.textContent=`★ ${nm} ${t('lbl-night-min')} (10PM–6AM) × +25%`;
+    if(nm>0)nn.textContent=`★ ${nm} ${t('lbl-night-min')} (${settings.nightStart||'22:00'}–${settings.nightEnd||'06:00'}) × +${settings.nightPct??25}%`;
   } else document.getElementById('earn-preview').style.display='none';
 }
 
@@ -2213,7 +2329,7 @@ function renderWorkPicker(){
   if(!selectedWorkId||!works.find(w=>w.id===selectedWorkId))selectedWorkId=works[0].id;
   picker.innerHTML=works.map(w=>`
     <div class="wp-btn ${selectedWorkId===w.id?'sel':''}" onclick="selectWork('${w.id}')">
-      <span class="wp-name"><span class="wp-dot" style="background:${w.color}"></span>${w.name}</span>
+      <span class="wp-name"><span class="wp-dot" style="background:${w.color}"></span>${esc(w.name)}</span>
     </div>`).join('');
   if(shiftMode==='single')recalcPreview();else recalcMultiPreview();
 }
@@ -2245,7 +2361,7 @@ function nightMinutes(s,e){let n=0,c=s;while(c<e){if(isNightMinute(c))n++;c+=600
 function saveNightSettings(){
   settings.nightStart=document.getElementById('night-start').value||'22:00';
   settings.nightEnd=document.getElementById('night-end').value||'06:00';
-  settings.nightPct=parseFloat(document.getElementById('night-pct').value)||25;
+  {const _np=parseFloat(document.getElementById('night-pct').value);settings.nightPct=Number.isFinite(_np)?Math.max(0,_np):25;}
   updateNightPreview();
   saveSettings();
   // Refresh previews
@@ -2287,7 +2403,7 @@ function recalcPreview(){
     document.getElementById('ep-total').textContent=s+total.toFixed(2);
     const nn=document.getElementById('night-note');
     nn.style.display=nm>0?'block':'none';
-    if(nm>0)nn.textContent=`★ ${nm} ${t('lbl-night-min')} (10PM–6AM) × +25%`;
+    if(nm>0)nn.textContent=`★ ${nm} ${t('lbl-night-min')} (${settings.nightStart||'22:00'}–${settings.nightEnd||'06:00'}) × +${settings.nightPct??25}%`;
   } else document.getElementById('earn-preview').style.display='none';
 }
 
@@ -2366,7 +2482,7 @@ async function clearAllShifts(){
 function renderFilterRow(){
   const row=document.getElementById('filter-work-row');
   row.innerHTML=`<div class="fw-btn ${filterWorkId===null?'sel':''}" onclick="setFilter(null)">${lang==='ja'?'全て':'All'}</div>`
-    +works.map(w=>`<div class="fw-btn ${filterWorkId===w.id?'sel':''}" onclick="setFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${w.name}</div>`).join('');
+    +works.map(w=>`<div class="fw-btn ${filterWorkId===w.id?'sel':''}" onclick="setFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${esc(w.name)}</div>`).join('');
 }
 function setFilter(id){filterWorkId=id;renderFilterRow();renderShifts();}
 
@@ -2471,7 +2587,7 @@ function renderShifts(){
         cursor:pointer;user-select:none;transition:border-color .2s;
       " onmouseenter="this.style.borderColor='${g.workColor}'" onmouseleave="this.style.borderColor='var(--border)'">
         <span style="width:11px;height:11px;border-radius:50%;background:${g.workColor};display:inline-block;flex-shrink:0"></span>
-        <span style="font-size:14px;font-weight:800;flex:1">${g.workName}</span>
+        <span style="font-size:14px;font-weight:800;flex:1">${esc(g.workName)}</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${count} ${lang==='ja'?'件':'shift'+(count>1?'s':'')}</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent)">${fmtDur(totalHours)}</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--green);font-weight:700">${fmtMoney(totalWages+totalTransport)}</span>
@@ -2573,7 +2689,7 @@ function renderMonthly(){
   // Work filter
   const mwf=document.getElementById('monthly-work-filter');
   mwf.innerHTML=`<div class="fw-btn ${monthlyFilterId===null?'sel':''}" onclick="setMonthlyFilter(null)">${lang==='ja'?'全て':'All'}</div>`
-    +works.map(w=>`<div class="fw-btn ${monthlyFilterId===w.id?'sel':''}" onclick="setMonthlyFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${w.name}</div>`).join('');
+    +works.map(w=>`<div class="fw-btn ${monthlyFilterId===w.id?'sel':''}" onclick="setMonthlyFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${esc(w.name)}</div>`).join('');
 
   // Stats
   let td=0,tw=0,tt=0;for(const s of ms){td+=s.duration;tw+=(s.wages||0);tt+=(s.transport||0);}
@@ -2595,7 +2711,7 @@ function renderMonthly(){
   if(!rows.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:22px">${lang==='ja'?'今月のシフトはありません':'No shifts this month.'}</td></tr>`;}
   else{
     let ts=0,tD=0,tW=0,tT=0;
-    tbody.innerHTML=rows.map(r=>{ts+=r.shifts;tD+=r.dur;tW+=r.wages;tT+=r.transport;return`<tr><td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${r.name}</div></td><td>${r.shifts}</td><td class="r">${fmtDur(r.dur)}</td><td class="r">${fmtMoney(r.wages)}</td><td class="r">${fmtMoney(r.transport)}</td><td class="r" style="color:var(--green);font-weight:600">${fmtMoney(r.wages+r.transport)}</td></tr>`;}).join('')
+    tbody.innerHTML=rows.map(r=>{ts+=r.shifts;tD+=r.dur;tW+=r.wages;tT+=r.transport;return`<tr><td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${esc(r.name)}</div></td><td>${r.shifts}</td><td class="r">${fmtDur(r.dur)}</td><td class="r">${fmtMoney(r.wages)}</td><td class="r">${fmtMoney(r.transport)}</td><td class="r" style="color:var(--green);font-weight:600">${fmtMoney(r.wages+r.transport)}</td></tr>`;}).join('')
     +`<tr class="td-total-row"><td style="font-weight:700">${lang==='ja'?'合計':'Total'}</td><td>${ts}</td><td class="r">${fmtDur(tD)}</td><td class="r">${fmtMoney(tW)}</td><td class="r">${fmtMoney(tT)}</td><td class="r">${fmtMoney(tW+tT)}</td></tr>`;
   }
 
@@ -2656,7 +2772,7 @@ function renderCalendar(monthShifts){
       <div class="day-shift-row">
         <div class="day-shift-work">
           <span style="width:8px;height:8px;border-radius:50%;background:${s.workColor||'#888'};display:inline-block"></span>
-          ${s.workName}
+          ${esc(s.workName)}
           <span style="color:var(--muted);font-weight:400">${fmtTime(s.clockIn)}–${fmtTime(s.clockOut)}</span>
         </div>
         <div class="day-shift-earn">${fmtMoney((s.wages||0)+(s.transport||0))}</div>
@@ -2683,7 +2799,7 @@ function drawChart(days,earnings,hours){
   const P={top:18,right:18,bottom:32,left:58},cW=W-P.left-P.right,cH=H-P.top-P.bottom;
   ctx.clearRect(0,0,W,H);
   // Read live CSS variables so chart respects dark/light theme
-  const cs=getComputedStyle(document.documentElement);
+  const cs=getComputedStyle(document.body);
   const clrGrid=cs.getPropertyValue('--border').trim()||'#2e2e42';
   const clrMuted=cs.getPropertyValue('--muted').trim()||'#8888aa';
   const clrGreen=cs.getPropertyValue('--green').trim()||'#7fd1ae';
@@ -2804,7 +2920,7 @@ function recalcTax(){
         const tax=tGross*(taxRate+socialRate);
         const net2=r.gross-tax;
         return `<tr>
-          <td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${r.name}</div></td>
+          <td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${esc(r.name)}</div></td>
           <td class="r">${fmtMoney(r.gross)}</td>
           <td class="r" style="color:var(--red)">${fmtMoney(tax)}</td>
           <td class="r" style="color:var(--green)">${fmtMoney(net2)}</td>
@@ -2884,7 +3000,7 @@ function renderBills(){
       </div>
       ${items.map(b=>`
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px">
-          <div style="flex:1;font-size:14px;font-weight:600">${b.name}</div>
+          <div style="flex:1;font-size:14px;font-weight:600">${esc(b.name)}</div>
           <div style="display:flex;align-items:center;gap:4px">
             <span style="color:var(--muted);font-size:13px">${sym()}</span>
             <input type="number" value="${b.amount.toFixed(2)}" min="0" step="0.01"
@@ -3049,12 +3165,13 @@ function setSumPeriod(p){
   sumPeriod=p;
   ['month','last-month','year','all','custom-month'].forEach(x=>{
     const btn=document.getElementById('sump-'+x);
-    if(btn)btn.classList.toggle('sel',x===p);
+    if(btn){btn.classList.toggle('active',x===p);btn.setAttribute('aria-selected',x===p?'true':'false');}
   });
   // Show/hide custom month picker
   const row=document.getElementById('sump-custom-month-row');
+  const wrap=document.getElementById('sump-cm-wrap');
+  if(wrap)wrap.classList.toggle('open',p==='custom-month');
   if(row){
-    row.style.display=p==='custom-month'?'flex':'none';
     // Pre-fill with current month/year if first time
     if(p==='custom-month'){
       const now=new Date();
@@ -3075,8 +3192,11 @@ function setSumFilter(id){
 function renderSumWorkFilter(){
   const el=document.getElementById('summary-work-filter');
   if(!el)return;
+  const _sig=JSON.stringify([sumFilterId,lang,works.map(w=>[w.id,w.name,w.color])]);
+  if(el._sig===_sig)return;
+  el._sig=_sig;
   el.innerHTML=`<div class="fw-btn ${sumFilterId===null?'sel':''}" onclick="setSumFilter(null)">${lang==='ja'?'全て':'All'}</div>`
-    +works.map(w=>`<div class="fw-btn ${sumFilterId===w.id?'sel':''}" onclick="setSumFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block;margin-right:4px"></span>${w.name}</div>`).join('');
+    +works.map(w=>`<div class="fw-btn ${sumFilterId===w.id?'sel':''}" onclick="setSumFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block;margin-right:4px"></span>${esc(w.name)}</div>`).join('');
 }
 
 function getSumShifts(){
@@ -3191,7 +3311,7 @@ function recalcSummary(){
         ${taxedGroups.map(g=>`
           <div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(42,42,58,.3)">
             <span style="width:8px;height:8px;border-radius:50%;background:${g.workColor};display:inline-block;flex-shrink:0"></span>
-            <span style="flex:1;font-weight:600">${g.workName}</span>
+            <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
             <span style="color:var(--muted);font-size:11px">${g.monthKey}</span>
             <span style="font-family:'JetBrains Mono',monospace;color:var(--text)">${fmtMoney(g.wages)}</span>
             <span style="color:var(--red);font-family:'JetBrains Mono',monospace">−${fmtMoney(g.tax)}</span>
@@ -3210,7 +3330,7 @@ function recalcSummary(){
       bd.innerHTML=bills.map(b=>`
         <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:16px">${CAT_ICONS[b.cat]||'📦'}</span>
-          <div style="flex:1;font-size:13px;font-weight:600">${b.name}</div>
+          <div style="flex:1;font-size:13px;font-weight:600">${esc(b.name)}</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
         </div>`).join('')+
         `<div style="display:flex;justify-content:flex-end;padding-top:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--yellow)">${lang==='ja'?'合計：':'Total: '}${fmtMoney(billsAmt)}</div>`;
@@ -3609,7 +3729,7 @@ function openTimesheetModal(){
   // Populate work selector
   const sel=document.getElementById('ts-work-select');
   sel.innerHTML='<option value="">— Select Work —</option>'+
-    works.map(w=>`<option value="${w.id}">${w.name}</option>`).join('');
+    works.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
   // Default to current monthly view
   document.getElementById('ts-year').value=currentYear;
   document.getElementById('ts-month').value=currentMonth+1;
@@ -3642,7 +3762,7 @@ function updateTsPreview(){
   });
   const totalH=sl.reduce((a,s)=>a+s.duration,0);
   const totalW=sl.reduce((a,s)=>a+(s.wages||0),0);
-  info.innerHTML=`<strong style="color:var(--text)">${work?.name||''}</strong> — ${yr}年${mo}月<br>
+  info.innerHTML=`<strong style="color:var(--text)">${esc(work?.name)}</strong> — ${yr}年${mo}月<br>
     ${sl.length} shifts &nbsp;·&nbsp; ${fmtDur(totalH)} &nbsp;·&nbsp; ${fmtMoney(totalW)}`;
 }
 
@@ -4016,17 +4136,13 @@ function syncBreakChips(){
   var base=window.switchTab;
   window.switchTab=function(tab){
     var prev=order.indexOf(currentTab()),next=order.indexOf(tab);
+    // Clear old slide classes first (removing them on animationend made the page's
+    // default 'rise' animation restart, which caused a visible flash after the slide).
+    document.querySelectorAll('.page.sw-l,.page.sw-r').forEach(function(p){p.classList.remove('sw-l','sw-r');});
     var r=base.apply(this,arguments);
     if(prev>-1&&next>-1&&prev!==next){
       var pg=document.getElementById('page-'+tab);
-      if(pg){
-        pg.classList.remove('sw-l','sw-r');
-        pg.classList.add(next>prev?'sw-r':'sw-l');
-        pg.addEventListener('animationend',function h(ev){
-          if(ev.target!==pg)return;
-          pg.classList.remove('sw-l','sw-r');pg.removeEventListener('animationend',h);
-        });
-      }
+      if(pg){void pg.offsetWidth;pg.classList.add(next>prev?'sw-r':'sw-l');}
     }
     return r;
   };
