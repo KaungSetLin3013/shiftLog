@@ -100,7 +100,7 @@ body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;heig
   /* Tax/summary top cards */
   #tax-stats-grid,#sum-top-cards{grid-template-columns:repeat(3,1fr)!important;}
   /* Bills summary bar */
-  #page-bills > div[style*="display:flex"]{flex-wrap:nowrap;}
+  
 }
 @media(min-width:1200px){
   .container{padding:28px 56px;}
@@ -663,6 +663,124 @@ canvas{width:100%!important;display:block;}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .loading-bar.show{animation-duration:2.4s!important;animation-iteration-count:infinite!important}
 }
+
+/* ---- Nav redesign: floating glass bar, sliding highlight, tap ripple ---- */
+:root{--nav-tint:color-mix(in srgb,var(--accent) 16%,transparent);--nav-edge:color-mix(in srgb,var(--accent) 35%,transparent)}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;background:var(--accent);opacity:.32;transform:translate(-50%,-50%) scale(0);animation:rippleOut 550ms var(--out) forwards}
+@keyframes rippleOut{to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+
+/* Mobile bottom nav: floating bar with a raised bump under the selected tab */
+.bottom-nav{
+  left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  padding:6px;border:1px solid var(--border);border-radius:28px;
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:0 12px 32px var(--shadow),inset 0 1px 0 rgba(255,255,255,.06);
+  --i:0;
+}
+.bn-clip{position:absolute;inset:0;border-radius:28px;overflow:hidden;pointer-events:none;z-index:0}
+.bn-pill{position:absolute;top:0;bottom:0;left:6px;width:calc((100% - 12px) / 5);
+  transform:translateX(calc(var(--i) * 100%));transition:transform 460ms var(--spring);pointer-events:none;z-index:1}
+.bn-pill::after{content:'';box-sizing:border-box;position:absolute;left:50%;top:-22px;width:56px;height:56px;margin-left:-28px;border-radius:50%;
+  background:var(--accent);border:5px solid var(--bg);
+  box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 45%,transparent)}
+.bn-item{position:relative;z-index:2;border-radius:22px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:color .2s,opacity .2s}
+.bn-item.active::before{display:none}
+.bn-item:not(.active){opacity:.78;font-size:9px}
+.bn-item:not(.active) .bn-icon{transform:scale(.82)}
+.bn-item.active{font-size:11px;font-weight:800;padding-top:12px}
+.bn-item.active .bn-icon{animation:iconBump 480ms var(--spring) forwards}
+.bn-item:not(.active):active .bn-icon{transform:scale(.7);transition-duration:80ms}
+.bn-item.active:active .bn-icon{animation:none;transform:translateY(-21px) scale(1)}
+@keyframes iconBump{0%{transform:translateY(0) scale(.8)}60%{transform:translateY(-27px) scale(1.3)}100%{transform:translateY(-22px) scale(1.18)}}
+@media(max-width:640px){
+  .container{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+  #toast{bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+}
+
+/* Desktop top tabs: soft pill container, tinted active tab */
+.tab-nav{border-radius:16px;padding:5px;gap:4px;background:color-mix(in srgb,var(--surface) 80%,transparent);box-shadow:0 6px 20px var(--shadow)}
+.tab-btn{position:relative;overflow:hidden;border-radius:12px;border:1px solid transparent;-webkit-tap-highlight-color:transparent}
+.tab-btn.active{background:var(--nav-tint);border-color:var(--nav-edge);color:var(--accent)}
+.tab-btn:hover:not(.active){background:color-mix(in srgb,var(--text) 6%,transparent)}
+
+@media (prefers-reduced-motion:reduce){
+  .ripple{display:none}
+  .bn-pill{transition:none}
+  .bn-item.active .bn-icon{animation:none;transform:translateY(-22px) scale(1.18)}
+}
+
+/* ---- Shift form: start | break | end on one line ---- */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.time-line{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:end;margin-bottom:12px;max-width:520px}
+.time-line .field{min-width:0}
+.time-line input[type="time"]{padding-left:8px;padding-right:8px;min-width:0}
+.tl-break{align-items:center;gap:6px;flex:none}
+.brk-ico{font-size:15px;line-height:14px;height:14px}
+.brk-chips{display:flex;gap:4px}
+.brk-chip{width:38px;min-height:48px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
+  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;cursor:pointer;padding:0;position:relative;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+.brk-chip:active{transform:scale(.93);transition-duration:80ms}
+.brk-chip.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent);font-weight:700;animation:pop 320ms var(--spring)}
+
+.time-line input[type="time"]::-webkit-calendar-picker-indicator{display:none}
+.time-line input[type="time"]{text-align:center;font-variant-numeric:tabular-nums}
+#single-date-row,#multi-date-section>.row{flex-direction:row!important;flex-wrap:nowrap!important;align-items:flex-end}
+#single-date-row .field:first-child{flex:1;min-width:0!important;max-width:none!important}
+#single-date-row .field:last-child,#multi-date-section>.row .field{flex:none;width:110px;min-width:110px!important;max-width:none!important}
+@media(min-width:641px){#single-date-row .field:first-child{flex:none;width:200px}#single-date-row{justify-content:flex-start}}
+@media(max-width:380px){.time-line{gap:6px}.brk-chip{width:34px}.brk-chips{gap:3px}}
+
+/* ---- Expenses + bills-in-settings ---- */
+.bills-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bills-form .field{min-width:0}
+.exp-cats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.exp-cat{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+.exp-cat:active{transform:scale(.95);transition-duration:80ms}
+.exp-cat.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent);animation:pop 320ms var(--spring)}
+.exp-line{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.exp-line .field{min-width:0!important;max-width:none!important}
+.exp-monthbar{display:flex;justify-content:center;margin:4px 0 14px}
+.exp-month-label{font-weight:700;font-size:14px;min-width:150px;text-align:center}
+.exp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.exp-stats .stat-card{min-width:0}
+.exp-stats .stat-val{font-size:clamp(14px,4.2vw,20px);overflow-wrap:anywhere}
+.exp-break{padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.exp-bar-row{display:grid;grid-template-columns:104px 1fr 84px;align-items:center;gap:10px;font-size:12px}
+.exp-bar-name{font-weight:600;white-space:nowrap}
+.exp-bar-track{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;display:block}
+.exp-bar-fill{display:block;height:100%;border-radius:4px;background:var(--accent);opacity:.8}
+.exp-bar-amt{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right}
+.exp-day{margin-bottom:14px}
+.exp-day-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding:0 4px}
+.exp-day-total{font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:0;font-size:12px}
+.exp-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:6px;min-height:56px;animation:rise 260ms var(--out) backwards}
+.exp-item-ico{font-size:20px;width:28px;text-align:center}
+.exp-item-main{flex:1;min-width:0}
+.exp-item-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp-item-amt{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--red)}
+.exp-item .del-btn{width:36px;height:36px}
+@media(max-width:380px){.exp-bar-row{grid-template-columns:90px 1fr 76px}}
+
+/* Icon-only buttons in Settings */
+.btn-icon{width:48px;min-width:48px;height:48px;padding:0!important;font-size:18px;line-height:1;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.lang-btn.icon-only{width:44px;min-width:44px;padding:0;font-size:17px;line-height:1;display:inline-flex;align-items:center;justify-content:center}
+
+.ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.icon-row{display:flex;gap:8px}
+.btn-icon.icon-wide{flex:1;width:auto}
+
+/* Work picker: compact, name only */
+.wp-btn{flex-direction:row;align-items:center;min-width:0!important;padding:0 12px;min-height:40px}
+.wp-name{white-space:nowrap;gap:6px}
+.wp-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex:none}
+@media (pointer:coarse){.wp-btn{min-height:44px}}
 </style>
 </head>
 <body>
@@ -697,12 +815,14 @@ canvas{width:100%!important;display:block;}
     <button class="tab-btn active"  onclick="switchTab('works')"  id="tab-works">Works <span class="tab-badge" id="badge-w">0</span></button>
     <button class="tab-btn"         onclick="switchTab('shifts')" id="tab-shifts">Shifts <span class="tab-badge" id="badge-s">0</span></button>
     <button class="tab-btn"         onclick="switchTab('monthly')"id="tab-monthly">Monthly</button>
-    <button class="tab-btn"         onclick="switchTab('bills')"  id="tab-bills">Bills</button>
+    <button class="tab-btn"         onclick="switchTab('expenses')" id="tab-expenses">Expenses</button>
     <button class="tab-btn"         onclick="switchTab('summary')"id="tab-summary">Summary</button>
   </div>
 
   <!-- Mobile bottom nav -->
   <nav class="bottom-nav" id="bottom-nav">
+    <span class="bn-clip" id="bn-clip" aria-hidden="true"></span>
+    <span class="bn-pill" aria-hidden="true"></span>
     <button class="bn-item active" id="bn-works" onclick="switchTab('works')">
       <span class="bn-icon">💼</span>
       <span id="bn-lbl-works">Works</span>
@@ -717,9 +837,9 @@ canvas{width:100%!important;display:block;}
       <span class="bn-icon">📊</span>
       <span id="bn-lbl-monthly">Monthly</span>
     </button>
-    <button class="bn-item" id="bn-bills" onclick="switchTab('bills')">
-      <span class="bn-icon">🏠</span>
-      <span id="bn-lbl-bills">Bills</span>
+    <button class="bn-item" id="bn-expenses" onclick="switchTab('expenses')">
+      <span class="bn-icon">💸</span>
+      <span id="bn-lbl-expenses">Expenses</span>
     </button>
     <button class="bn-item" id="bn-summary" onclick="switchTab('summary')">
       <span class="bn-icon">💰</span>
@@ -784,47 +904,27 @@ canvas{width:100%!important;display:block;}
           <label id="lbl-date">Date</label>
           <input type="date" id="shift-date">
         </div>
-        <div class="field" style="max-width:135px">
-          <label id="lbl-start">Start Time</label>
-          <input type="time" id="shift-start" oninput="recalcPreview()">
-        </div>
-        <div class="field" style="max-width:135px">
-          <label id="lbl-end">End Time</label>
-          <input type="time" id="shift-end" oninput="recalcPreview()">
-        </div>
-        <div class="field" style="max-width:155px">
-          <label id="lbl-break">Break</label>
-          <select id="shift-break" onchange="recalcPreview()">
-            <option value="0" data-i18n="break-no">No break</option>
-            <option value="15">15 min</option>
-            <option value="30">30 min</option>
-            <option value="45">45 min</option>
-            <option value="60">1 hour</option>
-            <option value="90">1.5 hours</option>
-            <option value="120">2 hours</option>
-          </select>
-        </div>
         <div class="field" style="max-width:94px">
           <label id="lbl-work-time">Work Time</label>
           <div class="dur-box" id="dur-box">—</div>
         </div>
       </div>
-
-      <!-- Multi-date rows -->
-      <div id="multi-date-section" style="display:none">
-        <div class="row">
-          <div class="field" style="max-width:135px">
-            <label id="lbl-start-m">Start Time</label>
-            <input type="time" id="m-start" oninput="recalcMultiPreview()">
+      <div id="single-time-line">
+        <div class="time-line">
+          <div class="field">
+            <label id="lbl-start">Start Time</label>
+            <input type="time" id="shift-start" oninput="recalcPreview()">
           </div>
-          <div class="field" style="max-width:135px">
-            <label id="lbl-end-m">End Time</label>
-            <input type="time" id="m-end" oninput="recalcMultiPreview()">
-          </div>
-          <div class="field" style="max-width:155px">
-            <label id="lbl-break-m">Break</label>
-            <select id="m-break" onchange="recalcMultiPreview()">
-              <option value="0" data-i18n="break-no">No break</option>
+          <div class="field tl-break" role="group" aria-labelledby="lbl-break">
+            <span class="brk-ico" aria-hidden="true">☕</span>
+            <span class="sr-only" id="lbl-break">Break</span>
+            <div class="brk-chips" data-select="shift-break">
+              <button type="button" class="brk-chip" data-min="15" aria-label="15 min">15</button>
+              <button type="button" class="brk-chip" data-min="30" aria-label="30 min">30</button>
+              <button type="button" class="brk-chip" data-min="45" aria-label="45 min">45</button>
+            </div>
+            <select id="shift-break" onchange="recalcPreview()" hidden>
+              <option value="0">No break</option>
               <option value="15">15 min</option>
               <option value="30">30 min</option>
               <option value="45">45 min</option>
@@ -833,6 +933,44 @@ canvas{width:100%!important;display:block;}
               <option value="120">2 hours</option>
             </select>
           </div>
+          <div class="field">
+            <label id="lbl-end">End Time</label>
+            <input type="time" id="shift-end" oninput="recalcPreview()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-date rows -->
+      <div id="multi-date-section" style="display:none">
+        <div class="time-line">
+          <div class="field">
+            <label id="lbl-start-m">Start Time</label>
+            <input type="time" id="m-start" oninput="recalcMultiPreview()">
+          </div>
+          <div class="field tl-break" role="group" aria-labelledby="lbl-break-m">
+            <span class="brk-ico" aria-hidden="true">☕</span>
+            <span class="sr-only" id="lbl-break-m">Break</span>
+            <div class="brk-chips" data-select="m-break">
+              <button type="button" class="brk-chip" data-min="15" aria-label="15 min">15</button>
+              <button type="button" class="brk-chip" data-min="30" aria-label="30 min">30</button>
+              <button type="button" class="brk-chip" data-min="45" aria-label="45 min">45</button>
+            </div>
+            <select id="m-break" onchange="recalcMultiPreview()" hidden>
+              <option value="0">No break</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+              <option value="60">1 hour</option>
+              <option value="90">1.5 hours</option>
+              <option value="120">2 hours</option>
+            </select>
+          </div>
+          <div class="field">
+            <label id="lbl-end-m">End Time</label>
+            <input type="time" id="m-end" oninput="recalcMultiPreview()">
+          </div>
+        </div>
+        <div class="row">
           <div class="field" style="max-width:94px">
             <label id="lbl-work-time-m">Work Time</label>
             <div class="dur-box" id="m-dur-box">—</div>
@@ -1065,51 +1203,45 @@ canvas{width:100%!important;display:block;}
     </div>
   </div>
 
-  <!-- ═══ BILLS ═══ -->
-  <div class="page" id="page-bills">
+  <!-- ═══ EXPENSES ═══ -->
+  <div class="page" id="page-expenses">
     <div class="panel">
-      <div class="panel-label" id="lbl-bills-title">Monthly Bills</div>
-      <!-- Add bill form -->
-      <div class="row" style="align-items:flex-end">
+      <div class="panel-label" id="lbl-exp-title">Add Expense</div>
+      <label id="lbl-exp-cats">Category</label>
+      <div class="exp-cats" id="exp-cats" role="group" aria-labelledby="lbl-exp-cats"></div>
+      <div class="exp-line">
         <div class="field">
-          <label id="lbl-bill-name-lbl">Bill Name</label>
-          <input type="text" id="bill-name" placeholder="e.g. Rent, Electric…" onkeydown="if(event.key==='Enter')addBill()">
+          <label id="lbl-exp-date">Date</label>
+          <input type="date" id="exp-date">
         </div>
-        <div class="field" style="max-width:160px">
-          <label id="lbl-bill-amount-lbl">Amount / Month</label>
-          <input type="number" id="bill-amount" placeholder="0.00" step="0.01" min="0" style="font-family:'JetBrains Mono',monospace">
+        <div class="field">
+          <label id="lbl-exp-amount">Amount</label>
+          <input type="number" id="exp-amount" inputmode="decimal" placeholder="0" min="0" step="any" style="font-family:'JetBrains Mono',monospace" onkeydown="if(event.key==='Enter')addExpense()">
         </div>
-        <div class="field" style="max-width:140px">
-          <label id="lbl-bill-cat-lbl">Category</label>
-          <select id="bill-cat">
-            <option value="housing">🏠 Housing</option>
-            <option value="electric">⚡ Electric</option>
-            <option value="gas">🔥 Gas</option>
-            <option value="water">💧 Water</option>
-            <option value="internet">🌐 Internet</option>
-            <option value="phone">📱 Phone</option>
-            <option value="insurance">🛡 Insurance</option>
-            <option value="other">📦 Other</option>
-          </select>
-        </div>
-        <div><button class="btn btn-primary" onclick="addBill()" id="btn-add-bill">+ Add</button></div>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label id="lbl-exp-note">Note (optional)</label>
+        <input type="text" id="exp-note" maxlength="60" placeholder="e.g. Lunch" onkeydown="if(event.key==='Enter')addExpense()">
+      </div>
+      <div class="add-shift-btn-row"><button class="btn btn-primary" onclick="addExpense()" id="btn-add-exp">+ Add Expense</button></div>
+    </div>
+
+    <div class="exp-monthbar">
+      <div class="month-nav">
+        <button type="button" class="month-nav-btn" onclick="expShiftMonth(-1)" aria-label="Previous month">&#8249;</button>
+        <span id="exp-month-label" class="exp-month-label"></span>
+        <button type="button" class="month-nav-btn" onclick="expShiftMonth(1)" aria-label="Next month">&#8250;</button>
       </div>
     </div>
 
-    <!-- Bills total summary bar -->
-    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="stat-card" style="flex:1;min-width:140px;border-color:rgba(255,68,102,.3)">
-        <div class="stat-val" style="color:var(--red)" id="bills-total-val">$0.00</div>
-        <div class="stat-lbl" id="lbl-bills-monthly-total">Total / Month</div>
-      </div>
-      <div class="stat-card" style="flex:1;min-width:140px;border-color:rgba(255,68,102,.2)">
-        <div class="stat-val" style="color:var(--yellow)" id="bills-annual-val">$0.00</div>
-        <div class="stat-lbl" id="lbl-bills-annual-total">Total / Year</div>
-      </div>
+    <div class="exp-stats">
+      <div class="stat-card"><div class="stat-val" style="color:var(--accent)" id="exp-today-val">$0.00</div><div class="stat-lbl" id="lbl-exp-today">Today</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--red)" id="exp-month-val">$0.00</div><div class="stat-lbl" id="lbl-exp-month">Month total</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--yellow)" id="exp-avg-val">$0.00</div><div class="stat-lbl" id="lbl-exp-avg">Daily average</div></div>
     </div>
 
-    <!-- Bills list -->
-    <div id="bills-list"></div>
+    <div id="exp-breakdown"></div>
+    <div id="exp-list"></div>
   </div>
 
   <!-- ═══ SUMMARY ═══ -->
@@ -1121,6 +1253,7 @@ canvas{width:100%!important;display:block;}
         <div style="font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px" id="lbl-summary-period">Period</div>
         <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
           <button class="fw-btn sel" id="sump-month"        onclick="setSumPeriod('month')">This Month</button>
+          <button class="fw-btn"     id="sump-last-month"   onclick="setSumPeriod('last-month')">Last Month</button>
           <button class="fw-btn"     id="sump-year"         onclick="setSumPeriod('year')">This Year</button>
           <button class="fw-btn"     id="sump-all"          onclick="setSumPeriod('all')">All Time</button>
           <button class="fw-btn"     id="sump-custom-month" onclick="setSumPeriod('custom-month')">Custom Month</button>
@@ -1256,8 +1389,8 @@ canvas{width:100%!important;display:block;}
         <div class="setting-sub" id="lbl-theme-sub">Dark or light mode</div>
       </div>
       <div class="lang-toggle">
-        <button class="lang-btn active" id="theme-dark"  onclick="setTheme('dark')">🌙 Dark</button>
-        <button class="lang-btn"        id="theme-light" onclick="setTheme('light')">☀ Light</button>
+        <button class="lang-btn icon-only active" id="theme-dark"  onclick="setTheme('dark')" aria-label="Dark" title="Dark">🌙</button>
+        <button class="lang-btn icon-only" id="theme-light" onclick="setTheme('light')" aria-label="Light" title="Light">☀️</button>
       </div>
     </div>
 
@@ -1309,6 +1442,46 @@ canvas{width:100%!important;display:block;}
       </div>
     </div>
 
+    <!-- Monthly bills (moved here from its own tab) -->
+    <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
+      <div class="panel-label" id="lbl-bills-title" style="margin-bottom:12px">Monthly Bills</div>
+      <div class="bills-form">
+        <div class="field" style="grid-column:1/-1">
+          <label id="lbl-bill-name-lbl">Bill Name</label>
+          <input type="text" id="bill-name" placeholder="e.g. Rent, Electric…" onkeydown="if(event.key==='Enter')addBill()">
+        </div>
+        <div class="field">
+          <label id="lbl-bill-amount-lbl">Amount / Month</label>
+          <input type="number" id="bill-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="font-family:'JetBrains Mono',monospace">
+        </div>
+        <div class="field">
+          <label id="lbl-bill-cat-lbl">Category</label>
+          <select id="bill-cat">
+            <option value="housing">🏠 Housing</option>
+            <option value="electric">⚡ Electric</option>
+            <option value="gas">🔥 Gas</option>
+            <option value="water">💧 Water</option>
+            <option value="internet">🌐 Internet</option>
+            <option value="phone">📱 Phone</option>
+            <option value="insurance">🛡 Insurance</option>
+            <option value="other">📦 Other</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" style="grid-column:1/-1" onclick="addBill()" id="btn-add-bill">+ Add</button>
+      </div>
+      <div style="display:flex;gap:10px;margin:14px 0">
+        <div class="stat-card" style="flex:1;min-width:0;border-color:rgba(255,68,102,.3)">
+          <div class="stat-val" style="color:var(--red)" id="bills-total-val">$0.00</div>
+          <div class="stat-lbl" id="lbl-bills-monthly-total">Total / Month</div>
+        </div>
+        <div class="stat-card" style="flex:1;min-width:0;border-color:rgba(255,68,102,.2)">
+          <div class="stat-val" style="color:var(--yellow)" id="bills-annual-val">$0.00</div>
+          <div class="stat-lbl" id="lbl-bills-annual-total">Total / Year</div>
+        </div>
+      </div>
+      <div id="bills-list"></div>
+    </div>
+
     <!-- Data & Backup section inside settings -->
     <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
       <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Data &amp; Backup</div>
@@ -1317,33 +1490,21 @@ canvas{width:100%!important;display:block;}
       <div style="background:linear-gradient(135deg,rgba(0,229,255,.04),transparent);border:1px solid rgba(0,229,255,.2);border-radius:12px;padding:14px;margin-bottom:12px">
         <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">☁ Google Drive</div>
         <div id="set-gdrive-status-row" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--muted)" id="set-gdrive-info">Not signed in — use the G button in the top-left</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button onclick="saveToDrive();closeSettings()" class="btn btn-primary" style="font-size:12px;padding:8px 14px;flex:1">☁ Save</button>
-          <button onclick="loadFromDrive();closeSettings()" class="btn btn-ghost" style="font-size:12px;padding:8px 14px;flex:1;border-color:var(--accent);color:var(--accent)">☁ Load</button>
+        <div class="icon-row">
+          <button onclick="saveToDrive();closeSettings()" class="btn btn-primary btn-icon icon-wide" aria-label="Save to Drive" title="Save to Drive"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.6 4.2 4.2 0 0 1 17.5 18z"/><path d="M12 16v-6m0 0-2.5 2.5M12 10l2.5 2.5"/></svg></button>
+          <button onclick="loadFromDrive();closeSettings()" class="btn btn-ghost btn-icon icon-wide" style="border-color:var(--accent);color:var(--accent)" aria-label="Load from Drive" title="Load from Drive"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>
         </div>
       </div>
 
       <!-- Local backup -->
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <span style="font-size:12px;color:var(--muted)">Download JSON backup</span>
-          <button onclick="exportBackup()" class="btn btn-ghost" style="font-size:12px;padding:7px 12px">⬇ Export</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <span style="font-size:12px;color:var(--muted)">Restore from JSON backup</span>
-          <label class="btn btn-ghost" style="font-size:12px;padding:7px 12px;cursor:pointer">
-            ⬆ Import
-            <input type="file" id="import-file-s" accept=".json" style="display:none" onchange="importBackup(this)">
-          </label>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <span style="font-size:12px;color:var(--muted)">Export all shifts as CSV</span>
-          <button onclick="exportCSV()" class="btn btn-ghost" style="font-size:12px;padding:7px 12px">⬇ CSV</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px">
-          <span style="font-size:12px;color:var(--red);font-weight:600">Delete all data</span>
-          <button onclick="nukeAll()" class="btn btn-del" style="font-size:12px;padding:7px 12px">Delete All</button>
-        </div>
+      <div class="icon-row">
+        <button onclick="exportBackup()" class="btn btn-ghost btn-icon icon-wide" aria-label="Export backup" title="Export backup"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6m0 0-2.5-2.5M12 17l2.5-2.5"/></svg></button>
+        <label class="btn btn-ghost btn-icon icon-wide" style="cursor:pointer" aria-label="Import backup" title="Import backup">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 17v-6m0 0-2.5 2.5M12 11l2.5 2.5"/></svg>
+          <input type="file" id="import-file-s" accept=".json" style="display:none" onchange="importBackup(this)">
+        </label>
+        <button onclick="exportCSV()" class="btn btn-ghost btn-icon icon-wide" aria-label="Export CSV" title="Export CSV"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M12 7v5m0 0-2-2m2 2 2-2"/></svg></button>
+        <button onclick="nukeAll()" class="btn btn-del btn-icon icon-wide" aria-label="Delete all data" title="Delete all data">🗑</button>
       </div>
 
       <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
@@ -1444,7 +1605,7 @@ canvas{width:100%!important;display:block;}
 // ════════════════════════════════════════════════
 // IndexedDB
 // ════════════════════════════════════════════════
-const DB_NAME='ShiftLogDB', DB_VER=2;
+const DB_NAME='ShiftLogDB', DB_VER=3;
 let db;
 function openDB(){
   return new Promise((res,rej)=>{
@@ -1454,6 +1615,7 @@ function openDB(){
       if(!d.objectStoreNames.contains('works')){const ws=d.createObjectStore('works',{keyPath:'id'});ws.createIndex('createdAt','createdAt');}
       if(!d.objectStoreNames.contains('shifts')){const ss=d.createObjectStore('shifts',{keyPath:'id'});ss.createIndex('clockIn','clockIn');ss.createIndex('workId','workId');}
       if(!d.objectStoreNames.contains('bills')) d.createObjectStore('bills',{keyPath:'id'});
+      if(!d.objectStoreNames.contains('expenses')){const es=d.createObjectStore('expenses',{keyPath:'id'});es.createIndex('date','date');}
       if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'});
     };
     r.onsuccess=e=>res(e.target.result);
@@ -1506,7 +1668,7 @@ const T={
     'lbl-edit-transport':'Transport Fee / Day','lbl-edit-color':'Color',
     'btn-cancel-edit':'Cancel','btn-save-edit':'Save',
     'lbl-m-shifts':'Shifts','lbl-m-hrs':'Work Hours','lbl-m-wages':'Wages','lbl-m-total':'Total inc. Transport',
-    'tab-works':'Works','tab-shifts':'Shifts','tab-monthly':'Monthly','tab-bills':'Bills','tab-summary':'Summary','tab-tax':'Tax','tab-data':'Data',
+    'tab-works':'Works','tab-shifts':'Shifts','tab-monthly':'Monthly','tab-expenses':'Expenses','lbl-exp-title':'Add Expense','lbl-exp-cats':'Category','lbl-exp-date':'Date','lbl-exp-amount':'Amount','lbl-exp-note':'Note (optional)','btn-add-exp':'+ Add Expense','lbl-exp-today':'Today','lbl-exp-month':'Month total','lbl-exp-avg':'Daily average','tab-summary':'Summary','tab-tax':'Tax','tab-data':'Data',
     'lbl-night-min':'night min','toast-work-added':'Work added ✓','toast-work-updated':'Work updated ✓',
     'toast-work-deleted':'Work deleted','toast-shift-saved':'Shift saved ✓','toast-shifts-saved':'shifts saved ✓',
     'toast-shift-deleted':'Shift deleted','toast-shifts-cleared':'All shifts cleared',
@@ -1560,7 +1722,7 @@ const T={
     'lbl-edit-transport':'交通費（1日）','lbl-edit-color':'カラー',
     'btn-cancel-edit':'キャンセル','btn-save-edit':'保存',
     'lbl-m-shifts':'シフト数','lbl-m-hrs':'勤務時間','lbl-m-wages':'給与','lbl-m-total':'合計（交通費含む）',
-    'tab-works':'仕事','tab-shifts':'シフト','tab-monthly':'月次','tab-bills':'請求書','tab-summary':'収支','tab-tax':'税金','tab-data':'データ',
+    'tab-works':'仕事','tab-shifts':'シフト','tab-monthly':'月次','tab-expenses':'支出','lbl-exp-title':'支出を追加','lbl-exp-cats':'カテゴリ','lbl-exp-date':'日付','lbl-exp-amount':'金額','lbl-exp-note':'メモ（任意）','btn-add-exp':'+ 支出を追加','lbl-exp-today':'今日','lbl-exp-month':'月合計','lbl-exp-avg':'1日平均','tab-summary':'収支','tab-tax':'税金','tab-data':'データ',
     'lbl-night-min':'分（深夜）','toast-work-added':'仕事を追加しました ✓','toast-work-updated':'仕事を更新しました ✓',
     'toast-work-deleted':'仕事を削除しました','toast-shift-saved':'シフトを保存しました ✓','toast-shifts-saved':'件のシフトを保存しました ✓',
     'toast-shift-deleted':'シフトを削除しました','toast-shifts-cleared':'全シフトを削除しました',
@@ -1691,11 +1853,12 @@ function openSettings(){
   document.getElementById('theme-dark').classList.toggle('active', th==='dark');
   document.getElementById('theme-light').classList.toggle('active', th==='light');
   updateNightPreview();
+  renderBills();
   // Refresh data stats in settings panel
   const te=shifts.reduce((a,s)=>a+(s.wages||0)+(s.transport||0),0);
   const th2=shifts.reduce((a,s)=>a+s.duration,0);
   const ds=document.getElementById('data-stats-s');
-  if(ds) ds.innerHTML=`Works: ${works.length} &nbsp;·&nbsp; Shifts: ${shifts.length} &nbsp;·&nbsp; Bills: ${bills.length}<br>Hours: ${fmtDur(th2)} &nbsp;·&nbsp; Earnings: ${fmtMoney(te)}`;
+  if(ds) ds.innerHTML=`Works: ${works.length} &nbsp;·&nbsp; Shifts: ${shifts.length} &nbsp;·&nbsp; Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th2)} &nbsp;·&nbsp; Earnings: ${fmtMoney(te)}`;
   // Refresh drive status in settings panel
   const srow=document.getElementById('set-gdrive-status-row');
   if(srow) srow.textContent=gUser?`Signed in as ${gUser.email}`:'Not signed in — use the G button in the top-left';
@@ -1772,6 +1935,7 @@ function setShiftMode(mode){
   document.getElementById('mode-single').classList.toggle('active',mode==='single');
   document.getElementById('mode-multi').classList.toggle('active',mode==='multi');
   document.getElementById('single-date-row').style.display=mode==='single'?'':'none';
+  document.getElementById('single-time-line').style.display=mode==='single'?'':'none';
   document.getElementById('multi-date-section').style.display=mode==='multi'?'':'none';
   document.getElementById('earn-preview').style.display='none';
   document.getElementById('dur-box').textContent='—';
@@ -1889,8 +2053,7 @@ function renderWorkPicker(){
   if(!selectedWorkId||!works.find(w=>w.id===selectedWorkId))selectedWorkId=works[0].id;
   picker.innerHTML=works.map(w=>`
     <div class="wp-btn ${selectedWorkId===w.id?'sel':''}" onclick="selectWork('${w.id}')">
-      <span class="wp-name"><span style="width:9px;height:9px;border-radius:50%;background:${w.color};display:inline-block"></span>${w.name}</span>
-      <span class="wp-rate">${sym()}${w.rate.toFixed(2)}/h · ${lang==='ja'?'深夜':'night'} ${sym()}${(w.rate*1.25).toFixed(2)}/h</span>
+      <span class="wp-name"><span class="wp-dot" style="background:${w.color}"></span>${w.name}</span>
     </div>`).join('');
   if(shiftMode==='single')recalcPreview();else recalcMultiPreview();
 }
@@ -1990,7 +2153,7 @@ async function addShift(){
     await dbPut('shifts',sh);shifts.unshift(sh);
     toast(t('toast-shift-saved'));
     document.getElementById('shift-start').value='';document.getElementById('shift-end').value='';
-    document.getElementById('shift-break').value='0';document.getElementById('dur-box').textContent='—';
+    document.getElementById('shift-break').value='0';syncBreakChips();document.getElementById('dur-box').textContent='—';
     document.getElementById('earn-preview').style.display='none';
     document.getElementById('shift-date').value=today();
   } else {
@@ -2011,7 +2174,7 @@ async function addShift(){
     toast(`${newShifts.length} ${t('toast-shifts-saved')}`);
     multiDates=[];renderMiniCal();updateMultiCountNote();
     document.getElementById('m-start').value='';document.getElementById('m-end').value='';
-    document.getElementById('m-break').value='0';document.getElementById('m-dur-box').textContent='—';
+    document.getElementById('m-break').value='0';syncBreakChips();document.getElementById('m-dur-box').textContent='—';
     document.getElementById('earn-preview').style.display='none';
   }
   updateStats();renderShifts();updateBadges();updateDataStats();
@@ -2164,7 +2327,7 @@ function updateBadges(){
   if(bw){bw.textContent=works.length;bw.style.display=works.length>0?'block':'none';}
   if(bs){bs.textContent=shifts.length;bs.style.display=shifts.length>0?'block':'none';}
   // Bottom nav labels i18n
-  const bnLabels={works:t('tab-works'),shifts:t('tab-shifts'),monthly:t('tab-monthly'),bills:t('tab-bills'),summary:t('tab-summary'),tax:t('tab-tax'),data:t('tab-data')};
+  const bnLabels={works:t('tab-works'),shifts:t('tab-shifts'),monthly:t('tab-monthly'),expenses:t('tab-expenses'),summary:t('tab-summary'),tax:t('tab-tax'),data:t('tab-data')};
   Object.entries(bnLabels).forEach(([k,v])=>{const el=document.getElementById('bn-lbl-'+k);if(el)el.textContent=v;});
 }
 
@@ -2534,13 +2697,142 @@ function renderBillsTotals(){
 }
 
 // ════════════════════════════════════════════════
+// Daily expenses
+// ════════════════════════════════════════════════
+let expenses=[];
+let expCat='food';
+let expMonth=(()=>{const n=new Date();return{y:n.getFullYear(),m:n.getMonth()};})();
+const EXP_CATS=[
+  {k:'food',icon:'🍚',en:'Food',ja:'食費'},
+  {k:'transport',icon:'🚃',en:'Transport',ja:'交通費'},
+  {k:'shopping',icon:'🛒',en:'Shopping',ja:'買い物'},
+  {k:'fun',icon:'🎮',en:'Fun',ja:'娯楽'},
+  {k:'health',icon:'🏥',en:'Health',ja:'医療'},
+  {k:'other',icon:'📦',en:'Other',ja:'その他'}
+];
+const expCatInfo=k=>EXP_CATS.find(c=>c.k===k)||EXP_CATS[EXP_CATS.length-1];
+const localToday=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const escHtml=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function loadExpenses(){
+  const raw=await dbGetAll('expenses');
+  expenses=raw.sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
+}
+
+function setExpCat(k){expCat=k;renderExpCats();}
+function renderExpCats(){
+  const el=document.getElementById('exp-cats');if(!el)return;
+  el.innerHTML=EXP_CATS.map(c=>`<button type="button" class="exp-cat${c.k===expCat?' sel':''}" aria-pressed="${c.k===expCat}" onclick="setExpCat('${c.k}')"><span aria-hidden="true">${c.icon}</span><span>${lang==='ja'?c.ja:c.en}</span></button>`).join('');
+}
+
+async function addExpense(){
+  const date=document.getElementById('exp-date').value;
+  const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+  const note=document.getElementById('exp-note').value.trim();
+  if(!date){toast(lang==='ja'?'日付を選択してください':'Pick a date','err');return;}
+  if(amount<=0){toast(lang==='ja'?'金額を入力してください':'Enter an amount','err');return;}
+  const ex={id:genId(),date,amount,cat:expCat,note,createdAt:Date.now()};
+  await dbPut('expenses',ex);
+  expenses.push(ex);
+  expenses.sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
+  document.getElementById('exp-amount').value='';
+  document.getElementById('exp-note').value='';
+  const [y,m]=date.split('-').map(Number);
+  expMonth={y,m:m-1};
+  renderExpenses();
+  toast(lang==='ja'?'支出を追加しました ✓':'Expense added ✓');
+  document.getElementById('exp-amount').focus();
+}
+
+async function deleteExpense(id){
+  if(!confirm(lang==='ja'?'この支出を削除しますか？':'Delete this expense?'))return;
+  await dbDelete('expenses',id);
+  expenses=expenses.filter(x=>x.id!==id);
+  renderExpenses();
+  toast(lang==='ja'?'削除しました':'Deleted');
+}
+
+function expShiftMonth(d){
+  let m=expMonth.m+d,y=expMonth.y;
+  if(m<0){m=11;y--;}else if(m>11){m=0;y++;}
+  expMonth={y,m};
+  renderExpenses();
+}
+
+function renderExpenses(){
+  const list=document.getElementById('exp-list');
+  if(!list)return;
+  renderExpCats();
+  const di=document.getElementById('exp-date');
+  if(di&&!di.value)di.value=localToday();
+  const ni=document.getElementById('exp-note');
+  if(ni)ni.placeholder=lang==='ja'?'例：ランチ':'e.g. Lunch';
+
+  const {y,m}=expMonth;
+  const prefix=y+'-'+String(m+1).padStart(2,'0');
+  const loc=lang==='ja'?'ja-JP':'en-US';
+  const lbl=document.getElementById('exp-month-label');
+  if(lbl)lbl.textContent=new Date(y,m,1).toLocaleDateString(loc,{year:'numeric',month:'long'});
+
+  const monthItems=expenses.filter(x=>x.date.startsWith(prefix));
+  const monthTotal=monthItems.reduce((a,x)=>a+x.amount,0);
+  const todayStr=localToday();
+  const todayTotal=expenses.filter(x=>x.date===todayStr).reduce((a,x)=>a+x.amount,0);
+  const now=new Date();
+  const isCurrent=now.getFullYear()===y&&now.getMonth()===m;
+  const days=isCurrent?now.getDate():new Date(y,m+1,0).getDate();
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('exp-today-val',fmtMoney(todayTotal));
+  set('exp-month-val',fmtMoney(monthTotal));
+  set('exp-avg-val',fmtMoney(monthTotal/Math.max(1,days)));
+
+  // Category breakdown
+  const bd=document.getElementById('exp-breakdown');
+  if(bd){
+    if(!monthItems.length){bd.innerHTML='';}
+    else{
+      const byCat={};monthItems.forEach(x=>{byCat[x.cat]=(byCat[x.cat]||0)+x.amount;});
+      const rows=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+      bd.innerHTML=`<div class="panel exp-break">${rows.map(([k,v])=>{
+        const c=expCatInfo(k),pct=Math.round(v/monthTotal*100);
+        return `<div class="exp-bar-row"><span class="exp-bar-name"><span aria-hidden="true">${c.icon}</span> ${lang==='ja'?c.ja:c.en}</span><span class="exp-bar-track"><span class="exp-bar-fill" style="width:${pct}%"></span></span><span class="exp-bar-amt">${fmtMoney(v)}</span></div>`;
+      }).join('')}</div>`;
+    }
+  }
+
+  // Day-grouped list
+  if(!monthItems.length){
+    list.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">💸</div>${lang==='ja'?'この月の支出はまだありません':'No expenses this month yet.'}</div>`;
+    return;
+  }
+  const byDay={};
+  monthItems.forEach(x=>{(byDay[x.date]=byDay[x.date]||[]).push(x);});
+  list.innerHTML=Object.keys(byDay).sort().reverse().map(date=>{
+    const items=byDay[date],total=items.reduce((a,x)=>a+x.amount,0);
+    const [yy,mm,dd]=date.split('-').map(Number);
+    const label=new Date(yy,mm-1,dd).toLocaleDateString(loc,{month:'short',day:'numeric',weekday:'short'});
+    return `<div class="exp-day">
+      <div class="exp-day-head"><span>${label}</span><span class="exp-day-total">${fmtMoney(total)}</span></div>
+      ${items.map(x=>{
+        const c=expCatInfo(x.cat);
+        return `<div class="exp-item">
+          <span class="exp-item-ico" aria-hidden="true">${c.icon}</span>
+          <div class="exp-item-main"><div class="exp-item-name">${x.note?escHtml(x.note):(lang==='ja'?c.ja:c.en)}</div>${x.note?`<div class="si-meta">${lang==='ja'?c.ja:c.en}</div>`:''}</div>
+          <div class="exp-item-amt">${fmtMoney(x.amount)}</div>
+          <button type="button" class="del-btn" onclick="deleteExpense('${x.id}')" aria-label="${lang==='ja'?'削除':'Delete'}">✕</button>
+        </div>`;}).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
 // Summary
 // ════════════════════════════════════════════════
 let sumPeriod='month', sumFilterId=null;
 
 function setSumPeriod(p){
   sumPeriod=p;
-  ['month','year','all','custom-month'].forEach(x=>{
+  ['month','last-month','year','all','custom-month'].forEach(x=>{
     const btn=document.getElementById('sump-'+x);
     if(btn)btn.classList.toggle('sel',x===p);
   });
@@ -2577,6 +2869,9 @@ function getSumShifts(){
   let sl=shifts;
   if(sumPeriod==='month'){
     sl=sl.filter(s=>{const d=new Date(s.clockIn);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
+  } else if(sumPeriod==='last-month'){
+    const lm=new Date(now.getFullYear(),now.getMonth()-1,1);
+    sl=sl.filter(s=>{const d=new Date(s.clockIn);return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear();});
   } else if(sumPeriod==='year'){
     sl=sl.filter(s=>new Date(s.clockIn).getFullYear()===now.getFullYear());
   } else if(sumPeriod==='custom-month'){
@@ -2590,7 +2885,7 @@ function getSumShifts(){
 
 function getSumBills(){
   const monthly=bills.reduce((a,b)=>a+b.amount,0);
-  if(sumPeriod==='month'||sumPeriod==='custom-month') return monthly;
+  if(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month') return monthly;
   if(sumPeriod==='year')  return monthly*12;
   // All time: use number of months of data
   if(!shifts.length) return monthly;
@@ -2612,6 +2907,7 @@ function recalcSummary(){
   const MONTHS_JA=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   let periodLabel;
   if(sumPeriod==='month') periodLabel=lang==='ja'?'今月':'this month';
+  else if(sumPeriod==='last-month') periodLabel=lang==='ja'?'先月':'last month';
   else if(sumPeriod==='year') periodLabel=lang==='ja'?'今年':'this year';
   else if(sumPeriod==='custom-month'){
     const cm=parseInt(document.getElementById('sump-cm-month')?.value??new Date().getMonth());
@@ -2693,14 +2989,14 @@ function recalcSummary(){
   const bd=el('sum-bills-detail');
   if(bd){
     if(!bills.length){
-      bd.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${lang==='ja'?'請求書が登録されていません':'No bills registered. Add bills in the Bills tab.'}</div>`;
+      bd.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${lang==='ja'?'請求書が登録されていません。設定（⚙）から追加できます':'No bills registered. Add bills in Settings (⚙).'}</div>`;
     } else {
-      const multiplier=sumPeriod==='month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:(bills.length?Math.max(1,(Date.now()-Math.min(...shifts.map(s=>s.clockIn)||[Date.now()]))/(1000*60*60*24*30.44)):1);
+      const multiplier=sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:(bills.length?Math.max(1,(Date.now()-Math.min(...shifts.map(s=>s.clockIn)||[Date.now()]))/(1000*60*60*24*30.44)):1);
       bd.innerHTML=bills.map(b=>`
         <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:16px">${CAT_ICONS[b.cat]||'📦'}</span>
           <div style="flex:1;font-size:13px;font-weight:600">${b.name}</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
         </div>`).join('')+
         `<div style="display:flex;justify-content:flex-end;padding-top:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--yellow)">${lang==='ja'?'合計：':'Total: '}${fmtMoney(billsAmt)}</div>`;
     }
@@ -2714,8 +3010,8 @@ function updateDataStats(){
   const te=shifts.reduce((a,s)=>a+(s.wages||0)+(s.transport||0),0);
   const th=shifts.reduce((a,s)=>a+s.duration,0);
   const statsHtml=lang==='ja'
-    ?`仕事：${works.length}件 · シフト：${shifts.length}件 · 請求書：${bills.length}件<br>累計時間：${fmtDur(th)} · 累計収入：${fmtMoney(te)}`
-    :`Works: ${works.length} · Shifts: ${shifts.length} · Bills: ${bills.length}<br>Hours: ${fmtDur(th)} · Earnings: ${fmtMoney(te)}`;
+    ?`仕事：${works.length}件 · シフト：${shifts.length}件 · 請求書：${bills.length}件 · 支出：${expenses.length}件<br>累計時間：${fmtDur(th)} · 累計収入：${fmtMoney(te)}`
+    :`Works: ${works.length} · Shifts: ${shifts.length} · Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th)} · Earnings: ${fmtMoney(te)}`;
   const el=document.getElementById('data-stats');
   if(el) el.innerHTML=statsHtml;
   const els=document.getElementById('data-stats-s');
@@ -2868,7 +3164,7 @@ async function saveToDrive(opts){
   }
   gdriveStatus('Uploading to Google Drive…');
   try{
-    const content=JSON.stringify({version:2,exportedAt:new Date().toISOString(),works,shifts,bills,settings},null,2);
+    const content=JSON.stringify({version:2,exportedAt:new Date().toISOString(),works,shifts,bills,expenses,settings},null,2);
     const existing=await findDriveFile();
     if(existing){
       // Update existing file content
@@ -2920,21 +3216,23 @@ async function loadFromDrive(opts){
     const r=await driveRequest('GET',`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
     const bk=await r.json();
     if(!bk.works||!bk.shifts) throw new Error('Backup file is invalid');
-    await dbClear('works');await dbClear('shifts');await dbClear('bills');
+    await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
     for(const w of bk.works)await dbPut('works',w);
     for(const s of bk.shifts)await dbPut('shifts',s);
     if(bk.bills)for(const b of bk.bills)await dbPut('bills',b);
+    if(bk.expenses)for(const x of bk.expenses)await dbPut('expenses',x);
     if(bk.settings)await dbPut('settings',{key:'main',...bk.settings});
     works=bk.works.sort((a,b)=>a.createdAt-b.createdAt);
     shifts=bk.shifts.sort((a,b)=>b.clockIn-a.clockIn);
     bills=(bk.bills||[]).sort((a,b)=>a.createdAt-b.createdAt);
+    expenses=(bk.expenses||[]).sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
     if(bk.settings){
       settings={...settings,...bk.settings};
       document.getElementById('currency-sym').value=settings.currency||'$';
       if(bk.settings.lang){lang=bk.settings.lang;applyLang(true);}
     }
     renderWorks();renderWorkPicker();renderFilterRow();
-    updateStats();renderShifts();renderBills();updateBadges();updateDataStats();
+    updateStats();renderShifts();renderBills();renderExpenses();updateBadges();updateDataStats();
     if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
     gdriveStatus(`✓ Loaded — ${shifts.length} shifts, ${works.length} works (saved ${new Date(bk.exportedAt).toLocaleString()})`);
     toast('Loaded from Google Drive ✓');
@@ -2949,7 +3247,7 @@ async function loadFromDrive(opts){
 }
 
 async function exportBackup(){
-  const backup={version:2,exportedAt:new Date().toISOString(),works,shifts,bills,settings};
+  const backup={version:2,exportedAt:new Date().toISOString(),works,shifts,bills,expenses,settings};
   dlFile(JSON.stringify(backup,null,2),`shiftlog_backup_${today()}.json`,'application/json');
   toast(t('toast-backup-exported'));
 }
@@ -2962,17 +3260,19 @@ async function importBackup(input){
       if(!data.works||!data.shifts)throw new Error('Invalid backup file.');
       if(!confirm(`${t('confirm-import')}\n(${data.works.length} ${t('toast-works')}, ${data.shifts.length} ${t('toast-shifts')})`))return;
       loading(true);
-      await dbClear('works');await dbClear('shifts');await dbClear('bills');
+      await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
       for(const w of data.works)await dbPut('works',w);
       for(const s of data.shifts)await dbPut('shifts',s);
       if(data.bills)for(const b of data.bills)await dbPut('bills',b);
+      if(data.expenses)for(const x of data.expenses)await dbPut('expenses',x);
       if(data.settings)await dbPut('settings',{key:'main',...data.settings});
       works=data.works.sort((a,b)=>a.createdAt-b.createdAt);
       shifts=data.shifts.sort((a,b)=>b.clockIn-a.clockIn);
       bills=(data.bills||[]).sort((a,b)=>a.createdAt-b.createdAt);
+      expenses=(data.expenses||[]).sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
       if(data.settings){settings={...settings,...data.settings};document.getElementById('currency-sym').value=settings.currency||'$';if(data.settings.lang){lang=data.settings.lang;applyLang(true);}}
       renderWorks();renderWorkPicker();renderFilterRow();
-      updateStats();renderShifts();renderBills();updateBadges();updateDataStats();
+      updateStats();renderShifts();renderBills();renderExpenses();updateBadges();updateDataStats();
       loading(false);
       toast(`${t('toast-imported')} ${works.length} ${t('toast-works')}, ${shifts.length} ${t('toast-shifts')}`);
     }catch(err){loading(false);toast('Import failed: '+err.message,'err');}
@@ -2986,10 +3286,10 @@ async function nukeAll(){
   const confirmWord=lang==='ja'?'削除':'delete';
   if(typed!==confirmWord){toast(t('toast-cancelled'));return;}
   loading(true);
-  await dbClear('works');await dbClear('shifts');await dbClear('bills');
-  works=[];shifts=[];bills=[];
+  await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
+  works=[];shifts=[];bills=[];expenses=[];
   renderWorks();renderWorkPicker();renderFilterRow();
-  updateStats();renderShifts();renderBills();updateBadges();updateDataStats();
+  updateStats();renderShifts();renderBills();renderExpenses();updateBadges();updateDataStats();
   loading(false);toast(t('toast-all-deleted'));
 }
 
@@ -3004,7 +3304,7 @@ function dlFile(content,filename,mime){
 // Tab switching
 // ════════════════════════════════════════════════
 function switchTab(tab){
-  ['works','shifts','monthly','bills','summary'].forEach((t,i)=>{
+  ['works','shifts','monthly','expenses','summary'].forEach((t,i)=>{
     const topBtn=document.querySelectorAll('.tab-btn')[i];
     if(topBtn) topBtn.classList.toggle('active',t===tab);
     const pg=document.getElementById('page-'+t);
@@ -3019,7 +3319,7 @@ function switchTab(tab){
   if(dataPg) dataPg.classList.toggle('active',tab==='data');
   if(tab==='shifts'){renderWorkPicker();renderFilterRow();}
   if(tab==='monthly')renderMonthly();
-  if(tab==='bills')renderBills();
+  if(tab==='expenses')renderExpenses();
   if(tab==='summary')recalcSummary();
   if(tab==='tax')recalcTax();
   if(tab==='data')updateDataStats();
@@ -3052,6 +3352,7 @@ window.addEventListener('resize',()=>{
     await loadWorks();
     await loadShifts();
     await loadBills();
+    await loadExpenses();
     lang=settings.lang||'en';
 
     // Show app BEFORE rendering so canvas has correct dimensions
@@ -3385,6 +3686,57 @@ function generateTimesheet(){
     toast('PDF error: '+err.message,'err');
   }
 }
+</script>
+<script>
+/* Break chips: tap to choose 15 / 30 / 45 min, tap again to clear */
+function syncBreakChips(){
+  document.querySelectorAll('.brk-chips').forEach(function(g){
+    var sel=document.getElementById(g.dataset.select);if(!sel)return;
+    g.querySelectorAll('.brk-chip').forEach(function(c){
+      var on=c.dataset.min===sel.value;
+      c.classList.toggle('sel',on);c.setAttribute('aria-pressed',on?'true':'false');
+    });
+  });
+}
+(function(){
+  document.addEventListener('click',function(e){
+    var c=e.target.closest&&e.target.closest('.brk-chip');if(!c)return;
+    var sel=document.getElementById(c.parentNode.dataset.select);if(!sel)return;
+    sel.value=(sel.value===c.dataset.min)?'0':c.dataset.min;
+    sel.dispatchEvent(new Event('change'));
+    syncBreakChips();
+  });
+  syncBreakChips();
+})();
+</script>
+<script>
+/* Nav: sliding highlight + tap ripple */
+(function(){
+  var order=['works','shifts','monthly','expenses','summary'];
+  var nav=document.getElementById('bottom-nav');
+  function setPill(tab){var i=order.indexOf(tab);if(nav&&i>-1)nav.style.setProperty('--i',i);}
+  if(typeof window.switchTab==='function'){
+    var orig=window.switchTab;
+    window.switchTab=function(tab){setPill(tab);return orig.apply(this,arguments);};
+  }
+  document.addEventListener('pointerdown',function(e){
+    var el=e.target.closest&&e.target.closest('.bn-item,.tab-btn,.brk-chip,.exp-cat');
+    if(!el)return;
+    var r=el.getBoundingClientRect(),size=Math.max(r.width,r.height)*2.2;
+    var d=document.createElement('span');
+    d.className='ripple';
+    d.style.cssText='left:'+(e.clientX-r.left)+'px;top:'+(e.clientY-r.top)+'px;width:'+size+'px;height:'+size+'px';
+    var host=el;
+    if(el.classList.contains('bn-item')){
+      host=document.getElementById('bn-clip')||el;
+      var n=host.getBoundingClientRect();
+      d.style.left=(e.clientX-n.left)+'px';d.style.top=(e.clientY-n.top)+'px';
+    }
+    host.appendChild(d);
+    d.addEventListener('animationend',function(){d.remove();});
+    try{if(navigator.vibrate&&e.pointerType==='touch')navigator.vibrate(8);}catch(_){}
+  },{passive:true});
+})();
 </script>
 <script>
 /* Keyboard and dialog basics */
