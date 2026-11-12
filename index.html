@@ -1060,6 +1060,45 @@ html[data-palette] body:not(.light-theme) .btn-primary,html[data-palette] body:n
 html{scrollbar-gutter:stable}
 body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-overlay,.modal{overscroll-behavior:contain}
+
+/* ---- Desktop layout fixes ---- */
+@media(min-width:641px){
+  /* calendar cells are square, so an uncapped calendar becomes huge on a wide panel */
+  .mini-cal{max-width:380px}
+  /* input forms stop stretching edge to edge */
+  #page-works>.panel:first-child,#page-shifts>.panel:first-child,#page-expenses>.panel:first-child{max-width:900px}
+}
+@media(min-width:901px){
+  /* Multiple Dates: calendar left; Work Time, Start/Break/End and Add Shift stacked on the right */
+  #multi-date-section{display:contents}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"])){display:grid;grid-template-columns:minmax(0,380px) minmax(0,380px);grid-template-rows:repeat(7,auto) 1fr auto;column-gap:36px;justify-content:start;align-items:start}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>*{grid-column:1/-1}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.panel-label{grid-row:1}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.mode-toggle{grid-row:2}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.warn-box{grid-row:3}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.wp-wrap{grid-row:4}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.md-cal-wrap{grid-column:1;grid-row:5/9;margin-bottom:0}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.md-cal-wrap .mini-cal{max-width:100%}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.row{grid-column:2;grid-row:5}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.time-line{grid-column:2;grid-row:6;max-width:none;width:100%}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.add-shift-btn-row{grid-column:2;grid-row:7;margin:0;justify-content:flex-start}
+  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.earn-preview{grid-row:9}
+  .mc-day{font-size:12px}
+}
+@media(min-width:1000px){
+  /* keep content readable on large monitors */
+  .container{max-width:1360px}
+}
+
+/* Single date (desktop): Start / Break / End and Add Shift on one line */
+@media(min-width:901px){
+  #page-shifts>.panel:has(#multi-date-section[style*="none"]){display:grid;grid-template-columns:minmax(0,520px) auto;column-gap:20px;justify-content:start;align-items:end}
+  #page-shifts>.panel:has(#multi-date-section[style*="none"])>*{grid-column:1/-1}
+  #page-shifts>.panel:has(#multi-date-section[style*="none"])>#single-time-line{grid-column:1;order:1}
+  #page-shifts>.panel:has(#multi-date-section[style*="none"])>.add-shift-btn-row{grid-column:2;order:1;margin:0 0 12px;align-self:end}
+  #page-shifts>.panel:has(#multi-date-section[style*="none"])>.add-shift-btn-row .btn{min-height:44px}
+  #page-shifts>.panel:has(#multi-date-section[style*="none"])>.earn-preview{order:2}
+}
 </style>
 </head>
 <body>
@@ -1250,7 +1289,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
             <div class="dur-box" id="m-dur-box">—</div>
           </div>
         </div>
-        <div style="margin-bottom:10px">
+        <div class="md-cal-wrap" style="margin-bottom:10px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
             <label id="lbl-add-dates" style="margin-bottom:0">Add Dates</label>
             <div style="display:flex;align-items:center;gap:6px">
