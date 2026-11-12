@@ -322,6 +322,50 @@ select option{background:var(--surface2);}
 .day-shift-work{display:flex;align-items:center;gap:5px;font-weight:600;}
 .day-shift-earn{font-family:'JetBrains Mono',monospace;color:var(--green);}
 
+/* ---- Monthly: calendar first, full width, with shift details in each day ---- */
+.monthly-layout{grid-template-columns:minmax(0,1fr)!important}
+.monthly-layout>div:last-child{order:-1}
+.calendar-wrap{position:static}
+.cal-grid{gap:5px}
+.cal-day.cd{aspect-ratio:auto;min-height:112px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;
+  padding:6px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Syne',sans-serif;font-weight:500;text-align:left;overflow:hidden;min-width:0}
+.cal-day.cd.empty{border-color:transparent;pointer-events:none;min-height:0}
+.cal-day.cd.normal{color:var(--muted)}
+.cal-day.cd::after,.cal-day.cd.has-shift::after{display:none}
+.cal-day.cd.has-shift{border-radius:10px;background:color-mix(in srgb,var(--accent) 7%,transparent);color:var(--text);font-weight:500;cursor:pointer}
+.cal-day.cd.has-shift:hover{transform:none;background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.cal-day.cd.today{border-color:var(--accent)}
+.cal-day.cd.selected,body.light-theme .cal-day.cd.selected{background:color-mix(in srgb,var(--accent) 20%,var(--surface2))!important;color:var(--text)!important;box-shadow:0 0 0 2px var(--accent);font-weight:500}
+.cd-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--muted)}
+.cal-day.cd.today .cd-num,.cal-day.cd.has-shift .cd-num{color:var(--accent)}
+.cd-shifts{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cd-shift{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:6px;padding:3px 5px;border-left:3px solid var(--c);border-radius:5px;background:color-mix(in srgb,var(--c) 14%,transparent);min-width:0}
+.cd-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cd-amt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);text-align:right}
+.cd-time{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.cd-more{font-size:10px;color:var(--muted);padding-left:4px}
+.cd-total{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:4px}
+.cd-total b{font-size:12px;color:var(--green);font-weight:700}
+.cd-dots,.cd-short{display:none}
+.dd-shift{padding:8px 0 8px 10px;border-left:3px solid var(--c);margin:6px 0;background:color-mix(in srgb,var(--c) 8%,transparent);border-radius:0 8px 8px 0;padding-right:10px}
+.dd-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.dd-name{font-size:13px;font-weight:700}
+.dd-time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.dd-money{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--green)}
+.dd-meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+.dd-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;font-weight:700}
+.dd-total b{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--green)}
+@media(max-width:640px){
+  .cal-grid{gap:2px}
+  .cal-day.cd{min-height:56px;padding:3px 2px;border-radius:7px;align-items:center;gap:2px}
+  .cal-day.cd.has-shift{border-radius:7px}
+  .cd-num{font-size:10px}
+  .cd-shifts,.cd-total{display:none}
+  .cd-dots{display:flex;gap:2px;justify-content:center;flex-wrap:wrap}
+  .cd-dots i{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .cd-short{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--green);line-height:1}
+}
+
 /* Graph */
 .graph-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:20px;}
 .graph-title{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
@@ -596,6 +640,20 @@ canvas{width:100%!important;display:block;}
   box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent);
 }
 .mc-day.selected:hover{background:color-mix(in srgb,var(--accent) 85%,#fff);}
+/* Multiple Dates: calendar on the left, work time / start-break-end / Add Shift on the right */
+.md-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;align-items:start}
+.md-right #md-add-slot .add-shift-btn-row{justify-content:flex-start;margin-top:4px}
+@media(min-width:641px){
+  .md-layout{grid-template-columns:280px minmax(0,1fr);gap:28px}
+  .md-right{padding-top:26px}
+}
+/* Compact picker: keep the multi-date calendar small */
+#multi-date-section .mini-cal{max-width:280px;padding:8px;border-radius:10px;}
+#multi-date-section .mini-cal-grid{gap:2px;}
+#multi-date-section .mc-day{font-size:12px;border-radius:6px;}
+#multi-date-section .mc-day-name{font-size:9px;padding:2px 0 5px;letter-spacing:.5px;}
+#multi-date-section .mc-nav-btn{width:24px;height:24px;font-size:14px;}
+#multi-date-section #mc-month-label{font-size:12px!important;min-width:90px!important;}
 /* Subtle count badge on selected days */
 .mc-sel-dot{
   position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
@@ -785,9 +843,9 @@ canvas{width:100%!important;display:block;}
 
 .time-line input[type="time"]::-webkit-calendar-picker-indicator{display:none}
 .time-line input[type="time"]{text-align:center;font-variant-numeric:tabular-nums}
-#single-date-row,#multi-date-section>.row{flex-direction:row!important;flex-wrap:nowrap!important;align-items:flex-end}
+#single-date-row,#multi-date-section .row{flex-direction:row!important;flex-wrap:nowrap!important;align-items:flex-end}
 #single-date-row .field:first-child{flex:1;min-width:0!important;max-width:none!important}
-#single-date-row .field:last-child,#multi-date-section>.row .field{flex:none;width:110px;min-width:110px!important;max-width:none!important}
+#single-date-row .field:last-child,#multi-date-section .row .field{flex:none;width:110px;min-width:110px!important;max-width:none!important}
 @media(min-width:641px){#single-date-row .field:first-child{flex:none;width:200px}#single-date-row{justify-content:flex-start}}
 @media(max-width:380px){.time-line{gap:6px}.brk-chip{width:34px}.brk-chips{gap:3px}}
 
@@ -1060,45 +1118,6 @@ html[data-palette] body:not(.light-theme) .btn-primary,html[data-palette] body:n
 html{scrollbar-gutter:stable}
 body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-overlay,.modal{overscroll-behavior:contain}
-
-/* ---- Desktop layout fixes ---- */
-@media(min-width:641px){
-  /* calendar cells are square, so an uncapped calendar becomes huge on a wide panel */
-  .mini-cal{max-width:380px}
-  /* input forms stop stretching edge to edge */
-  #page-works>.panel:first-child,#page-shifts>.panel:first-child,#page-expenses>.panel:first-child{max-width:900px}
-}
-@media(min-width:901px){
-  /* Multiple Dates: calendar left; Work Time, Start/Break/End and Add Shift stacked on the right */
-  #multi-date-section{display:contents}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"])){display:grid;grid-template-columns:minmax(0,380px) minmax(0,380px);grid-template-rows:repeat(7,auto) 1fr auto;column-gap:36px;justify-content:start;align-items:start}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>*{grid-column:1/-1}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.panel-label{grid-row:1}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.mode-toggle{grid-row:2}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.warn-box{grid-row:3}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.wp-wrap{grid-row:4}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.md-cal-wrap{grid-column:1;grid-row:5/9;margin-bottom:0}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.md-cal-wrap .mini-cal{max-width:100%}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.row{grid-column:2;grid-row:5}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.time-line{grid-column:2;grid-row:6;max-width:none;width:100%}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.add-shift-btn-row{grid-column:2;grid-row:7;margin:0;justify-content:flex-start}
-  #page-shifts>.panel:has(#multi-date-section:not([style*="none"]))>.earn-preview{grid-row:9}
-  .mc-day{font-size:12px}
-}
-@media(min-width:1000px){
-  /* keep content readable on large monitors */
-  .container{max-width:1360px}
-}
-
-/* Single date (desktop): Start / Break / End and Add Shift on one line */
-@media(min-width:901px){
-  #page-shifts>.panel:has(#multi-date-section[style*="none"]){display:grid;grid-template-columns:minmax(0,520px) auto;column-gap:20px;justify-content:start;align-items:end}
-  #page-shifts>.panel:has(#multi-date-section[style*="none"])>*{grid-column:1/-1}
-  #page-shifts>.panel:has(#multi-date-section[style*="none"])>#single-time-line{grid-column:1;order:1}
-  #page-shifts>.panel:has(#multi-date-section[style*="none"])>.add-shift-btn-row{grid-column:2;order:1;margin:0 0 12px;align-self:end}
-  #page-shifts>.panel:has(#multi-date-section[style*="none"])>.add-shift-btn-row .btn{min-height:44px}
-  #page-shifts>.panel:has(#multi-date-section[style*="none"])>.earn-preview{order:2}
-}
 </style>
 </head>
 <body>
@@ -1130,9 +1149,9 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   </header>
 
   <div class="tab-nav">
-    <button class="tab-btn active"  onclick="switchTab('works')"  id="tab-works">Works <span class="tab-badge" id="badge-w">0</span></button>
+    <button class="tab-btn"         onclick="switchTab('works')"  id="tab-works">Works <span class="tab-badge" id="badge-w">0</span></button>
     <button class="tab-btn"         onclick="switchTab('shifts')" id="tab-shifts">Shifts <span class="tab-badge" id="badge-s">0</span></button>
-    <button class="tab-btn"         onclick="switchTab('monthly')"id="tab-monthly">Monthly</button>
+    <button class="tab-btn active"  onclick="switchTab('monthly')"id="tab-monthly">Monthly</button>
     <button class="tab-btn"         onclick="switchTab('expenses')" id="tab-expenses">Expenses</button>
     <button class="tab-btn"         onclick="switchTab('summary')"id="tab-summary">Summary</button>
   </div>
@@ -1146,7 +1165,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
         <path class="s" d="M20,40.5 C36,40.5 30,9 60,9 C90,9 84,40.5 100,40.5"/>
       </svg>
     </span>
-    <button class="bn-item active" id="bn-works" onclick="switchTab('works')">
+    <button class="bn-item" id="bn-works" onclick="switchTab('works')">
       <span class="bn-icon">💼</span>
       <span id="bn-lbl-works">Works</span>
       <span class="bn-badge" id="bn-badge-w" style="display:none">0</span>
@@ -1156,7 +1175,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       <span id="bn-lbl-shifts">Shifts</span>
       <span class="bn-badge" id="bn-badge-s" style="display:none">0</span>
     </button>
-    <button class="bn-item" id="bn-monthly" onclick="switchTab('monthly')">
+    <button class="bn-item active" id="bn-monthly" onclick="switchTab('monthly')">
       <span class="bn-icon">📊</span>
       <span id="bn-lbl-monthly">Monthly</span>
     </button>
@@ -1171,7 +1190,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   </nav>
 
   <!-- ═══ WORKS ═══ -->
-  <div class="page active" id="page-works">
+  <div class="page" id="page-works">
     <div class="panel">
       <div class="panel-label" id="lbl-create-work">Create New Work</div>
       <div class="row">
@@ -1260,6 +1279,28 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
       <!-- Multi-date rows -->
       <div id="multi-date-section" style="display:none">
+        <div class="md-layout">
+          <div class="md-left">
+        <div style="margin-bottom:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;max-width:280px">
+            <label id="lbl-add-dates" style="margin-bottom:0">Add Dates</label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button class="mc-nav-btn" onclick="miniCalPrev()" type="button">&#8249;</button>
+              <span id="mc-month-label" style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;min-width:110px;text-align:center"></span>
+              <button class="mc-nav-btn" onclick="miniCalNext()" type="button">&#8250;</button>
+            </div>
+          </div>
+          <div class="mini-cal" id="mini-cal"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace" id="multi-count-note"></div>
+        </div>
+          </div>
+          <div class="md-right">
+        <div class="row">
+          <div class="field" style="max-width:94px">
+            <label id="lbl-work-time-m">Work Time</label>
+            <div class="dur-box" id="m-dur-box">—</div>
+          </div>
+        </div>
         <div class="time-line">
           <div class="field">
             <label id="lbl-start-m">Start Time</label>
@@ -1283,23 +1324,8 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
             <input type="time" id="m-end" oninput="recalcMultiPreview()">
           </div>
         </div>
-        <div class="row">
-          <div class="field" style="max-width:94px">
-            <label id="lbl-work-time-m">Work Time</label>
-            <div class="dur-box" id="m-dur-box">—</div>
+                  <div id="md-add-slot"></div>
           </div>
-        </div>
-        <div class="md-cal-wrap" style="margin-bottom:10px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-            <label id="lbl-add-dates" style="margin-bottom:0">Add Dates</label>
-            <div style="display:flex;align-items:center;gap:6px">
-              <button class="mc-nav-btn" onclick="miniCalPrev()" type="button">&#8249;</button>
-              <span id="mc-month-label" style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;min-width:110px;text-align:center"></span>
-              <button class="mc-nav-btn" onclick="miniCalNext()" type="button">&#8250;</button>
-            </div>
-          </div>
-          <div class="mini-cal" id="mini-cal"></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace" id="multi-count-note"></div>
         </div>
       </div><!-- /multi-date-section -->
 
@@ -1352,7 +1378,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   </div>
 
   <!-- ═══ MONTHLY ═══ -->
-  <div class="page" id="page-monthly">
+  <div class="page active" id="page-monthly">
     <div class="month-controls">
       <div class="month-nav">
         <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
@@ -1383,11 +1409,6 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
             <button class="gtog"        id="gtog-hours"    onclick="setGraph('hours')">Hours</button>
           </div>
           <canvas id="main-chart" height="200"></canvas>
-          <!-- Day detail shown here, below chart -->
-          <div id="day-detail" style="display:none" class="day-detail" style="margin-top:14px">
-            <div class="day-detail-title" id="day-detail-title"></div>
-            <div id="day-detail-body"></div>
-          </div>
         </div>
         <div class="panel">
           <div class="panel-label" id="lbl-work-breakdown">Work Breakdown</div>
@@ -1414,6 +1435,10 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
           <div class="cal-legend">
             <span><i class="s"></i><span id="cal-legend-shift">Has shift</span></span>
             <span><i class="t"></i><span id="cal-legend-today">Today</span></span>
+          </div>
+          <div id="day-detail" class="day-detail" style="display:none">
+            <div class="day-detail-title" id="day-detail-title"></div>
+            <div id="day-detail-body"></div>
           </div>
         </div>
       </div>
@@ -2307,6 +2332,11 @@ function setShiftMode(mode){
   document.getElementById('earn-preview').style.display='none';
   document.getElementById('dur-box').textContent='—';
   document.getElementById('m-dur-box').textContent='—';
+  const addRow=document.querySelector('.add-shift-btn-row');
+  if(addRow){
+    if(mode==='multi')document.getElementById('md-add-slot').appendChild(addRow);
+    else document.getElementById('earn-preview').insertAdjacentElement('afterend',addRow);
+  }
   if(mode==='single') recalcPreview(); else {renderMiniCal();recalcMultiPreview();}
 }
 
@@ -2815,23 +2845,23 @@ function renderCalendar(monthShifts){
   const days=new Date(currentYear,currentMonth+1,0).getDate();
   const firstDow=new Date(currentYear,currentMonth,1).getDay(); // 0=Sun
   const todayStr=today();
-  const DAYS_EN=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  const DAYS_JA=['日','月','火','水','木','金','土'];
-  const dayNames=lang==='ja'?DAYS_JA:DAYS_EN;
+  const ja=lang==='ja';
+  const dayNames=ja?['日','月','火','水','木','金','土']:['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const hhmm=ts=>{const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
+  const shortMoney=n=>{n=Math.round(n||0);return n>=10000?sym()+(n/1000).toFixed(n>=100000?0:1).replace(/\.0$/,'')+'k':sym()+n;};
+  const shiftTotal=s=>(s.wages||0)+(s.transport||0);
 
-  // Build set of days that have shifts
+  // Group shifts by day of month, earliest first
   const shiftDays={};
   for(const s of monthShifts){
     const d=new Date(s.clockIn).getDate();
     if(!shiftDays[d])shiftDays[d]=[];
     shiftDays[d].push(s);
   }
+  Object.values(shiftDays).forEach(l=>l.sort((x,y)=>x.clockIn-y.clockIn));
 
-  // Day name headers
   const headers=dayNames.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
-
-  // Empty cells for offset
-  const empties=Array(firstDow).fill('<div class="cal-day empty"></div>').join('');
+  const empties=Array(firstDow).fill('<div class="cal-day cd empty"></div>').join('');
 
   const todayDateObj=new Date(todayStr);
   const isCurrentYearMonth=(todayDateObj.getFullYear()===currentYear&&todayDateObj.getMonth()===currentMonth);
@@ -2839,37 +2869,55 @@ function renderCalendar(monthShifts){
 
   const cells=Array.from({length:days},(_,i)=>{
     const d=i+1;
-    const hasShift=!!shiftDays[d];
-    const isToday=d===todayDay;
-    const isSel=calSelectedDay===d;
-    let cls='cal-day';
-    if(hasShift)cls+=' has-shift';
-    else cls+=' normal';
-    if(isToday)cls+=' today';
-    if(isSel)cls+=' selected';
-    const onclick=hasShift?`onclick="selectCalDay(${d})"`:isToday?`onclick="selectCalDay(${d})"`:''
-    return `<div class="${cls}" ${onclick}>${d}</div>`;
+    const list=shiftDays[d]||[];
+    const hasShift=list.length>0;
+    let cls='cal-day cd';
+    cls+=hasShift?' has-shift':' normal';
+    if(d===todayDay)cls+=' today';
+    if(calSelectedDay===d)cls+=' selected';
+    const clickable=hasShift||d===todayDay;
+    let inner=`<div class="cd-top"><span class="cd-num">${d}</span></div>`;
+    if(hasShift){
+      let tot=0,dayMs=0;list.forEach(s=>{tot+=shiftTotal(s);dayMs+=s.duration||0;});
+      const shown=list.slice(0,3),more=list.length-shown.length;
+      inner+=`<div class="cd-shifts">`
+        +shown.map(s=>`<div class="cd-shift" style="--c:${s.workColor||'#888'}"><span class="cd-name">${esc(s.workName)}</span>${list.length>1?`<span class="cd-amt">${fmtMoney(shiftTotal(s))}</span>`:''}<span class="cd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span></div>`).join('')
+        +(more>0?`<div class="cd-more">+${more} ${ja?'件':'more'}</div>`:'')
+        +`</div>`
+        +`<div class="cd-total"><span>${fmtDur(dayMs)}</span><b>${fmtMoney(tot)}</b></div>`
+        +`<div class="cd-dots">${list.slice(0,4).map(s=>`<i style="background:${s.workColor||'#888'}"></i>`).join('')}</div>`
+        +`<div class="cd-short">${shortMoney(tot)}</div>`;
+    }
+    return `<div class="${cls}" ${clickable?`onclick="selectCalDay(${d})"`:''}>${inner}</div>`;
   }).join('');
 
   grid.innerHTML=headers+empties+cells;
 
-  // Day detail
-  if(calSelectedDay&&shiftDays[calSelectedDay]){
-    const detail=document.getElementById('day-detail');
+  // Selected-day detail (shown right under the calendar)
+  const detail=document.getElementById('day-detail');
+  const list=calSelectedDay?shiftDays[calSelectedDay]:null;
+  if(list&&list.length){
     detail.style.display='block';
-    const dateLabel=lang==='ja'?`${currentMonth+1}月${calSelectedDay}日`:`${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][currentMonth]} ${calSelectedDay}`;
+    const dateLabel=new Date(currentYear,currentMonth,calSelectedDay).toLocaleDateString(ja?'ja-JP':'en-US',{weekday:'long',month:'long',day:'numeric'});
     document.getElementById('day-detail-title').textContent=dateLabel;
-    document.getElementById('day-detail-body').innerHTML=shiftDays[calSelectedDay].map(s=>`
-      <div class="day-shift-row">
-        <div class="day-shift-work">
-          <span style="width:8px;height:8px;border-radius:50%;background:${s.workColor||'#888'};display:inline-block"></span>
-          ${esc(s.workName)}
-          <span style="color:var(--muted);font-weight:400">${fmtTime(s.clockIn)}–${fmtTime(s.clockOut)}</span>
+    let tW=0,tT=0,tD=0;
+    const rows=list.map(s=>{
+      const w=s.wages||0,tr=s.transport||0;tW+=w;tT+=tr;tD+=s.duration||0;
+      return `<div class="dd-shift" style="--c:${s.workColor||'#888'}">
+        <div class="dd-head"><span class="dd-name">${esc(s.workName)}</span><span class="dd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span><span class="dd-money">${fmtMoney(w+tr)}</span></div>
+        <div class="dd-meta">
+          <span>${ja?'勤務':'Worked'} ${fmtDur(s.duration||0)}</span>
+          ${s.breakMin>0?`<span>${ja?'休憩':'Break'} ${s.breakMin}m</span>`:''}
+          ${s.nightMin>0?`<span>${ja?'深夜':'Night'} ${fmtDur(s.nightMin*60000)}</span>`:''}
+          <span>${ja?'給与':'Wages'} ${fmtMoney(w)}</span>
+          ${tr>0?`<span>${ja?'交通費':'Transport'} ${fmtMoney(tr)}</span>`:''}
         </div>
-        <div class="day-shift-earn">${fmtMoney((s.wages||0)+(s.transport||0))}</div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
+    document.getElementById('day-detail-body').innerHTML=rows
+      +`<div class="dd-total"><span>${ja?'この日の合計':'Day total'} · ${fmtDur(tD)}</span><b>${fmtMoney(tW+tT)}</b></div>`;
   } else {
-    document.getElementById('day-detail').style.display='none';
+    detail.style.display='none';
   }
 }
 
@@ -3805,6 +3853,7 @@ window.addEventListener('resize',()=>{
     updateBadges();
     updateDataStats();
     renderMonthly();
+    if(window.switchTab)window.switchTab('monthly'); // open on Monthly (also syncs the nav highlight)
     initGoogleAuth();
     tick();
   }catch(e){
