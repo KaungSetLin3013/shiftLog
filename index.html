@@ -726,6 +726,63 @@ canvas{width:100%!important;display:block;}
 .brk-chip:active{transform:scale(.93);transition-duration:80ms}
 .brk-chip.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent);font-weight:700;animation:pop 320ms var(--spring)}
 
+
+/* ---- Break dial: icon button + wind-up clock ---- */
+.brk-dial-btn{position:relative;width:52px;height:52px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:pointer;padding:0;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+.brk-dial-btn:active{transform:scale(.92);transition-duration:80ms}
+.brk-dial-btn:hover{transform:translateY(-2px) scale(1.05)}
+.brk-dial-btn .brk-val{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;line-height:1;margin-top:1px;min-height:9px}
+.brk-dial-btn.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
+.brk-dial-btn:not(.sel) .brk-val{opacity:.0}
+.tl-break{min-width:52px}
+.bd-modal{max-width:340px;text-align:center;padding:24px 20px 20px}
+.bd-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;letter-spacing:.5px;margin-bottom:2px}
+.bd-hint{font-size:11px;color:var(--muted);margin-bottom:10px}
+.bd-wrap{display:flex;align-items:center;justify-content:center;gap:12px}
+.bd-stage{position:relative;flex:0 1 232px;width:232px;max-width:calc(100vw - 150px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+.bd-stage svg{width:100%;height:100%;display:block;overflow:visible}
+.bd-face{fill:var(--surface2);stroke:var(--border);stroke-width:1.5}
+.bd-track{fill:none;stroke:var(--border);stroke-width:14;stroke-linecap:round;opacity:.55}
+.bd-arc{fill:none;stroke:var(--accent);stroke-width:14;stroke-linecap:round}
+.bd-tick{stroke:var(--muted);stroke-width:1.5;stroke-linecap:round;opacity:.55;transition:stroke .12s,opacity .12s}
+.bd-tick.major{stroke-width:2.5;opacity:.9}
+.bd-tick.hit{stroke:var(--accent);opacity:1}
+.bd-num{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central}
+.bd-hand{stroke:var(--accent);stroke-width:3;stroke-linecap:round}
+.bd-hub{fill:var(--accent)}
+.bd-knob:focus{outline:none}
+.bd-knob:focus-visible{stroke:var(--text)}
+.bd-knob{fill:var(--accent);stroke:var(--surface);stroke-width:3;cursor:grab;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4))}
+.bd-stage.drag .bd-knob{cursor:grabbing}
+.bd-knob-ring{fill:none;stroke:var(--accent);stroke-width:2;opacity:0;transform-box:fill-box;transform-origin:center}
+.bd-stage.pulse .bd-knob-ring{animation:bdPulse 380ms ease-out}
+@keyframes bdPulse{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(2)}}
+.bd-read{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.bd-read b{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-1px}
+.bd-read span{font-size:11px;color:var(--muted);margin-top:2px}
+.bd-ring1{fill:none;stroke:var(--accent);stroke-width:14;opacity:0;transition:opacity .2s}
+.bd-ring1.on{opacity:.28}
+.bd-hours{display:flex;flex-direction:column;align-items:center;gap:6px;width:40px}
+.bd-hr-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted)}
+.bd-hcount{width:40px;height:56px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);
+  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;
+  transition:background-color .2s,border-color .2s,color .2s}
+.bd-hcount.on{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
+.bd-hcount.bump{animation:bdBump 360ms var(--spring)}
+@keyframes bdBump{0%{transform:scale(.8)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.bd-hcount.bump{animation:none}}
+.bd-presets{display:flex;gap:6px;justify-content:center;margin:14px 0 14px;flex-wrap:wrap}
+.bd-preset{min-width:52px;height:38px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;padding:0 12px;transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+.bd-preset:active{transform:scale(.92)}
+.bd-preset.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
+.bd-actions{display:flex;gap:8px}
+.bd-actions .btn{flex:1}
+@media(prefers-reduced-motion:reduce){.bd-stage.pulse .bd-knob-ring{animation:none}}
+
 .time-line input[type="time"]::-webkit-calendar-picker-indicator{display:none}
 .time-line input[type="time"]{text-align:center;font-variant-numeric:tabular-nums}
 #single-date-row,#multi-date-section>.row{flex-direction:row!important;flex-wrap:nowrap!important;align-items:flex-end}
@@ -1143,13 +1200,8 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
             <input type="time" id="shift-start" oninput="recalcPreview()">
           </div>
           <div class="field tl-break" role="group" aria-labelledby="lbl-break">
-            <span class="brk-ico" aria-hidden="true">☕</span>
             <span class="sr-only" id="lbl-break">Break</span>
-            <div class="brk-chips" data-select="shift-break">
-              <button type="button" class="brk-chip" data-min="15" aria-label="15 min">15</button>
-              <button type="button" class="brk-chip" data-min="30" aria-label="30 min">30</button>
-              <button type="button" class="brk-chip" data-min="45" aria-label="45 min">45</button>
-            </div>
+            <button type="button" class="brk-dial-btn" data-select="shift-break" aria-haspopup="dialog" aria-label="Break time"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9.5 2.5h5M12 2.5V5"/></svg><span class="brk-val">0</span></button>
             <select id="shift-break" onchange="recalcPreview()" hidden>
               <option value="0">No break</option>
               <option value="15">15 min</option>
@@ -1175,13 +1227,8 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
             <input type="time" id="m-start" oninput="recalcMultiPreview()">
           </div>
           <div class="field tl-break" role="group" aria-labelledby="lbl-break-m">
-            <span class="brk-ico" aria-hidden="true">☕</span>
             <span class="sr-only" id="lbl-break-m">Break</span>
-            <div class="brk-chips" data-select="m-break">
-              <button type="button" class="brk-chip" data-min="15" aria-label="15 min">15</button>
-              <button type="button" class="brk-chip" data-min="30" aria-label="30 min">30</button>
-              <button type="button" class="brk-chip" data-min="45" aria-label="45 min">45</button>
-            </div>
+            <button type="button" class="brk-dial-btn" data-select="m-break" aria-haspopup="dialog" aria-label="Break time"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9.5 2.5h5M12 2.5V5"/></svg><span class="brk-val">0</span></button>
             <select id="m-break" onchange="recalcMultiPreview()" hidden>
               <option value="0">No break</option>
               <option value="15">15 min</option>
@@ -4029,24 +4076,210 @@ function generateTimesheet(){
   }
 }
 </script>
+<!-- Break dial modal -->
+<div class="modal-overlay" id="break-dial-modal" onclick="if(event.target===this)closeBreakDial(false)">
+  <div class="modal bd-modal">
+    <button class="modal-close" type="button" onclick="closeBreakDial(false)" aria-label="Close">&#10005;</button>
+    <div class="bd-title modal-title" id="bd-title">Break time</div>
+    <div class="bd-hint" id="bd-hint">Full circle = 1 hr · locks every 5 min</div>
+    <div class="bd-wrap">
+    <div class="bd-stage" id="bd-stage">
+      <svg viewBox="0 0 240 240" id="bd-svg" aria-hidden="true">
+        <circle class="bd-face" cx="120" cy="120" r="116"/>
+        <g id="bd-ticks"></g>
+        <circle class="bd-track" cx="120" cy="120" r="84"/>
+        <circle class="bd-ring1" id="bd-ring1" cx="120" cy="120" r="84"/>
+        <path class="bd-arc" id="bd-arc" d=""/>
+        <line class="bd-hand" id="bd-hand" x1="120" y1="80" x2="120" y2="42"/>
+                <circle class="bd-knob-ring" id="bd-ring" r="13" cx="120" cy="36"/>
+        <circle class="bd-knob" id="bd-knob" r="13" cx="120" cy="36" tabindex="0" role="slider" aria-label="Break minutes" aria-valuemin="0" aria-valuemax="720" aria-valuenow="0"/>
+      </svg>
+      <div class="bd-read"><b id="bd-num">0</b><span id="bd-unit">No break</span></div>
+    </div>
+    <div class="bd-hours" aria-hidden="true">
+      <span class="bd-hr-lbl">HR</span>
+      <div class="bd-hcount" id="bd-hcount">0</div>
+    </div>
+    </div>
+    <div class="bd-presets" id="bd-presets">
+      <button type="button" class="bd-preset" data-min="15">15</button>
+      <button type="button" class="bd-preset" data-min="30">30</button>
+      <button type="button" class="bd-preset" data-min="45">45</button>
+      <button type="button" class="bd-preset" data-min="60">1h</button>
+    </div>
+    <div class="bd-actions">
+      <button type="button" class="btn btn-ghost" id="bd-clear" onclick="setDial(0,true)">No break</button>
+      <button type="button" class="btn btn-primary" id="bd-done" onclick="closeBreakDial(true)">Set</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* Break chips: tap to choose 15 / 30 / 45 min, tap again to clear */
+/* Break dial: icon button -> wind-up clock. Handle is magnetic, locking to every 5 min (0-120 min, 1h = bottom). */
+var DIAL_MAX=720,DIAL_LAP=60,DIAL_STEP=5; /* 1 lap = 1 hr, up to 12 hr */
+var _dial={sel:null,val:0,raw:0,dragging:false,last:-1};
+function fmtBreak(m){return m>=60?(Math.floor(m/60)+'h'+(m%60?(' '+m%60+'m'):'')):m+'m';}
 function syncBreakChips(){
-  document.querySelectorAll('.brk-chips').forEach(function(g){
-    var sel=document.getElementById(g.dataset.select);if(!sel)return;
-    g.querySelectorAll('.brk-chip').forEach(function(c){
-      var on=c.dataset.min===sel.value;
-      c.classList.toggle('sel',on);c.setAttribute('aria-pressed',on?'true':'false');
-    });
+  document.querySelectorAll('.brk-dial-btn').forEach(function(b){
+    var sel=document.getElementById(b.dataset.select);if(!sel)return;
+    var v=parseInt(sel.value)||0;
+    b.classList.toggle('sel',v>0);
+    b.querySelector('.brk-val').textContent=v>0?(v>=60?(v/60)+'h':v):'';
+    b.setAttribute('aria-label','Break time: '+(v>0?v+' min':'none'));
   });
 }
-(function(){
-  document.addEventListener('click',function(e){
-    var c=e.target.closest&&e.target.closest('.brk-chip');if(!c)return;
-    var sel=document.getElementById(c.parentNode.dataset.select);if(!sel)return;
-    sel.value=(sel.value===c.dataset.min)?'0':c.dataset.min;
-    sel.dispatchEvent(new Event('change'));
+function _polar(a,r){var rad=(a-90)*Math.PI/180;return [120+r*Math.cos(rad),120+r*Math.sin(rad)];}
+function _buildTicks(){
+  var g=document.getElementById('bd-ticks');if(g.firstChild)return;
+  var ns='http://www.w3.org/2000/svg',n=DIAL_LAP/DIAL_STEP;
+  for(var i=0;i<n;i++){
+    var m=i*DIAL_STEP,a=m/DIAL_LAP*360,major=(m%15===0);
+    var p1=_polar(a,major?100:103),p2=_polar(a,110);
+    var l=document.createElementNS(ns,'line');
+    l.setAttribute('x1',p1[0]);l.setAttribute('y1',p1[1]);l.setAttribute('x2',p2[0]);l.setAttribute('y2',p2[1]);
+    l.setAttribute('class','bd-tick'+(major?' major':''));l.dataset.m=m;g.appendChild(l);
+    if(major){
+      var q=_polar(a,64),t=document.createElementNS(ns,'text');
+      t.setAttribute('x',q[0]);t.setAttribute('y',q[1]);t.setAttribute('class','bd-num');
+      t.textContent=m===0?'0':m;g.appendChild(t);
+    }
+  }
+}
+/* draw handle at a (possibly un-snapped) minute value */
+function _draw(minFloat){
+  var lap=minFloat<=0.01?0:Math.ceil(minFloat/DIAL_LAP-1e-9)-1;
+  var within=minFloat-lap*DIAL_LAP;            /* minutes into the current lap, 0-60 */
+  var a=within/DIAL_LAP*360,k=_polar(a,84);
+  var knob=document.getElementById('bd-knob'),ring=document.getElementById('bd-ring'),hand=document.getElementById('bd-hand');
+  knob.setAttribute('cx',k[0]);knob.setAttribute('cy',k[1]);ring.setAttribute('cx',k[0]);ring.setAttribute('cy',k[1]);
+  var h=_polar(a,78),h0=_polar(a,40);hand.setAttribute('x1',h0[0]);hand.setAttribute('y1',h0[1]);hand.setAttribute('x2',h[0]);hand.setAttribute('y2',h[1]);
+  document.getElementById('bd-ring1').classList.toggle('on',lap>=1); /* first hour stays as a faint full ring */
+  var arc=document.getElementById('bd-arc');
+  if(minFloat<=0.01){arc.setAttribute('d','');}
+  else{
+    var end=_polar(Math.min(a,359.99),84),large=a>180?1:0;
+    arc.setAttribute('d','M120 36 A84 84 0 '+large+' 1 '+end[0]+' '+end[1]);
+  }
+}
+function _readout(v){
+  var big=document.getElementById('bd-num'),ja=(lang==='ja');
+  big.textContent=v===0?'0':(v>=60?(Math.floor(v/60)+(ja?'時間':'h')+(v%60?(' '+(v%60)+(ja?'分':'m')):'')):v);
+  big.style.fontSize=v>=60?'24px':'';
+  document.getElementById('bd-unit').textContent=v===0?(ja?'休憩なし':'No break'):(v>=60?(v+(ja?' 分':' min')):(ja?'分':'min'));
+  var knob=document.getElementById('bd-knob');knob.setAttribute('aria-valuenow',v);knob.setAttribute('aria-valuetext',v+' min');
+  var lapMin=v===0?-1:(((v-1)%DIAL_LAP)+1)%DIAL_LAP;
+  document.querySelectorAll('.bd-tick').forEach(function(t){t.classList.toggle('hit',v>0&&+t.dataset.m===lapMin);});
+  var hc=document.getElementById('bd-hcount'),hrs=Math.floor(v/DIAL_LAP);
+  if(hc.textContent!==String(hrs)){
+    hc.textContent=hrs;hc.classList.remove('bump');void hc.offsetWidth;hc.classList.add('bump');
+  }
+  hc.classList.toggle('on',hrs>0);
+  document.querySelectorAll('.bd-preset').forEach(function(b){b.classList.toggle('sel',+b.dataset.min===v);});
+}
+function _lock(v){ /* ping when the handle clicks onto a new 5-min notch */
+  if(v===_dial.last)return;_dial.last=v;
+  if(navigator.vibrate)try{navigator.vibrate(v%15===0?14:7);}catch(e){}
+  var st=document.getElementById('bd-stage');st.classList.remove('pulse');void st.offsetWidth;st.classList.add('pulse');
+}
+/* magnet: near a notch the handle is pulled in hard; at the mid-point it is free, so it feels like it clicks into place */
+function _magnet(raw){
+  var half=DIAL_STEP/2,nearest=Math.round(raw/DIAL_STEP)*DIAL_STEP,d=raw-nearest;
+  var r=Math.min(1,Math.abs(d)/half),off=(d<0?-1:1)*half*r*r*r;
+  return {shown:Math.max(0,Math.min(DIAL_MAX,nearest+off)),snap:Math.max(0,Math.min(DIAL_MAX,nearest))};
+}
+var _anim=null;
+function setDial(v,animate){
+  v=Math.max(0,Math.min(DIAL_MAX,Math.round(v/DIAL_STEP)*DIAL_STEP));
+  var from=_dial.raw,to=v;_dial.val=v;_dial.raw=v;
+  if(v!==_dial.last)_lock(v);
+  _readout(v);
+  cancelAnimationFrame(_anim);
+  if(!animate||from===to){_draw(v);return;}
+  var t0=performance.now(),dur=260;
+  (function step(now){
+    var p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);
+    _draw(from+(to-from)*e);
+    if(p<1)_anim=requestAnimationFrame(step);
+  })(t0);
+}
+function openBreakDial(selId){
+  var sel=document.getElementById(selId);if(!sel)return;
+  _buildTicks();_dial.sel=selId;_dial.last=-1;
+  var v=parseInt(sel.value)||0;
+  document.getElementById('bd-title').textContent=lang==='ja'?'休憩時間':'Break time';
+  document.getElementById('bd-hint').textContent=lang==='ja'?'1周＝1時間・5分ごとにロック':'Full circle = 1 hr · locks every 5 min';
+  document.getElementById('bd-clear').textContent=lang==='ja'?'休憩なし':'No break';
+  document.getElementById('bd-done').textContent=lang==='ja'?'決定':'Set';
+  document.getElementById('break-dial-modal').classList.add('open');
+  _dial.raw=0;_dial.val=0;_draw(0);_readout(0);setDial(v,true);
+  setTimeout(function(){var k=document.getElementById('bd-knob');if(k)k.focus({preventScroll:true});},60);
+}
+function closeBreakDial(apply){
+  var m=document.getElementById('break-dial-modal');if(!m.classList.contains('open'))return;
+  if(apply!==false&&_dial.sel){
+    var sel=document.getElementById(_dial.sel);
+    if(sel){
+      var vs=String(_dial.val);
+      if(!Array.prototype.some.call(sel.options,function(o){return o.value===vs;})){
+        var o=document.createElement('option');o.value=vs;o.textContent=fmtBreak(_dial.val);sel.appendChild(o);
+      }
+      sel.value=vs;sel.dispatchEvent(new Event('change'));}
     syncBreakChips();
+  }
+  m.classList.remove('open');_dial.dragging=false;
+}
+(function(){
+  var stage=document.getElementById('bd-stage'),svg=document.getElementById('bd-svg');
+  function lapMinFromEvent(e){
+    var r=svg.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    var ang=Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI+90;if(ang<0)ang+=360;
+    return ang/360*DIAL_LAP; /* 0-60 */
+  }
+  /* winding: follow the angle change so the ring restarts after 1 hr; stops at 0 and 2 hr */
+  function rawFromEvent(e){
+    var m60=lapMinFromEvent(e),prev=_dial.raw,pm=((prev%DIAL_LAP)+DIAL_LAP)%DIAL_LAP;
+    var d=m60-pm;if(d>DIAL_LAP/2)d-=DIAL_LAP;else if(d<-DIAL_LAP/2)d+=DIAL_LAP;
+    return Math.max(0,Math.min(DIAL_MAX,prev+d));
+  }
+  function move(e){
+    if(!_dial.dragging)return;
+    var raw=rawFromEvent(e);_dial.raw=raw;
+    var mg=_magnet(raw);_dial.val=mg.snap;
+    _draw(mg.shown);_readout(mg.snap);_lock(mg.snap);
+  }
+  svg.addEventListener('pointerdown',function(e){
+    if(e.button!==undefined&&e.button!==0)return;
+    var r=svg.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+    var dist=Math.sqrt(dx*dx+dy*dy)/(r.width/240);
+    if(dist<40)return; /* ignore taps in the middle of the face */
+    _dial.dragging=true;stage.classList.add('drag');cancelAnimationFrame(_anim);
+    try{svg.setPointerCapture(e.pointerId);}catch(_){}
+    /* tapping the face jumps the handle there, then you can keep winding */
+    var m60=lapMinFromEvent(e),best=_dial.val,bd=1e9;
+    for(var k=0;k<=DIAL_MAX/DIAL_LAP;k++){var c=m60+k*DIAL_LAP;if(c>DIAL_MAX)return;var dd=Math.abs(c-_dial.val);if(dd<bd){bd=dd;best=c;}}
+    _dial.raw=best;move(e);e.preventDefault();
+  });
+  svg.addEventListener('pointermove',move);
+  function end(){
+    if(!_dial.dragging)return;_dial.dragging=false;stage.classList.remove('drag');
+    setDial(_dial.val,true); /* handle clicks into the nearest 5-min notch */
+  }
+  svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);
+  document.getElementById('bd-knob').addEventListener('keydown',function(e){
+    var d=0;
+    if(e.key==='ArrowRight'||e.key==='ArrowUp')d=DIAL_STEP;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowDown')d=-DIAL_STEP;
+    else if(e.key==='Home'){setDial(0,true);e.preventDefault();return;}
+    else if(e.key==='End'){setDial(DIAL_MAX,true);e.preventDefault();return;}
+    else if(e.key==='Enter'){closeBreakDial(true);return;}
+    if(d){setDial(_dial.val+d,true);e.preventDefault();}
+  });
+  document.getElementById('bd-presets').addEventListener('click',function(e){
+    var b=e.target.closest('.bd-preset');if(b)setDial(+b.dataset.min,true);
+  });
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.brk-dial-btn');if(!b)return;
+    openBreakDial(b.dataset.select);
   });
   syncBreakChips();
 })();
@@ -4062,7 +4295,7 @@ function syncBreakChips(){
     window.switchTab=function(tab){setPill(tab);return orig.apply(this,arguments);};
   }
   document.addEventListener('pointerdown',function(e){
-    var el=e.target.closest&&e.target.closest('.bn-item,.tab-btn,.brk-chip,.exp-cat');
+    var el=e.target.closest&&e.target.closest('.bn-item,.tab-btn,.brk-chip,.brk-dial-btn,.exp-cat');
     if(!el)return;
     var r=el.getBoundingClientRect(),size=Math.max(r.width,r.height)*2.2;
     var d=document.createElement('span');
