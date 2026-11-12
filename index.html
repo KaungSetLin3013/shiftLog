@@ -998,6 +998,11 @@ html[data-palette] body:not(.light-theme) .btn-primary,html[data-palette] body:n
 @keyframes iconBump{0%{transform:translateY(0) scale(.8)}60%{transform:translateY(calc(var(--s) * -.48)) scale(1.3)}100%{transform:translateY(calc(var(--s) * -.39)) scale(1.18)}}
 .bn-item.active:active .bn-icon{transform:translateY(calc(var(--s) * -.375)) scale(1)}
 @media (prefers-reduced-motion:reduce){.bn-item.active .bn-icon{transform:translateY(calc(var(--s) * -.39)) scale(1.18)}}
+
+/* Lock the page behind any open modal (settings, edit, timesheet) */
+html{scrollbar-gutter:stable}
+body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
+.modal-overlay,.modal{overscroll-behavior:contain}
 </style>
 </head>
 <body>
@@ -4350,6 +4355,27 @@ function syncBreakChips(){
   if(typeof sg==='function'){
     window.setGraph=function(){var r=sg.apply(this,arguments);easeIn(document.getElementById('main-chart'));return r;};
   }
+})();
+</script>
+<script>
+/* Scroll lock: the page behind an open modal stays put (keeps its scroll position, restores it on close) */
+(function(){
+  var locked=false,y=0;
+  function sync(){
+    var open=!!document.querySelector('.modal-overlay.open'),b=document.body;
+    if(open&&!locked){
+      locked=true;y=window.pageYOffset||document.documentElement.scrollTop||0;
+      b.style.top=(-y)+'px';b.classList.add('scroll-locked');
+    }else if(!open&&locked){
+      locked=false;b.classList.remove('scroll-locked');b.style.top='';
+      window.scrollTo(0,y);
+    }
+  }
+  var mo=new MutationObserver(sync);
+  function watch(){document.querySelectorAll('.modal-overlay').forEach(function(o){if(!o.__lockWatched){o.__lockWatched=true;mo.observe(o,{attributes:true,attributeFilter:['class']});}});}
+  watch();
+  new MutationObserver(function(){watch();sync();}).observe(document.body,{childList:true});
+  sync();
 })();
 </script>
 </body>
