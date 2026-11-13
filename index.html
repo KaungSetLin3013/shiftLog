@@ -61,7 +61,8 @@
     }
 }
 </script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
 <style>
@@ -390,31 +391,31 @@ canvas{width:100%!important;display:block;}
 
 @media(max-width:860px){.monthly-layout{grid-template-columns:1fr;}}
 
-/* Google account profile button */
-#g-profile{
+/* Account profile button */
+#acc-profile{
   display:flex;align-items:center;cursor:pointer;flex-shrink:0;
 }
-#g-avatar-wrap{
+#acc-avatar-wrap{
   display:flex;align-items:center;gap:7px;
   background:var(--surface2);border:1px solid var(--border);
   border-radius:24px;padding:5px 11px 5px 5px;
   transition:border-color .2s;
 }
-#g-profile:hover #g-avatar-wrap{border-color:var(--accent);}
-.g-avatar-placeholder{
+#acc-profile:hover #acc-avatar-wrap{border-color:var(--accent);}
+.acc-avatar-placeholder{
   width:28px;height:28px;border-radius:50%;
   background:linear-gradient(135deg,#4285F4,#34A853);
   display:flex;align-items:center;justify-content:center;
   color:#fff;font-size:13px;font-weight:800;flex-shrink:0;
 }
-#g-avatar-photo{
+#acc-avatar-photo{
   width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;
   border:2px solid var(--accent);
 }
-#g-signin-label{
+#acc-signin-label{
   font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;
 }
-#g-user-short{
+#acc-user-short{
   font-size:12px;font-weight:700;color:var(--text);max-width:90px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
@@ -1019,7 +1020,7 @@ canvas{width:100%!important;display:block;}
 @media (prefers-reduced-motion:reduce){.seg-thumb{transition:none}}
 
 /* ---- Prettier sign-in / account button ---- */
-#g-avatar-wrap{
+#acc-avatar-wrap{
   position:relative;overflow:hidden;gap:8px;padding:5px 15px 5px 5px;
   border:1.5px solid transparent;border-radius:999px;
   background:linear-gradient(var(--surface2),var(--surface2)) padding-box,
@@ -1028,29 +1029,29 @@ canvas{width:100%!important;display:block;}
   transition:transform 450ms var(--spring),box-shadow .25s;
   -webkit-tap-highlight-color:transparent;
 }
-#g-avatar-wrap::before{content:'';position:absolute;top:2px;left:14%;width:36%;height:34%;border-radius:50%;pointer-events:none;
+#acc-avatar-wrap::before{content:'';position:absolute;top:2px;left:14%;width:36%;height:34%;border-radius:50%;pointer-events:none;
   background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,0));opacity:.45}
-#g-avatar-wrap::after{content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:34%;pointer-events:none;
+#acc-avatar-wrap::after{content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:34%;pointer-events:none;
   background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);
-  transform:translateX(-160%) skewX(-18deg);animation:gShine 5.5s ease-in-out 1.2s infinite}
-@keyframes gShine{0%,62%{transform:translateX(-160%) skewX(-18deg)}100%{transform:translateX(420%) skewX(-18deg)}}
-#g-avatar-wrap.signed::after{animation:none;opacity:0}
-.g-avatar-placeholder{
+  transform:translateX(-160%) skewX(-18deg);animation:accShine 5.5s ease-in-out 1.2s infinite}
+@keyframes accShine{0%,62%{transform:translateX(-160%) skewX(-18deg)}100%{transform:translateX(420%) skewX(-18deg)}}
+#acc-avatar-wrap.signed::after{animation:none;opacity:0}
+.acc-avatar-placeholder{
   background:#fff!important;box-shadow:0 1px 4px rgba(0,0,0,.28);
   transition:transform 450ms var(--spring);position:relative;z-index:1}
-.g-avatar-placeholder svg{display:block}
-#g-signin-label{color:var(--text)!important;font-weight:700!important;font-size:12.5px!important;letter-spacing:.3px;position:relative;z-index:1}
-#g-user-short,.g-avatar-photo{position:relative;z-index:1}
-.g-avatar-photo[style*="display: none"]+.g-online,.g-avatar-photo:not([src]) + .g-online,.g-avatar-photo[src=""]+.g-online{display:none}
-.g-online{position:absolute;left:23px;bottom:5px;width:9px;height:9px;border-radius:50%;z-index:2;
+.acc-avatar-placeholder svg{display:block}
+#acc-signin-label{color:var(--text)!important;font-weight:700!important;font-size:12.5px!important;letter-spacing:.3px;position:relative;z-index:1}
+#acc-user-short,.acc-avatar-photo{position:relative;z-index:1}
+.acc-avatar-photo[style*="display: none"]+.acc-online,.acc-avatar-photo:not([src]) + .acc-online,.acc-avatar-photo[src=""]+.acc-online{display:none}
+.acc-online{position:absolute;left:23px;bottom:5px;width:9px;height:9px;border-radius:50%;z-index:2;
   background:var(--green);border:2px solid var(--surface2);box-shadow:0 0 8px var(--green)}
 @media (hover:hover){
-  #g-profile:hover #g-avatar-wrap{transform:translateY(-2px) scale(1.05);border-color:transparent;
+  #acc-profile:hover #acc-avatar-wrap{transform:translateY(-2px) scale(1.05);border-color:transparent;
     box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 34%,transparent),inset 0 1px 0 rgba(255,255,255,.12)}
-  #g-profile:hover .g-avatar-placeholder{transform:rotate(-14deg) scale(1.12)}
+  #acc-profile:hover .acc-avatar-placeholder{transform:rotate(-14deg) scale(1.12)}
 }
-#g-profile:active #g-avatar-wrap{transform:scale(.93,.9);transition-duration:80ms}
-@media (prefers-reduced-motion:reduce){#g-avatar-wrap::after{display:none}}
+#acc-profile:active #acc-avatar-wrap{transform:scale(.93,.9);transition-duration:80ms}
+@media (prefers-reduced-motion:reduce){#acc-avatar-wrap::after{display:none}}
 
 /* Collapsible settings sections */
 .setting-collapse{margin:8px 0}
@@ -1118,6 +1119,31 @@ html[data-palette] body:not(.light-theme) .btn-primary,html[data-palette] body:n
 html{scrollbar-gutter:stable}
 body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-overlay,.modal{overscroll-behavior:contain}
+/* ---- Account modal (login / register / details) ---- */
+.acc-tabs{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:18px}
+.acc-tabs button{flex:1;padding:9px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.acc-tabs button.active{background:var(--surface3);color:var(--text)}
+.acc-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.acc-field label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.acc-msg{min-height:18px;font-size:12px;line-height:1.5;margin:2px 0 12px;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.acc-msg.err{color:var(--red)}.acc-msg.ok{color:var(--green)}
+.acc-link{background:none;border:none;color:var(--accent);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+.acc-link:hover{text-decoration:underline}
+.acc-hero{display:flex;align-items:center;gap:14px;padding-bottom:16px;margin-bottom:6px;border-bottom:1px solid var(--border)}
+.acc-av{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:2px solid var(--accent);object-fit:cover;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--purple));color:#000;font-size:22px;font-weight:800;overflow:hidden}
+.acc-av img{width:100%;height:100%;object-fit:cover}
+.acc-hero-name{font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acc-hero-mail{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acc-sec{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:20px 0 10px}
+.acc-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.acc-row span:first-child{color:var(--muted);flex-shrink:0}
+.acc-row span:last-child{text-align:right;word-break:break-word}
+.acc-inline{display:flex;gap:8px}
+.acc-inline input{flex:1;min-width:0}
+.acc-btns{display:flex;gap:8px;flex-wrap:wrap}
+.acc-btns .btn{flex:1;min-width:120px}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red)}
+.header-login-ico{display:block}
 </style>
 </head>
 <body>
@@ -1131,11 +1157,11 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
 <div class="container" id="main-app" style="display:none">
   <header>
-    <!-- Google account profile (left) -->
-    <div id="g-profile" onclick="handleGoogleProfileClick()" title="Google Drive" role="button" tabindex="0" aria-label="Google Drive account">
-      <div id="g-avatar-wrap">
-        <div id="g-avatar" class="g-avatar-placeholder"><svg viewBox="0 0 48 48" width="16" height="16" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg></div>
-        <div id="g-signin-label">Sign in</div>
+    <!-- Account / login button (left) -->
+    <div id="acc-profile" onclick="openAccount()" title="Login / Account" role="button" tabindex="0" aria-label="Login or account">
+      <div id="acc-avatar-wrap">
+        <div id="acc-avatar" class="acc-avatar-placeholder"><svg class="header-login-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#3c4043" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+        <div id="acc-signin-label">Login</div>
       </div>
     </div>
     <div class="logo">Shift<span>Log</span></div>
@@ -1457,7 +1483,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="tax-rate" value="20" min="0" max="100" step="0.1"
               style="font-family:'JetBrains Mono',monospace;font-size:16px;text-align:center"
-              oninput="recalcTax()">
+              oninput="saveSettings();recalcTax()">
             <span style="color:var(--purple);font-weight:800;font-size:16px">%</span>
           </div>
         </div>
@@ -1466,7 +1492,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="tax-social" value="0" min="0" max="100" step="0.1"
               style="font-family:'JetBrains Mono',monospace;font-size:16px;text-align:center"
-              oninput="recalcTax()">
+              oninput="saveSettings();recalcTax()">
             <span style="color:var(--purple);font-weight:800;font-size:16px">%</span>
           </div>
         </div>
@@ -1474,7 +1500,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
           <label id="lbl-tax-deduct-lbl">Deductions</label>
           <input type="number" id="tax-deduct" value="0" min="0" step="0.01" placeholder="0.00"
             style="font-family:'JetBrains Mono',monospace;font-size:15px"
-            oninput="recalcTax()">
+            oninput="saveSettings();recalcTax()">
         </div>
       </div>
 
@@ -1491,11 +1517,11 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
             <div class="field" style="max-width:160px">
               <label id="lbl-tax-from">From</label>
-              <input type="date" id="tax-from" oninput="recalcTax()">
+              <input type="date" id="tax-from" oninput="saveSettings();recalcTax()">
             </div>
             <div class="field" style="max-width:160px">
               <label id="lbl-tax-to">To</label>
-              <input type="date" id="tax-to" oninput="recalcTax()">
+              <input type="date" id="tax-to" oninput="saveSettings();recalcTax()">
             </div>
           </div>
         </div>
@@ -1667,43 +1693,86 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   <div class="page" id="page-data" style="display:none!important"></div>
 </div><!-- /main-app -->
 
-<!-- Google Account Dropdown -->
-<div id="g-dropdown" style="display:none;position:fixed;top:70px;left:16px;z-index:300;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:280px;box-shadow:0 8px 32px var(--shadow)">
-  <div id="g-dropdown-signed-out">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-      <div style="width:44px;height:44px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px">G</div>
-      <div>
-        <div style="font-size:14px;font-weight:700">Google Drive Sync</div>
-        <div style="font-size:12px;color:var(--muted)">Not signed in</div>
+<!-- Account modal: login / register / account details -->
+<div class="modal-overlay" id="account-modal" onclick="if(event.target===this)closeAccount()">
+  <div class="modal">
+    <button type="button" class="modal-close" onclick="closeAccount()" aria-label="Close">✕</button>
+    <div class="modal-title" id="acc-title" data-ai="account">Account</div>
+
+    <!-- Signed out: Login / Register -->
+    <div id="acc-out">
+      <div class="acc-tabs" role="tablist">
+        <button type="button" id="acc-tab-login" class="active" data-ai="login" onclick="accTab('login')">Login</button>
+        <button type="button" id="acc-tab-register" data-ai="register" onclick="accTab('register')">Register</button>
+      </div>
+
+      <form id="acc-form-login" onsubmit="accLogin(event)" novalidate>
+        <div class="acc-field"><label for="acc-l-email" data-ai="email">Email</label>
+          <input id="acc-l-email" type="email" autocomplete="email" inputmode="email" required></div>
+        <div class="acc-field"><label for="acc-l-pass" data-ai="password">Password</label>
+          <input id="acc-l-pass" type="password" autocomplete="current-password" required></div>
+        <div style="text-align:right;margin:-4px 0 6px"><button type="button" class="acc-link" data-ai="forgot" onclick="accForgot()">Forgot password?</button></div>
+        <div class="acc-msg" id="acc-msg-login" role="status"></div>
+        <button type="submit" class="btn btn-primary" id="acc-btn-login" style="width:100%;padding:12px" data-ai="login">Login</button>
+      </form>
+
+      <form id="acc-form-register" onsubmit="accRegister(event)" style="display:none" novalidate>
+        <div class="acc-field"><label for="acc-r-name" data-ai="displayName">Display name</label>
+          <input id="acc-r-name" type="text" autocomplete="name" maxlength="60"></div>
+        <div class="acc-field"><label for="acc-r-email" data-ai="email">Email</label>
+          <input id="acc-r-email" type="email" autocomplete="email" inputmode="email" required></div>
+        <div class="acc-field"><label for="acc-r-pass" data-ai="password">Password</label>
+          <input id="acc-r-pass" type="password" autocomplete="new-password" minlength="6" required></div>
+        <div class="acc-field"><label for="acc-r-pass2" data-ai="confirm">Confirm password</label>
+          <input id="acc-r-pass2" type="password" autocomplete="new-password" required></div>
+        <div class="acc-msg" id="acc-msg-register" role="status"></div>
+        <button type="submit" class="btn btn-primary" id="acc-btn-register" style="width:100%;padding:12px" data-ai="createAcc">Create account</button>
+      </form>
+
+      <p style="font-size:11px;color:var(--muted);line-height:1.6;margin-top:14px" data-ai="loginNote">Your data stays on this device. Log in to back it up and use it on any device.</p>
+    </div>
+
+    <!-- Signed in: account details -->
+    <div id="acc-in" style="display:none">
+      <div class="acc-hero">
+        <div class="acc-av" id="acc-av">?</div>
+        <div style="min-width:0">
+          <div class="acc-hero-name" id="acc-name">—</div>
+          <div class="acc-hero-mail" id="acc-mail">—</div>
+        </div>
+      </div>
+
+      <div class="acc-sec" data-ai="details">Account details</div>
+      <div class="acc-field"><label for="acc-dname" data-ai="displayName">Display name</label>
+        <div class="acc-inline"><input id="acc-dname" type="text" maxlength="60" autocomplete="name">
+          <button type="button" class="btn btn-ghost" data-ai="save" onclick="accSaveName()">Save</button></div></div>
+      <div class="acc-row"><span data-ai="email">Email</span><span id="acc-d-email">—</span></div>
+      <div class="acc-row"><span data-ai="since">Member since</span><span id="acc-d-since">—</span></div>
+      <div class="acc-row"><span data-ai="lastLogin">Last login</span><span id="acc-d-last">—</span></div>
+      <div class="acc-row"><span data-ai="uid">User ID</span><span id="acc-d-id" style="font-family:'JetBrains Mono',monospace;font-size:11px">—</span></div>
+
+      <div class="acc-sec" data-ai="cloud">Cloud data</div>
+      <div class="acc-row"><span data-ai="lastSync">Last synced</span><span id="acc-d-sync">—</span></div>
+      <div class="acc-row"><span data-ai="onDevice">On this device</span><span id="acc-d-counts">—</span></div>
+      <div class="acc-msg" id="acc-status" style="margin-top:10px"></div>
+      <div class="acc-btns">
+        <button type="button" class="btn btn-primary" data-ai="syncNow" onclick="syncNow()">⟳ Sync now</button>
+      </div>
+
+      <div id="acc-pass-sec">
+        <div class="acc-sec" data-ai="security">Security</div>
+        <div class="acc-field"><label for="acc-newpass" data-ai="newPass">New password</label>
+          <div class="acc-inline"><input id="acc-newpass" type="password" autocomplete="new-password" minlength="6">
+            <button type="button" class="btn btn-ghost" data-ai="update" onclick="accChangePass()">Update</button></div></div>
+      </div>
+      <div class="acc-msg" id="acc-msg-in" role="status" style="margin-top:8px"></div>
+
+      <div class="acc-btns" style="margin-top:6px">
+        <button type="button" class="btn btn-ghost" data-ai="logout" onclick="signOutAccount()">Log out</button>
       </div>
     </div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Sign in with Google to save your ShiftLog data to Drive and access it from any device.</p>
-    <button onclick="signInWithGoogle()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:box-shadow .2s" onmouseenter="this.style.boxShadow='0 2px 8px rgba(0,0,0,.15)'" onmouseleave="this.style.boxShadow='none'">
-      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z"/></svg>
-      Sign in with Google
-    </button>
-  </div>
-  <div id="g-dropdown-signed-in" style="display:none">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
-      <img id="g-user-photo" src="" alt="" width="44" height="44" style="border-radius:50%;border:2px solid var(--accent)">
-      <div style="min-width:0">
-        <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="g-user-name">—</div>
-        <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="g-user-email">—</div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-      <button onclick="saveToDrive()" style="width:100%;padding:11px;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-        ☁ Save to Drive
-      </button>
-      <button onclick="loadFromDrive()" style="width:100%;padding:11px;background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-        ☁ Load from Drive
-      </button>
-    </div>
-    <div id="g-dropdown-status" style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-height:16px;margin-bottom:12px"></div>
-    <button onclick="signOutGoogle()" style="width:100%;padding:8px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-size:12px;cursor:pointer">Sign out</button>
   </div>
 </div>
-<div id="g-dropdown-backdrop" style="display:none;position:fixed;inset:0;z-index:299" onclick="closeGoogleDropdown()"></div>
 
 <!-- Settings Modal -->
 <div class="modal-overlay" id="settings-modal">
@@ -1843,16 +1912,6 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
       <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Data &amp; Backup</div>
 
-      <!-- Google Drive -->
-      <div style="background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 4%,transparent),transparent);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:12px;padding:14px;margin-bottom:12px">
-        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">☁ Google Drive</div>
-        <div id="set-gdrive-status-row" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:var(--muted)" id="set-gdrive-info">Not signed in — use the G button in the top-left</div>
-        <div class="icon-row">
-          <button onclick="saveToDrive();closeSettings()" class="btn btn-primary btn-icon icon-wide" aria-label="Save to Drive" title="Save to Drive"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.6 4.2 4.2 0 0 1 17.5 18z"/><path d="M12 16v-6m0 0-2.5 2.5M12 10l2.5 2.5"/></svg></button>
-          <button onclick="loadFromDrive();closeSettings()" class="btn btn-ghost btn-icon icon-wide" style="border-color:var(--accent);color:var(--accent)" aria-label="Load from Drive" title="Load from Drive"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></button>
-        </div>
-      </div>
-
       <!-- Local backup -->
       <div class="icon-row">
         <button onclick="exportBackup()" class="btn btn-ghost btn-icon icon-wide" aria-label="Export backup" title="Export backup"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6m0 0-2.5-2.5M12 17l2.5-2.5"/></svg></button>
@@ -1980,9 +2039,9 @@ function openDB(){
   });
 }
 function dbGetAll(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readonly');const r=tx.objectStore(s).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
-function dbPut(s,o){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).put(o);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
-function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
-function dbClear(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).clear();r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+function dbPut(s,o){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).put(o);r.onsuccess=()=>{res(r.result);cloudHook('put',s,null,o);};r.onerror=()=>rej(r.error);});}
+function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).delete(id);r.onsuccess=()=>{res();cloudHook('del',s,id,null);};r.onerror=()=>rej(r.error);});}
+function dbClear(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).clear();r.onsuccess=()=>{res();cloudHook('clear',s,null,null);};r.onerror=()=>rej(r.error);});}
 function toggleSettingSection(k){
   const btn=document.getElementById('st-'+k),box=document.getElementById('sd-'+k);
   if(!btn||!box)return;
@@ -2132,6 +2191,7 @@ function applyLang(rerender){
     const badgeHTML=badge?badge.outerHTML:'';
     btn.innerHTML=t('tab-'+tab)+' '+badgeHTML;
   });
+  if(typeof applyAccountLang==='function')applyAccountLang();
   // Lang toggle highlight
   const el_en=document.getElementById('lang-en');
   const el_ja=document.getElementById('lang-ja');
@@ -2210,6 +2270,8 @@ async function saveSettings(){
   settings.currency=document.getElementById('currency-sym').value||'$';
   settings.lang=lang;
   settings.taxRate=parseFloat(document.getElementById('setting-tax-rate')?.value)||10;
+  {const g=id=>document.getElementById(id);
+   if(g('tax-rate'))settings.taxCalc={rate:g('tax-rate').value,social:g('tax-social')?.value,deduct:g('tax-deduct')?.value,period:taxPeriod,from:g('tax-from')?.value||'',to:g('tax-to')?.value||''};}
   await dbPut('settings',{key:'main',...settings});
 }
 async function loadSettings(){
@@ -2222,6 +2284,7 @@ async function loadSettings(){
   document.getElementById('night-pct').value=settings.nightPct??25;
   const trEl=document.getElementById('setting-tax-rate');
   if(trEl) trEl.value=settings.taxRate??10;
+  applyTaxUI();
   if(settings.lang) lang=settings.lang;
   // Apply saved theme
   const th=settings.theme||'dark';
@@ -2251,9 +2314,6 @@ function openSettings(){
   const th2=shifts.reduce((a,s)=>a+s.duration,0);
   const ds=document.getElementById('data-stats-s');
   if(ds) ds.innerHTML=`Works: ${works.length} &nbsp;·&nbsp; Shifts: ${shifts.length} &nbsp;·&nbsp; Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th2)} &nbsp;·&nbsp; Earnings: ${fmtMoney(te)}`;
-  // Refresh drive status in settings panel
-  const srow=document.getElementById('set-gdrive-status-row');
-  if(srow) srow.textContent=gUser?`Signed in as ${gUser.email}`:'Not signed in — use the G button in the top-left';
   document.getElementById('settings-modal').classList.add('open');
 }
 function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
@@ -2577,8 +2637,6 @@ async function addShift(){
   updateStats();renderShifts();updateBadges();updateDataStats();
   if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
   loading(false);btn.disabled=false;
-  // Auto-save to Google Drive (only if signed in)
-  if(gToken)saveToDrive({silent:true});
 }
 
 // ════════════════════════════════════════════════
@@ -2971,6 +3029,15 @@ function drawChart(days,earnings,hours){
 // Tax Calculator
 // ════════════════════════════════════════════════
 let taxPeriod='all';
+function applyTaxUI(){
+  const tc=settings.taxCalc;if(!tc)return;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el&&v!==undefined&&v!==null&&v!=='')el.value=v;};
+  set('tax-rate',tc.rate);set('tax-social',tc.social);set('tax-deduct',tc.deduct);set('tax-from',tc.from);set('tax-to',tc.to);
+  const p=['all','month','year','custom'].includes(tc.period)?tc.period:'all';
+  taxPeriod=p;
+  ['all','month','year','custom'].forEach(x=>{const b=document.getElementById('taxp-'+x);if(b)b.classList.toggle('sel',x===p);});
+  const cd=document.getElementById('tax-custom-dates');if(cd)cd.style.display=p==='custom'?'block':'none';
+}
 
 function setTaxPeriod(p){
   taxPeriod=p;
@@ -2980,6 +3047,7 @@ function setTaxPeriod(p){
   });
   const customDiv=document.getElementById('tax-custom-dates');
   if(customDiv) customDiv.style.display=p==='custom'?'block':'none';
+  saveSettings();
   recalcTax();
 }
 
@@ -3493,233 +3561,460 @@ function updateDataStats(){
 }
 
 // ════════════════════════════════════════════════
-// Google OAuth + Drive API
+// Supabase Auth (email + password) + Cloud Sync
 // ════════════════════════════════════════════════
-const DRIVE_FILENAME='shiftlog_backup.json';
-// Replace with your own Google OAuth Client ID from console.cloud.google.com
-const GOOGLE_CLIENT_ID='778480488304-51o5a477jfica0sa122k7ujjo7ktrlea.apps.googleusercontent.com';
-const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
+// 1. Create a project at supabase.com  2. Run supabase-setup.sql in the SQL editor
+// 3. Enable Auth → Providers → Email  4. Paste your Project URL + anon (public) key into config.js (next to this file).
+// The anon key is safe to expose in the browser: Row Level Security limits each user to their own row.
+const _CFG=window.SHIFTLOG_CONFIG||{};            // loaded from config.js
+const SUPABASE_URL=String(_CFG.supabaseUrl||'');
+const SUPABASE_ANON_KEY=String(_CFG.supabaseAnonKey||'');
 
-let gToken=null;   // access token
-let gUser=null;    // {name, email, picture}
-let gTokenClient=null;
+let sb=null;             // Supabase client
+let acctUser=null;          // {id, name, given_name, email, created, lastLogin}
+let lastAuthUid=null;    // user id already reconciled in this page load
+let cloudReady=false;    // true once local/cloud have been reconciled → auto-save allowed
+let cloudSuppress=false; // true while cloud data is being written into the local DB
 
-function initGoogleAuth(){
-  // Load GIS (Google Identity Services)
-  if(typeof google==='undefined'||!google.accounts){
-    setTimeout(initGoogleAuth,500);
+function cloudConfigured(){
+  return /^https:\/\/.+\.supabase\.co\/?$/.test(SUPABASE_URL)&&!SUPABASE_URL.includes('YOUR-PROJECT')&&SUPABASE_ANON_KEY.length>20&&!SUPABASE_ANON_KEY.includes('YOUR-ANON');
+}
+function userFromAuth(u){
+  const m=u.user_metadata||{};
+  const name=m.full_name||m.name||(u.email||'').split('@')[0]||'User';
+  return {id:u.id,name,given_name:name.split(' ')[0],email:u.email||'',
+    created:u.created_at||'',lastLogin:u.last_sign_in_at||''};
+}
+function syncKey(){return 'sl-cloud-sync-'+(acctUser?acctUser.id:'');}
+
+// ── small i18n table for the account UI (EN / JA) ──
+const AT={
+  en:{account:'Account',login:'Login',register:'Register',email:'Email',password:'Password',confirm:'Confirm password',
+    displayName:'Display name',forgot:'Forgot password?',createAcc:'Create account',
+    loginNote:'Your data stays on this device. Log in to back it up and use it on any device.',
+    details:'Account details',save:'Save',since:'Member since',lastLogin:'Last login',uid:'User ID',
+    cloud:'Cloud data',lastSync:'Last synced',onDevice:'On this device',syncNow:'⟳ Sync now',
+    security:'Security',newPass:'New password',update:'Update',logout:'Log out',
+    works:'works',shifts:'shifts',bills:'bills',expenses:'expenses',never:'Never',
+    notConfigured:'Cloud login is not set up yet — add your Supabase URL and anon key in config.js.',
+    offline:'Cloud service unavailable (are you offline?)',fillAll:'Please fill in email and password.',
+    passShort:'Password must be at least 6 characters.',passMismatch:'Passwords do not match.',
+    checkEmail:'Account created! Check your email to confirm, then log in.',alreadyReg:'This email is already registered — try logging in.',
+    resetSent:'Password reset email sent. Check your inbox.',enterEmail:'Enter your email above first.',
+    nameSaved:'Name updated ✓',passSaved:'Password updated ✓',setNewPass:'Enter a new password below.',
+    confirmDel:'Delete your cloud backup? Data on this device is kept.',cloudDeleted:'Cloud data deleted',loggedOut:'Logged out'},
+  ja:{account:'アカウント',login:'ログイン',register:'新規登録',email:'メールアドレス',password:'パスワード',confirm:'パスワード（確認）',
+    displayName:'表示名',forgot:'パスワードを忘れた場合',createAcc:'アカウント作成',
+    loginNote:'データはこの端末に保存されます。ログインするとバックアップされ、他の端末でも使えます。',
+    details:'アカウント情報',save:'保存',since:'登録日',lastLogin:'最終ログイン',uid:'ユーザーID',
+    cloud:'クラウドデータ',lastSync:'最終同期',onDevice:'この端末のデータ',syncNow:'⟳ 今すぐ同期',
+    security:'セキュリティ',newPass:'新しいパスワード',update:'更新',logout:'ログアウト',
+    works:'勤務先',shifts:'シフト',bills:'請求',expenses:'支出',never:'なし',
+    notConfigured:'クラウドログインが未設定です。config.js にSupabaseのURLとanonキーを入力してください。',
+    offline:'クラウドに接続できません（オフラインですか？）',fillAll:'メールアドレスとパスワードを入力してください。',
+    passShort:'パスワードは6文字以上にしてください。',passMismatch:'パスワードが一致しません。',
+    checkEmail:'アカウントを作成しました。メールを確認してからログインしてください。',alreadyReg:'このメールは登録済みです。ログインしてください。',
+    resetSent:'パスワード再設定メールを送信しました。',enterEmail:'先にメールアドレスを入力してください。',
+    nameSaved:'名前を更新しました ✓',passSaved:'パスワードを更新しました ✓',setNewPass:'新しいパスワードを入力してください。',
+    confirmDel:'クラウドのバックアップを削除しますか？この端末のデータは残ります。',cloudDeleted:'クラウドデータを削除しました',loggedOut:'ログアウトしました'}
+};
+function at(k){return ((AT[lang]||AT.en)[k])||AT.en[k]||k;}
+function applyAccountLang(){
+  document.querySelectorAll('#account-modal [data-ai]').forEach(el=>{el.textContent=at(el.dataset.ai);});
+  updateAccountUI();
+}
+
+async function initAuth(){
+  updateAccountUI();
+  if(!window.supabase||!cloudConfigured())return;   // offline or not configured: app keeps working locally
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+  });
+  // Defer: calling Supabase from inside this callback can deadlock
+  sb.auth.onAuthStateChange((event,session)=>{setTimeout(()=>handleAuthChange(event,session),0);});
+}
+
+async function handleAuthChange(event,session){
+  if(!session){
+    acctUser=null;lastAuthUid=null;cloudReady=false;
+    updateAccountUI();
     return;
   }
-  gTokenClient=google.accounts.oauth2.initTokenClient({
-    client_id:GOOGLE_CLIENT_ID,
-    scope:DRIVE_SCOPE+' https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-    callback:(resp)=>{
-      if(resp.error){gdriveStatus('Auth error: '+resp.error,true);return;}
-      gToken=resp.access_token;
-      fetchGoogleUserInfo().then(()=>{
-        // Auto-load data from Drive right after a fresh sign-in
-        if(gUser) loadFromDrive({auto:true});
-      });
+  acctUser=userFromAuth(session.user);
+  updateAccountUI();
+  if(event==='PASSWORD_RECOVERY'){
+    openAccount();accMsg('acc-msg-in',at('setNewPass'),'ok');
+    const np=document.getElementById('acc-newpass');if(np)np.focus();
+  }else if(event==='SIGNED_IN'&&document.getElementById('account-modal').classList.contains('open')){
+    closeAccount();
+  }
+  if(lastAuthUid===acctUser.id)return;   // token refresh / tab refocus — already reconciled
+  lastAuthUid=acctUser.id;
+  await reconcileCloud();
+}
+
+// ── UI ──
+function avatarHTML(){
+  return esc((acctUser.name||acctUser.email||'?').trim().charAt(0).toUpperCase()||'?');
+}
+function fmtDT(iso){
+  if(!iso)return '—';
+  const d=new Date(iso);
+  return isNaN(d)?'—':d.toLocaleString(lang==='ja'?'ja-JP':undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function updateAccountUI(){
+  const isIn=!!acctUser;
+  // header button
+  const wrap=document.getElementById('acc-avatar-wrap');
+  if(wrap){
+    const initial=isIn?esc((acctUser.name||acctUser.email||'?').trim().charAt(0).toUpperCase()):'';
+    if(isIn){
+      wrap.classList.add('signed');
+      wrap.innerHTML=`<div class="acc-avatar-placeholder" style="background:linear-gradient(135deg,var(--accent),var(--purple))!important;color:#000;font-weight:800">${initial}</div>`
+        +`<span id="acc-user-short" style="font-size:12px;font-weight:700;color:var(--text);max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc((acctUser.given_name||acctUser.name||'').split(' ')[0])}</span>`;
+    }else{
+      wrap.classList.remove('signed');
+      wrap.innerHTML=`<div class="acc-avatar-placeholder"><svg class="header-login-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#3c4043" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><div id="acc-signin-label">${esc(at('login'))}</div>`;
     }
-  });
-  // Try to restore token from sessionStorage
-  const saved=sessionStorage.getItem('gToken');
-  if(saved){gToken=saved;fetchGoogleUserInfo();}
+  }
+  // modal views
+  const out=document.getElementById('acc-out'),inn=document.getElementById('acc-in');
+  if(out&&inn){
+    out.style.display=isIn?'none':'block';
+    inn.style.display=isIn?'block':'none';
+    document.getElementById('acc-title').textContent=at('account');
+  }
+  if(isIn){
+    document.getElementById('acc-av').innerHTML=avatarHTML();
+    document.getElementById('acc-name').textContent=acctUser.name||'';
+    document.getElementById('acc-mail').textContent=acctUser.email||'';
+    const dn=document.getElementById('acc-dname');
+    if(dn&&document.activeElement!==dn)dn.value=acctUser.name||'';
+    document.getElementById('acc-d-email').textContent=acctUser.email||'—';
+    document.getElementById('acc-d-since').textContent=fmtDT(acctUser.created);
+    document.getElementById('acc-d-last').textContent=fmtDT(acctUser.lastLogin);
+    document.getElementById('acc-d-id').textContent=acctUser.id.slice(0,8)+'…';
+    document.getElementById('acc-d-sync').textContent=fmtDT(localStorage.getItem(syncKey()))==='—'?at('never'):fmtDT(localStorage.getItem(syncKey()));
+    document.getElementById('acc-d-counts').textContent=`${works.length} ${at('works')} · ${shifts.length} ${at('shifts')} · ${bills.length} ${at('bills')} · ${expenses.length} ${at('expenses')}`;
+  }
 }
 
-async function fetchGoogleUserInfo(){
-  if(!gToken)return;
+function openAccount(){
+  updateAccountUI();
+  ['acc-msg-login','acc-msg-register','acc-msg-in'].forEach(id=>accMsg(id,''));
+  document.getElementById('account-modal').classList.add('open');
+  if(!acctUser)setTimeout(()=>{const el=document.getElementById('acc-l-email');if(el&&document.getElementById('acc-form-login').style.display!=='none')el.focus();},60);
+}
+function closeAccount(){document.getElementById('account-modal').classList.remove('open');}
+function accTab(which){
+  const login=which==='login';
+  document.getElementById('acc-form-login').style.display=login?'block':'none';
+  document.getElementById('acc-form-register').style.display=login?'none':'block';
+  document.getElementById('acc-tab-login').classList.toggle('active',login);
+  document.getElementById('acc-tab-register').classList.toggle('active',!login);
+  ['acc-msg-login','acc-msg-register'].forEach(id=>accMsg(id,''));
+}
+function accMsg(id,text,kind){
+  const el=document.getElementById(id);if(!el)return;
+  el.textContent=text||'';el.className='acc-msg'+(kind?' '+kind:'');
+}
+function accReady(msgId){
+  if(!cloudConfigured()){accMsg(msgId,at('notConfigured'),'err');return false;}
+  if(!sb){accMsg(msgId,at('offline'),'err');return false;}
+  return true;
+}
+function accBusy(btnId,on){const b=document.getElementById(btnId);if(b)b.disabled=on;}
+
+async function accLogin(ev){
+  ev.preventDefault();
+  const email=document.getElementById('acc-l-email').value.trim();
+  const pass=document.getElementById('acc-l-pass').value;
+  if(!accReady('acc-msg-login'))return;
+  if(!email||!pass){accMsg('acc-msg-login',at('fillAll'),'err');return;}
+  accBusy('acc-btn-login',true);accMsg('acc-msg-login','…');
+  const {error}=await sb.auth.signInWithPassword({email,password:pass});
+  accBusy('acc-btn-login',false);
+  if(error){accMsg('acc-msg-login',error.message,'err');return;}
+  document.getElementById('acc-l-pass').value='';
+  accMsg('acc-msg-login','');   // modal closes via onAuthStateChange
+}
+
+async function accRegister(ev){
+  ev.preventDefault();
+  const name=document.getElementById('acc-r-name').value.trim();
+  const email=document.getElementById('acc-r-email').value.trim();
+  const pass=document.getElementById('acc-r-pass').value;
+  const pass2=document.getElementById('acc-r-pass2').value;
+  if(!accReady('acc-msg-register'))return;
+  if(!email||!pass){accMsg('acc-msg-register',at('fillAll'),'err');return;}
+  if(pass.length<6){accMsg('acc-msg-register',at('passShort'),'err');return;}
+  if(pass!==pass2){accMsg('acc-msg-register',at('passMismatch'),'err');return;}
+  accBusy('acc-btn-register',true);accMsg('acc-msg-register','…');
+  const {data,error}=await sb.auth.signUp({email,password:pass,options:{
+    data:{full_name:name||email.split('@')[0]},
+    emailRedirectTo:location.origin+location.pathname}});
+  accBusy('acc-btn-register',false);
+  if(error){accMsg('acc-msg-register',error.message,'err');return;}
+  if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0){
+    accMsg('acc-msg-register',at('alreadyReg'),'err');return;
+  }
+  document.getElementById('acc-r-pass').value='';document.getElementById('acc-r-pass2').value='';
+  if(!data.session){accMsg('acc-msg-register',at('checkEmail'),'ok');}   // email confirmation is on
+}
+
+async function accForgot(){
+  const email=document.getElementById('acc-l-email').value.trim();
+  if(!accReady('acc-msg-login'))return;
+  if(!email){accMsg('acc-msg-login',at('enterEmail'),'err');return;}
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+  if(error)accMsg('acc-msg-login',error.message,'err');
+  else accMsg('acc-msg-login',at('resetSent'),'ok');
+}
+
+async function accSaveName(){
+  const name=document.getElementById('acc-dname').value.trim();
+  if(!sb||!acctUser||!name)return;
+  const {error}=await sb.auth.updateUser({data:{full_name:name}});
+  if(error){accMsg('acc-msg-in',error.message,'err');return;}
+  acctUser.name=name;acctUser.given_name=name.split(' ')[0];
+  updateAccountUI();accMsg('acc-msg-in',at('nameSaved'),'ok');
+}
+
+async function accChangePass(){
+  const pass=document.getElementById('acc-newpass').value;
+  if(!sb||!acctUser)return;
+  if(pass.length<6){accMsg('acc-msg-in',at('passShort'),'err');return;}
+  const {error}=await sb.auth.updateUser({password:pass});
+  if(error){accMsg('acc-msg-in',error.message,'err');return;}
+  document.getElementById('acc-newpass').value='';
+  accMsg('acc-msg-in',at('passSaved'),'ok');
+}
+
+async function signOutAccount(){
   try{
-    const r=await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{
-      headers:{Authorization:'Bearer '+gToken}
-    });
-    if(!r.ok){gToken=null;sessionStorage.removeItem('gToken');updateGoogleUI();return;}
-    gUser=await r.json();
-    sessionStorage.setItem('gToken',gToken);
-    updateGoogleUI();
-  }catch{gToken=null;updateGoogleUI();}
+    if(acctUser){
+      flushOps();await cloudChain;
+      if(cloudFailed||isDirty())await cloudFullPush();   // make sure nothing is left unsynced
+      if(isDirty())toast('Could not sync before logout — changes stay on this device','err');
+    }
+    if(sb)await sb.auth.signOut({scope:'local'});         // local = only this device
+  }catch(e){console.error(e);}
+  acctUser=null;lastAuthUid=null;cloudReady=false;cloudFailed=false;
+  updateAccountUI();closeAccount();
+  toast(at('loggedOut'));
 }
 
-function updateGoogleUI(){
-  const isIn=!!gUser;
-  // Header profile button
-  const wrap=document.getElementById('g-avatar-wrap');
-  const label=document.getElementById('g-signin-label');
-  if(!wrap)return;
-  if(isIn){
-    wrap.classList.add('signed');
-    wrap.innerHTML=`<img src="${gUser.picture||''}" alt="" class="g-avatar-photo" onerror="this.style.display='none'" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);object-fit:cover"><span class="g-online"></span>
-      <span id="g-user-short" style="font-size:12px;font-weight:700;color:var(--text);max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${(gUser.given_name||gUser.name||'').split(' ')[0]}</span>`;
-  } else {
-    wrap.classList.remove('signed');
-    wrap.innerHTML=`<div class="g-avatar-placeholder"><svg viewBox="0 0 48 48" width="16" height="16" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg></div><div id="g-signin-label">Sign in</div>`;
-  }
-  // Dropdown
-  document.getElementById('g-dropdown-signed-out').style.display=isIn?'none':'block';
-  document.getElementById('g-dropdown-signed-in').style.display=isIn?'block':'none';
-  if(isIn){
-    document.getElementById('g-user-name').textContent=gUser.name||'';
-    document.getElementById('g-user-email').textContent=gUser.email||'';
-    const photo=document.getElementById('g-user-photo');
-    if(photo)photo.src=gUser.picture||'';
-  }
-  // Data page status
-  const dpName=document.getElementById('gdrive-data-name');
-  const dpEmail=document.getElementById('gdrive-data-email');
-  const dpAv=document.getElementById('gdrive-data-avatar');
-  if(dpName) dpName.textContent=isIn?(gUser.name||'Signed in'):'Not signed in';
-  if(dpEmail) dpEmail.textContent=isIn?(gUser.email||''):'Tap the G button in the top-left to sign in';
-  if(dpAv){
-    if(isIn&&gUser.picture) dpAv.innerHTML=`<img src="${gUser.picture}" style="width:32px;height:32px;border-radius:50%;object-fit:cover">`;
-    else dpAv.textContent='G';
-  }
-}
-
-function signInWithGoogle(){
-  if(!gTokenClient){toast('Google Auth not ready yet','err');return;}
-  closeGoogleDropdown();
-  gTokenClient.requestAccessToken({prompt:'consent'});
-}
-
-function signOutGoogle(){
-  if(gToken&&typeof google!=='undefined')
-    google.accounts.oauth2.revoke(gToken,()=>{});
-  gToken=null;gUser=null;
-  sessionStorage.removeItem('gToken');
-  updateGoogleUI();
-  closeGoogleDropdown();
-  toast('Signed out of Google');
-}
-
-function handleGoogleProfileClick(){
-  const dd=document.getElementById('g-dropdown');
-  const bd=document.getElementById('g-dropdown-backdrop');
-  if(dd.style.display==='none'||!dd.style.display){
-    dd.style.display='block';bd.style.display='block';
-  } else {
-    closeGoogleDropdown();
-  }
-}
-function closeGoogleDropdown(){
-  document.getElementById('g-dropdown').style.display='none';
-  document.getElementById('g-dropdown-backdrop').style.display='none';
-}
-
-function gdriveStatus(msg,isErr=false){
-  [document.getElementById('gdrive-status'),document.getElementById('g-dropdown-status')].forEach(el=>{
+function cloudStatus(msg,isErr=false){
+  [document.getElementById('acc-status')].forEach(el=>{
     if(el){el.textContent=msg;el.style.color=isErr?'var(--red)':'var(--muted)';}
   });
 }
 
-async function driveRequest(method,url,body,contentType){
-  if(!gToken) throw new Error('Not signed in to Google');
-  const opts={method,headers:{Authorization:'Bearer '+gToken}};
-  if(body){opts.body=body;opts.headers['Content-Type']=contentType||'application/json';}
-  const r=await fetch(url,opts);
-  if(r.status===401){gToken=null;gUser=null;sessionStorage.removeItem('gToken');updateGoogleUI();throw new Error('Session expired — please sign in again');}
-  return r;
-}
+// ════════════════════════════════════════════════
+// Database sync engine — local-first, every write goes to Supabase tables
+//   works / shifts / bills / expenses → one row per record (sl_* tables)
+//   settings (theme, tax, night bonus, language, timesheet info…) → sl_settings
+// ════════════════════════════════════════════════
+const TABLES={works:'sl_works',shifts:'sl_shifts',bills:'sl_bills',expenses:'sl_expenses'};
+const SETTINGS_TABLE='sl_settings';
+const STORES=Object.keys(TABLES);
+let cloudOps=[],cloudFlushTimer=null,cloudChain=Promise.resolve(),cloudInflight=0,cloudFailed=false,cloudRetryTimer=null;
 
-async function findDriveFile(){
-  const r=await driveRequest('GET',`https://www.googleapis.com/drive/v3/files?q=name='${DRIVE_FILENAME}'+and+trashed=false&fields=files(id,name,modifiedTime)&spaces=drive`);
-  const data=await r.json();
-  return data.files?.[0]||null;
-}
+function isDirty(){return localStorage.getItem('sl-dirty')==='1';}
+function setDirty(v){try{if(v)localStorage.setItem('sl-dirty','1');else localStorage.removeItem('sl-dirty');}catch(e){}}
+function ownerId(){return localStorage.getItem('sl-owner');}
+function setOwner(id){try{if(id)localStorage.setItem('sl-owner',id);else localStorage.removeItem('sl-owner');}catch(e){}}
+function cloudActive(){return !!(sb&&acctUser&&cloudReady);}
+async function dbq(q){const {error}=await q;if(error)throw error;}
 
-let driveSaving=false,drivePending=false;
-async function saveToDrive(opts){
-  const silent=!!(opts&&opts.silent);   // silent = auto-save after adding shifts
-  if(!gToken){if(!silent)signInWithGoogle();return;}
-  // If a save is already running, queue one more run so the latest data always wins
-  if(driveSaving){drivePending=true;return;}
-  driveSaving=true;
-  const btns=[document.getElementById('btn-gdrive-save')].filter(Boolean);
-  if(!silent){
-    btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Saving…';}});
-    loading(true);
-  }
-  gdriveStatus('Uploading to Google Drive…');
+// Called by dbPut / dbDelete / dbClear after every local write
+function cloudHook(t,store,id,obj){
+  if(cloudSuppress)return;
+  setDirty(true);                       // "this device has changes the database may not have yet"
+  if(!cloudActive())return;
+  cloudOps.push({t,store,id,obj});
+  clearTimeout(cloudFlushTimer);
+  cloudFlushTimer=setTimeout(flushOps,300);
+}
+function flushOps(){
+  clearTimeout(cloudFlushTimer);
+  const batch=cloudOps.splice(0);
+  if(!batch.length||!cloudActive())return;
+  cloudInflight++;
+  cloudChain=cloudChain.then(()=>runBatch(batch)).finally(()=>{cloudInflight--;});
+}
+async function upsertChunks(table,rows){
+  for(let k=0;k<rows.length;k+=400)
+    await dbq(sb.from(table).upsert(rows.slice(k,k+400),{onConflict:'user_id,id'}));
+}
+async function runBatch(batch){
+  if(cloudFailed||!cloudActive())return;   // a full push will recover everything
+  const uid=acctUser.id;
   try{
-    const content=JSON.stringify({version:2,exportedAt:new Date().toISOString(),works,shifts,bills,expenses,settings},null,2);
-    const existing=await findDriveFile();
-    if(existing){
-      // Update existing file content
-      await driveRequest('PATCH',
-        `https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=media`,
-        content,'application/json');
-    } else {
-      // Create new file with metadata
-      const meta=JSON.stringify({name:DRIVE_FILENAME,mimeType:'application/json'});
-      const boundary='shift_log_boundary';
-      const body=`--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${content}\r\n--${boundary}--`;
-      await driveRequest('POST',
-        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-        body,`multipart/related; boundary=${boundary}`);
-    }
-    gdriveStatus(`✓ ${silent?'Auto-saved':'Saved'} at ${new Date().toLocaleTimeString()} — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills`);
-    if(!silent){toast('Saved to Google Drive ✓');closeGoogleDropdown();}
-  }catch(e){
-    gdriveStatus('✗ '+e.message,true);
-    toast('Drive save failed: '+e.message,'err');
-  }finally{
-    driveSaving=false;
-    if(!silent){
-      btns.forEach(b=>{if(b){b.disabled=false;b.textContent='☁ Save to Drive';}});
-      loading(false);
-    }
-    if(drivePending){drivePending=false;saveToDrive({silent:true});}
-  }
-}
-
-async function loadFromDrive(opts){
-  const auto=!!(opts&&opts.auto);   // auto = right after sign-in, no confirm popup
-  if(!gToken){if(!auto)signInWithGoogle();return;}
-  if(!auto&&!confirm('Load from Google Drive? This will replace all local data.'))return;
-  const btns=[document.getElementById('btn-gdrive-load')].filter(Boolean);
-  btns.forEach(b=>{if(b){b.disabled=true;b.textContent='Loading…';}});
-  gdriveStatus('Searching Google Drive…');loading(true);
-  try{
-    const file=await findDriveFile();
-    if(!file){
-      if(auto){
-        // First sign-in with no backup yet: upload current local data instead of replacing it
-        gdriveStatus('No Drive backup yet — creating one from local data…');
-        saveToDrive({silent:true});
-        return;
+    let i=0;
+    while(i<batch.length){
+      const op=batch[i];
+      if(op.store==='settings'){
+        let last=op;
+        while(i<batch.length&&batch[i].store==='settings'){last=batch[i];i++;}
+        if(last.obj)await dbq(sb.from(SETTINGS_TABLE).upsert({user_id:uid,data:last.obj},{onConflict:'user_id'}));
+      }else if(op.t==='put'){
+        const rows=new Map();
+        while(i<batch.length&&batch[i].t==='put'&&batch[i].store===op.store){
+          const o=batch[i].obj,id=String(o.id);
+          rows.set(id,{user_id:uid,id,data:o});i++;
+        }
+        await upsertChunks(TABLES[op.store],[...rows.values()]);
+      }else if(op.t==='del'){
+        await dbq(sb.from(TABLES[op.store]).delete().eq('user_id',uid).eq('id',String(op.id)));i++;
+      }else{
+        await dbq(sb.from(TABLES[op.store]).delete().eq('user_id',uid));i++;
       }
-      throw new Error(`"${DRIVE_FILENAME}" not found in your Drive. Save first.`);
     }
-    const r=await driveRequest('GET',`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
-    const bk=await r.json();
-    if(!bk.works||!bk.shifts) throw new Error('Backup file is invalid');
-    await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
-    for(const w of bk.works)await dbPut('works',w);
-    for(const s of bk.shifts)await dbPut('shifts',s);
-    if(bk.bills)for(const b of bk.bills)await dbPut('bills',b);
-    if(bk.expenses)for(const x of bk.expenses)await dbPut('expenses',x);
-    if(bk.settings)await dbPut('settings',{key:'main',...bk.settings});
-    works=bk.works.sort((a,b)=>a.createdAt-b.createdAt);
-    shifts=bk.shifts.sort((a,b)=>b.clockIn-a.clockIn);
-    bills=(bk.bills||[]).sort((a,b)=>a.createdAt-b.createdAt);
-    expenses=(bk.expenses||[]).sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
-    if(bk.settings){
-      settings={...settings,...bk.settings};
-      document.getElementById('currency-sym').value=settings.currency||'$';
-      if(bk.settings.lang){lang=bk.settings.lang;applyLang(true);}
-    }
-    renderWorks();renderWorkPicker();renderFilterRow();
-    updateStats();renderShifts();renderBills();renderExpenses();updateBadges();updateDataStats();
-    if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
-    gdriveStatus(`✓ Loaded — ${shifts.length} shifts, ${works.length} works (saved ${new Date(bk.exportedAt).toLocaleString()})`);
-    toast('Loaded from Google Drive ✓');
-    closeGoogleDropdown();
-  }catch(e){
-    gdriveStatus('✗ '+e.message,true);
-    toast('Drive load failed: '+e.message,'err');
-  }finally{
-    btns.forEach(b=>{if(b){b.disabled=false;b.textContent='☁ Load from Drive';}});
-    loading(false);
+    if(!cloudOps.length&&cloudInflight<=1)markSynced();
+  }catch(e){cloudFail(e);}
+}
+function markSynced(){
+  cloudFailed=false;setDirty(false);
+  try{localStorage.setItem(syncKey(),new Date().toISOString());}catch(e){}
+  cloudStatus(`✓ Synced at ${new Date().toLocaleTimeString()} — ${shifts.length} shifts, ${works.length} works, ${bills.length} bills, ${expenses.length} expenses`);
+  updateAccountUI();
+}
+function cloudFail(e){
+  const first=!cloudFailed;
+  cloudFailed=true;
+  cloudStatus('✗ '+((e&&e.message)||e)+' — will retry',true);
+  if(first)toast('Database sync failed — changes are kept on this device and will retry','err');
+  scheduleRetry(20000);
+}
+function scheduleRetry(ms){
+  clearTimeout(cloudRetryTimer);
+  cloudRetryTimer=setTimeout(()=>{if(cloudActive()&&(cloudFailed||isDirty()))cloudFullPush();},ms);
+}
+window.addEventListener('online',()=>{if(cloudActive()&&(cloudFailed||isDirty()))cloudFullPush();});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushOps();});
+
+async function fetchPaged(table,cols){
+  const out=[],step=1000;let from=0;
+  for(;;){
+    const {data,error}=await sb.from(table).select(cols).eq('user_id',acctUser.id).order('id').range(from,from+step-1);
+    if(error)throw error;
+    out.push(...data);
+    if(data.length<step)break;
+    from+=step;
   }
+  return out;
+}
+async function fetchRemote(){
+  const out={};
+  for(const s of STORES)out[s]=(await fetchPaged(TABLES[s],'id,data')).map(r=>r.data);
+  const {data,error}=await sb.from(SETTINGS_TABLE).select('data').eq('user_id',acctUser.id).maybeSingle();
+  if(error)throw error;
+  out.settings=data?data.data:null;
+  return out;
+}
+
+// Device → database (this device's data wins). Upserts everything and removes rows that no longer exist locally.
+async function fullPushInner(){
+  const uid=acctUser.id;
+  for(const s of STORES){
+    const table=TABLES[s];
+    const rows=(await dbGetAll(s)).filter(o=>o&&o.id!=null).map(o=>({user_id:uid,id:String(o.id),data:o}));
+    await upsertChunks(table,rows);
+    const keep=new Set(rows.map(r=>r.id));
+    const extra=(await fetchPaged(table,'id')).map(r=>r.id).filter(id=>!keep.has(id));
+    for(let k=0;k<extra.length;k+=100)
+      await dbq(sb.from(table).delete().eq('user_id',uid).in('id',extra.slice(k,k+100)));
+  }
+  const main=(await dbGetAll('settings')).find(x=>x.key==='main');
+  if(main)await dbq(sb.from(SETTINGS_TABLE).upsert({user_id:uid,data:main},{onConflict:'user_id'}));
+}
+function cloudFullPush(){
+  cloudInflight++;
+  const p=cloudChain.then(async()=>{
+    if(!cloudActive())return false;
+    try{
+      cloudStatus('Syncing to database…');
+      await fullPushInner();
+      if(!cloudOps.length)markSynced();else cloudFailed=false;
+      return true;
+    }catch(e){cloudFail(e);return false;}
+  }).finally(()=>{cloudInflight--;});
+  cloudChain=p;
+  return p;
+}
+
+// Database → device. replace=true makes the device match the database; false merges (database wins on same id).
+async function applyRemote(remote,opts){
+  const replace=!opts||opts.replace!==false;
+  cloudSuppress=true;
+  try{
+    for(const s of STORES){
+      if(replace)await dbClear(s);
+      for(const rec of remote[s])await dbPut(s,rec);
+    }
+    if(remote.settings){
+      if(replace)await dbClear('settings');
+      await dbPut('settings',remote.settings);
+    }else if(opts&&opts.resetSettings){
+      await dbClear('settings');
+      settings={currency:'$',lang:settings.lang||'en'};
+    }
+  }finally{cloudSuppress=false;}
+  await loadSettings();await loadWorks();await loadShifts();await loadBills();await loadExpenses();
+  lang=settings.lang||'en';
+  refreshAllUI();
+}
+function refreshAllUI(){
+  applyLang(true);   // also re-renders works, filters, stats, shifts, badges
+  renderBills();renderExpenses();updateDataStats();
+  if(typeof renderMiniCal==='function')renderMiniCal();
+  const act=id=>{const el=document.getElementById(id);return el&&el.classList.contains('active');};
+  if(act('page-monthly'))renderMonthly();
+  if(act('page-tax'))recalcTax();
+  if(act('page-summary'))recalcSummary();
+  updateAccountUI();
+}
+
+// Runs after login (once per page load) and from "Sync now"
+async function reconcileCloud(){
+  const uid=acctUser.id;
+  try{
+    cloudStatus('Checking database…');
+    const remote=await fetchRemote();
+    const remoteEmpty=STORES.every(s=>!remote[s].length)&&!remote.settings;
+    const hasLocal=works.length||shifts.length||bills.length||expenses.length;
+    const owner=ownerId(),dirty=isDirty();
+    cloudReady=true;
+    if(owner&&owner!==uid){
+      // this device still holds another account's data → show this account's data instead
+      await applyRemote(remote,{replace:true,resetSettings:true});
+      setDirty(false);markSynced();
+    }else if(remoteEmpty||(owner===uid&&dirty)){
+      await cloudFullPush();                       // first login / unsynced changes: device → database
+      if(!cloudFailed&&!remoteEmpty)toast('Unsynced changes uploaded ✓');
+    }else if(!owner&&hasLocal){
+      await applyRemote(remote,{replace:false});   // existing device data + existing account data: merge, nothing is lost
+      await cloudFullPush();
+      toast('Merged this device with your account data ✓');
+    }else{
+      await applyRemote(remote,{replace:true});    // database is the source of truth
+      setDirty(false);markSynced();
+    }
+    setOwner(uid);
+    return !cloudFailed;
+  }catch(e){
+    cloudFail(e);
+    return false;
+  }
+}
+async function syncNow(){
+  if(!sb||!acctUser){openAccount();return;}
+  loading(true);
+  try{
+    flushOps();await cloudChain;
+    if(await reconcileCloud())toast('Synced ✓');
+  }finally{loading(false);}
 }
 
 async function exportBackup(){
@@ -3854,7 +4149,7 @@ window.addEventListener('resize',()=>{
     updateDataStats();
     renderMonthly();
     if(window.switchTab)window.switchTab('monthly'); // open on Monthly (also syncs the nav highlight)
-    initGoogleAuth();
+    initAuth();
     tick();
   }catch(e){
     document.getElementById('splash-msg').textContent='Error: '+e.message;
@@ -3875,8 +4170,8 @@ function openTimesheetModal(){
   document.getElementById('ts-month').value=currentMonth+1;
   if(monthlyFilterId) sel.value=monthlyFilterId;
   // Load saved staff name / company
-  const sn=localStorage.getItem('ts-staff-name')||'';
-  const sc=localStorage.getItem('ts-company')||'';
+  const sn=settings.tsStaffName??localStorage.getItem('ts-staff-name')??'';
+  const sc=settings.tsCompany??localStorage.getItem('ts-company')??'';
   document.getElementById('ts-staff-name').value=sn;
   document.getElementById('ts-company').value=sc;
   updateTsPreview();
@@ -3924,8 +4219,7 @@ function generateTimesheet(){
       toast('PDF library not loaded yet. Please wait and try again.','err');return;
     }
 
-    localStorage.setItem('ts-staff-name',staffName);
-    localStorage.setItem('ts-company',company);
+    settings.tsStaffName=staffName;settings.tsCompany=company;saveSettings();
 
     // Shifts indexed by day
     const dayShifts={};
@@ -4404,7 +4698,7 @@ function closeBreakDial(apply){
 <script>
 /* Keyboard and dialog basics */
 (function(){
-  var gp=document.getElementById('g-profile');
+  var gp=document.getElementById('acc-profile');
   if(gp)gp.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();gp.click();}});
   document.querySelectorAll('.modal-overlay').forEach(function(o,i){
     o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
