@@ -10,6 +10,6 @@
  * because Row Level Security (from supabase-setup.sql) limits each user to their own rows.
  */
 window.SHIFTLOG_CONFIG = {
-  supabaseUrl:     'https://YOUR-PROJECT-REF.supabase.co',
-  supabaseAnonKey: 'YOUR-ANON-PUBLIC-KEY'
+  supabaseUrl:     'https://olxgwikqbtmrnevoivzg.supabase.co',
+  supabaseAnonKey: 'sb_publishable_TMzz_KwMY0k8R3Ehi7NnCQ_wkVxXqzt'
 };
