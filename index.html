@@ -4519,6 +4519,40 @@ function cloudStatus(msg,isErr=false){
 const TABLES={works:'sl_works',shifts:'sl_shifts',bills:'sl_bills',expenses:'sl_expenses'};
 const SETTINGS_TABLE='sl_settings';
 const STORES=Object.keys(TABLES);
+
+// ── Record ⇄ database row: every field has its own column ──
+// [app field, column, type]  (type 'ts' = millisecond timestamp stored as timestamptz)
+// Any field not listed here is kept in the "extra" jsonb column so nothing is ever lost.
+const COLS={
+  works:[['name','name'],['rate','rate'],['transport','transport'],['color','color'],['payTiming','pay_timing'],['payDay','pay_day'],['createdAt','created_at','ts']],
+  shifts:[['workId','work_id'],['workName','work_name'],['workColor','work_color'],['rate','rate'],['clockIn','clock_in','ts'],['clockOut','clock_out','ts'],['breakMin','break_min'],['duration','duration_ms'],['wages','wages'],['transport','transport'],['nightMin','night_min'],['createdAt','created_at','ts']],
+  bills:[['name','name'],['amount','amount'],['cat','cat'],['createdAt','created_at','ts']],
+  expenses:[['date','date'],['amount','amount'],['cat','cat'],['note','note'],['createdAt','created_at','ts']],
+  settings:[['currency','currency'],['lang','lang'],['theme','theme'],['palette','palette'],['nightStart','night_start'],['nightEnd','night_end'],['nightPct','night_pct'],['taxRate','tax_rate'],['taxCalc','tax_calc'],['tsCompany','ts_company'],['tsStaffName','ts_staff_name']]
+};
+function toRow(store,o,uid){
+  const r={user_id:uid},known=new Set(['id','key']);
+  if(store!=='settings')r.id=String(o.id);
+  for(const [k,c,ty] of COLS[store]){
+    known.add(k);let v=o[k];
+    if(v===undefined||v===null||(typeof v==='number'&&Number.isNaN(v)))v=null;
+    else if(ty==='ts'){const d=new Date(v);v=isNaN(d.getTime())?null:d.toISOString();}
+    r[c]=v;
+  }
+  const extra={};
+  Object.keys(o).forEach(k=>{if(!known.has(k))extra[k]=o[k];});
+  r.extra=extra;
+  return r;
+}
+function fromRow(store,r){
+  const o=store==='settings'?{key:'main'}:{id:r.id};
+  for(const [k,c,ty] of COLS[store]){
+    let v=r[c];if(v===null||v===undefined)continue;
+    if(ty==='ts')v=Date.parse(v);
+    o[k]=v;
+  }
+  return Object.assign(o,r.extra||{});
+}
 let cloudOps=[],cloudFlushTimer=null,cloudChain=Promise.resolve(),cloudInflight=0,cloudFailed=false,cloudRetryTimer=null;
 
 function isDirty(){return localStorage.getItem('sl-dirty')==='1';}
@@ -4558,12 +4592,12 @@ async function runBatch(batch){
       if(op.store==='settings'){
         let last=op;
         while(i<batch.length&&batch[i].store==='settings'){last=batch[i];i++;}
-        if(last.obj)await dbq(sb.from(SETTINGS_TABLE).upsert({user_id:uid,data:last.obj},{onConflict:'user_id'}));
+        if(last.obj)await dbq(sb.from(SETTINGS_TABLE).upsert(toRow('settings',last.obj,uid),{onConflict:'user_id'}));
       }else if(op.t==='put'){
         const rows=new Map();
         while(i<batch.length&&batch[i].t==='put'&&batch[i].store===op.store){
           const o=batch[i].obj,id=String(o.id);
-          rows.set(id,{user_id:uid,id,data:o});i++;
+          rows.set(id,toRow(op.store,o,uid));i++;
         }
         await upsertChunks(TABLES[op.store],[...rows.values()]);
       }else if(op.t==='del'){
@@ -4608,10 +4642,10 @@ async function fetchPaged(table,cols){
 }
 async function fetchRemote(){
   const out={};
-  for(const s of STORES)out[s]=(await fetchPaged(TABLES[s],'id,data')).map(r=>r.data);
-  const {data,error}=await sb.from(SETTINGS_TABLE).select('data').eq('user_id',acctUser.id).maybeSingle();
+  for(const s of STORES)out[s]=(await fetchPaged(TABLES[s],'*')).map(r=>fromRow(s,r));
+  const {data,error}=await sb.from(SETTINGS_TABLE).select('*').eq('user_id',acctUser.id).maybeSingle();
   if(error)throw error;
-  out.settings=data?data.data:null;
+  out.settings=data?fromRow('settings',data):null;
   return out;
 }
 
@@ -4620,7 +4654,7 @@ async function fullPushInner(){
   const uid=acctUser.id;
   for(const s of STORES){
     const table=TABLES[s];
-    const rows=(await dbGetAll(s)).filter(o=>o&&o.id!=null).map(o=>({user_id:uid,id:String(o.id),data:o}));
+    const rows=(await dbGetAll(s)).filter(o=>o&&o.id!=null).map(o=>toRow(s,o,uid));
     await upsertChunks(table,rows);
     const keep=new Set(rows.map(r=>r.id));
     const extra=(await fetchPaged(table,'id')).map(r=>r.id).filter(id=>!keep.has(id));
@@ -4628,7 +4662,7 @@ async function fullPushInner(){
       await dbq(sb.from(table).delete().eq('user_id',uid).in('id',extra.slice(k,k+100)));
   }
   const main=(await dbGetAll('settings')).find(x=>x.key==='main');
-  if(main)await dbq(sb.from(SETTINGS_TABLE).upsert({user_id:uid,data:main},{onConflict:'user_id'}));
+  if(main)await dbq(sb.from(SETTINGS_TABLE).upsert(toRow('settings',main,uid),{onConflict:'user_id'}));
 }
 function cloudFullPush(){
   cloudInflight++;
