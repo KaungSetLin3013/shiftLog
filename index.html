@@ -1202,7 +1202,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 /* ---- Desktop layout fixes ---- */
 @media(min-width:641px){
   /* input forms stop stretching edge to edge */
-  #page-works>.panel:first-child,#page-shifts>.panel:first-child,#page-expenses>.panel:first-child{max-width:900px}
+  #page-works>.panel:first-child,#page-shifts>.panel:first-child{max-width:900px}
 }
 @media(min-width:901px){
   /* Single date: Start / Break / End and Add Shift on one line */
@@ -1332,6 +1332,91 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   .set-pane-title{font-size:18px;margin-bottom:14px}
   .set-pane .palette-grid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
 }
+
+/* Expense form: Date + Amount on one line, Note + Add button on the next */
+.exp-note-row{display:flex;align-items:flex-end;gap:10px;margin-top:12px}
+.exp-note-row .exp-note-field{flex:1;min-width:0!important}
+.exp-add-btn{flex:none;min-height:48px;white-space:nowrap;padding-left:16px;padding-right:16px}
+@media(min-width:641px){.exp-note-row{gap:12px}.exp-add-btn{padding-left:24px;padding-right:24px}}
+
+/* Expense categories: round icon buttons; the selected one grows into a stadium with its label */
+.exp-cats{gap:8px}
+.exp-cat{border-radius:999px;padding:0 13px;min-width:48px;justify-content:center;gap:0}
+.exp-cat-ico{font-size:18px;line-height:1;width:20px;text-align:center;flex:none}
+.exp-cat-lbl{display:inline-block;max-width:0;opacity:0;margin-left:0;overflow:hidden;white-space:nowrap;
+  transition:max-width 320ms var(--out),opacity 200ms,margin-left 320ms var(--out)}
+.exp-cat.sel{animation:none}
+.exp-cat.sel .exp-cat-lbl{max-width:110px;opacity:1;margin-left:8px}
+@media (prefers-reduced-motion:reduce){.exp-cat-lbl{transition:none}}
+
+/* Multiple Dates calendar: centered on phones, on the right on desktop */
+@media(max-width:640px){
+  #multi-date-section .md-left>div{max-width:340px;margin-left:auto;margin-right:auto}
+  #multi-date-section .md-left>div>div:first-child{max-width:none!important}
+  #multi-date-section .mini-cal{max-width:none}
+  #multi-date-section #multi-count-note{text-align:center}
+}
+@media(min-width:641px){
+  .md-layout{grid-template-columns:minmax(0,1fr) 280px}
+  .md-left{order:2}
+  .md-right{order:1;padding-top:0}
+}
+
+/* Multiple Dates on PC: use the full width so the calendar sits at the right edge, not mid-left */
+@media(min-width:641px){
+  #page-shifts>.panel.is-multi{max-width:none}
+  #page-shifts>.panel.is-multi .md-layout{grid-template-columns:minmax(0,1fr) 300px;gap:40px}
+  #page-shifts>.panel.is-multi #multi-date-section .mini-cal{max-width:300px}
+  #page-shifts>.panel.is-multi #multi-date-section .md-left>div>div:first-child{max-width:300px!important}
+}
+
+/* Multiple Dates: Work Time sits under Start Time, on one line with Add Shift */
+.md-bottom{display:flex;align-items:flex-end;gap:12px;margin-top:12px}
+.md-bottom .field{flex:none;width:110px;min-width:110px!important;max-width:none!important}
+.md-bottom #md-add-slot{flex:1;min-width:0}
+.md-right .md-bottom #md-add-slot .add-shift-btn-row{margin:0;justify-content:stretch}
+.md-bottom #md-add-slot .btn{flex:1;min-height:48px}
+@media(min-width:641px){
+  .md-right .md-bottom #md-add-slot .add-shift-btn-row{justify-content:flex-start}
+  .md-bottom #md-add-slot .btn{flex:none;padding-left:32px;padding-right:32px}
+}
+
+/* Single-date picker button + popover (reuses the Multiple Dates calendar look) */
+.sd-btn{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer;text-align:left;transition:border-color .2s}
+.sd-btn:hover,.sd-btn[aria-expanded="true"]{border-color:var(--accent)}
+.sd-btn .ico{width:18px;height:18px;color:var(--accent);flex:none}
+.sd-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sd-pop{position:fixed;z-index:900;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px;box-shadow:0 18px 48px rgba(0,0,0,.45);transform-origin:top left;animation:sdIn 180ms var(--out)}
+.sd-pop[hidden]{display:none}
+@keyframes sdIn{from{opacity:0;transform:scale(.96) translateY(-4px)}}
+.sd-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sd-month{font-family:'Syne',sans-serif;font-weight:700;font-size:14px}
+.sd-head .mc-nav-btn{width:32px;height:32px}
+.sd-pop .mini-cal{padding:8px;border-radius:10px}
+.sd-pop .mini-cal-grid{gap:2px}
+.sd-pop button.mc-day{appearance:none;-webkit-appearance:none;padding:0;font-size:13px;font-family:'JetBrains Mono',monospace}
+.sd-pop button.mc-day:not(.selected){background:transparent}
+.sd-foot{display:flex;justify-content:flex-end;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.sd-pop{animation:none}}
+#single-date-row .field:first-child{position:relative}
+@media(min-width:641px){#single-date-row .field:first-child{flex:none;width:210px}}
+
+.sd-scrim{position:fixed;inset:0;z-index:899;background:rgba(0,0,0,.5);animation:sdFade 180ms ease-out}
+.sd-scrim[hidden]{display:none}
+@keyframes sdFade{from{opacity:0}}
+.sd-pop{transform-origin:center}
+
+/* Payday */
+.field[hidden]{display:none}
+.pay-row{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;flex-wrap:wrap}
+.pay-main{min-width:96px}
+.pay-date{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
+.pay-when{font-size:11px;color:var(--accent);margin-top:2px}
+.pay-works{flex:1;display:flex;flex-wrap:wrap;gap:6px 12px;min-width:0}
+.pay-work{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.pay-dot{width:6px;height:6px;border-radius:50%;flex:none}
+.pay-amt{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green);margin-left:auto}
+.pay-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -1426,6 +1511,16 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
         </div>
         <div><button class="btn btn-primary" id="btn-add-work" onclick="addWork()">Add</button></div>
       </div>
+      <div class="row" id="w-pay-row">
+        <div class="field" style="max-width:220px">
+          <label id="lbl-pay-timing">Payday</label>
+          <select id="w-pay-timing" onchange="payFieldToggle('w')"></select>
+        </div>
+        <div class="field" id="w-pay-day-field" style="max-width:160px" hidden>
+          <label id="lbl-pay-day">Pay day</label>
+          <select id="w-pay-day"></select>
+        </div>
+      </div>
       <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono',monospace;margin-top:2px" id="night-bonus-note">
         ★ Night bonus: +25% auto-applied for hours between 10 PM – 6 AM
       </div>
@@ -1458,7 +1553,11 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       <div id="single-date-row" class="row">
         <div class="field" style="max-width:155px">
           <label id="lbl-date">Date</label>
-          <input type="date" id="shift-date">
+          <button type="button" class="sd-btn" id="sd-btn" aria-haspopup="dialog" aria-expanded="false" onclick="sdToggle()">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+            <span id="sd-text"></span>
+          </button>
+          <input type="date" id="shift-date" class="sr-only" tabindex="-1" aria-hidden="true">
         </div>
         <div class="field" style="max-width:94px">
           <label id="lbl-work-time">Work Time</label>
@@ -1509,12 +1608,6 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
         </div>
           </div>
           <div class="md-right">
-        <div class="row">
-          <div class="field" style="max-width:94px">
-            <label id="lbl-work-time-m">Work Time</label>
-            <div class="dur-box" id="m-dur-box">—</div>
-          </div>
-        </div>
         <div class="time-line">
           <div class="field">
             <label id="lbl-start-m">Start Time</label>
@@ -1538,7 +1631,13 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
             <input type="time" id="m-end" oninput="recalcMultiPreview()">
           </div>
         </div>
-                  <div id="md-add-slot"></div>
+        <div class="md-bottom">
+          <div class="field">
+            <label id="lbl-work-time-m">Work Time</label>
+            <div class="dur-box" id="m-dur-box">—</div>
+          </div>
+          <div id="md-add-slot"></div>
+        </div>
           </div>
         </div>
       </div><!-- /multi-date-section -->
@@ -1771,11 +1870,13 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
           <input type="number" id="exp-amount" inputmode="decimal" placeholder="0" min="0" step="any" style="font-family:'JetBrains Mono',monospace" onkeydown="if(event.key==='Enter')addExpense()">
         </div>
       </div>
-      <div class="field" style="margin-top:12px">
-        <label id="lbl-exp-note">Note (optional)</label>
-        <input type="text" id="exp-note" maxlength="60" placeholder="e.g. Lunch" onkeydown="if(event.key==='Enter')addExpense()">
+      <div class="exp-note-row">
+        <div class="field exp-note-field">
+          <label id="lbl-exp-note">Note (optional)</label>
+          <input type="text" id="exp-note" maxlength="60" placeholder="e.g. Lunch" onkeydown="if(event.key==='Enter')addExpense()">
+        </div>
+        <button class="btn btn-primary exp-add-btn" onclick="addExpense()" id="btn-add-exp">+ Add Expense</button>
       </div>
-      <div class="add-shift-btn-row"><button class="btn btn-primary" onclick="addExpense()" id="btn-add-exp">+ Add Expense</button></div>
     </div>
 
     <div class="exp-monthbar">
@@ -1874,6 +1975,12 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     <div class="panel">
       <div class="panel-label" id="lbl-sum-bills-detail">Bills Applied</div>
       <div id="sum-bills-detail"></div>
+    </div>
+    <!-- Payday: when each month's wages arrive -->
+    <div class="panel" id="payday-panel">
+      <div class="panel-label" id="lbl-payday-title">Payday</div>
+      <div id="payday-list"></div>
+      <div class="pay-note" id="payday-note"></div>
     </div>
   </div>
 
@@ -2248,6 +2355,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <div class="field"><label id="lbl-edit-rate">Hourly Rate</label><input type="number" id="edit-rate" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-transport">Transport Fee / Day</label><input type="number" id="edit-transport" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-color">Color</label><input type="color" id="edit-color"></div>
+      <div class="field"><label id="lbl-edit-pay-timing">Payday</label><select id="edit-pay-timing" onchange="payFieldToggle('edit')"></select></div>
+      <div class="field" id="edit-pay-day-field" hidden><label id="lbl-edit-pay-day">Pay day</label><select id="edit-pay-day"></select></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()" id="btn-cancel-edit">Cancel</button>
@@ -2321,7 +2430,7 @@ const T={
   en:{
     'splash':'Loading local database…',
     'offline-badge':'Saved Locally',
-    'lbl-create-work':'Create New Work','lbl-work-name':'Work Name','lbl-hourly-rate':'Hourly Rate',
+    'lbl-create-work':'Create New Work','lbl-work-name':'Work Name','lbl-hourly-rate':'Hourly Rate','lbl-pay-timing':'Payday','lbl-pay-day':'Pay day','lbl-edit-pay-timing':'Payday','lbl-edit-pay-day':'Pay day','lbl-payday-title':'Payday',
     'lbl-transport':'Transport / Day','lbl-color':'Color','night-bonus-note':'★ Night bonus: +25% auto-applied for hours between 10 PM – 6 AM',
     'lbl-your-works':'Your Works','lbl-add-shift':'+ Add Shift',
     'mode-single':'Single Date','mode-multi':'Multiple Dates',
@@ -2375,7 +2484,7 @@ const T={
   ja:{
     'splash':'ローカルデータベースを読み込み中…',
     'offline-badge':'ローカル保存',
-    'lbl-create-work':'新しい仕事を作成','lbl-work-name':'仕事名','lbl-hourly-rate':'時給',
+    'lbl-create-work':'新しい仕事を作成','lbl-work-name':'仕事名','lbl-hourly-rate':'時給','lbl-pay-timing':'給料日','lbl-pay-day':'支払日','lbl-edit-pay-timing':'給料日','lbl-edit-pay-day':'支払日','lbl-payday-title':'給料日',
     'lbl-transport':'交通費（1日）','lbl-color':'カラー','night-bonus-note':'★ 深夜ボーナス：午後10時〜午前6時は+25%自動適用',
     'lbl-your-works':'登録された仕事','lbl-add-shift':'+ シフトを追加',
     'mode-single':'単一日','mode-multi':'複数日',
@@ -2590,12 +2699,13 @@ async function addWork(){
   const name=document.getElementById('w-name').value.trim();
   if(!name){alert(t('alert-no-name'));return;}
   const btn=document.getElementById('btn-add-work');btn.disabled=true;
-  const w={id:genId(),name,rate:parseFloat(document.getElementById('w-rate').value)||0,transport:parseFloat(document.getElementById('w-transport').value)||0,color:document.getElementById('w-color').value,createdAt:Date.now()};
+  const w={id:genId(),name,rate:parseFloat(document.getElementById('w-rate').value)||0,transport:parseFloat(document.getElementById('w-transport').value)||0,color:document.getElementById('w-color').value,payTiming:document.getElementById('w-pay-timing').value,payDay:parseInt(document.getElementById('w-pay-day').value),createdAt:Date.now()};
   await dbPut('works',w);works.push(w);
   renderWorks();renderWorkPicker();renderFilterRow();updateBadges();
   toast(t('toast-work-added'));
   ['w-name','w-rate','w-transport'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('w-color').value='#ffc233';
+  document.getElementById('w-pay-timing').value='none';payFieldToggle('w');
   btn.disabled=false;
 }
 async function saveEditWork(){
@@ -2604,6 +2714,8 @@ async function saveEditWork(){
   w.rate=parseFloat(document.getElementById('edit-rate').value)||0;
   w.transport=parseFloat(document.getElementById('edit-transport').value)||0;
   w.color=document.getElementById('edit-color').value;
+  w.payTiming=document.getElementById('edit-pay-timing').value;
+  w.payDay=parseInt(document.getElementById('edit-pay-day').value);
   await dbPut('works',w);
   renderWorks();renderWorkPicker();renderFilterRow();updateStats();renderShifts();renderMonthly();
   toast(t('toast-work-updated'));closeModal();
@@ -2615,6 +2727,7 @@ async function deleteWork(id){
   renderWorks();renderWorkPicker();renderFilterRow();updateBadges();toast(t('toast-work-deleted'));
 }
 function renderWorks(){
+  fillPaySelects();
   const g=document.getElementById('works-grid');
   if(!works.length){g.innerHTML=`<div class="empty-card"><div class="empty-icon">💼</div>${t('lbl-your-works')}<br>—</div>`;return;}
   g.innerHTML=works.map(w=>`
@@ -2625,6 +2738,7 @@ function renderWorks(){
         <div class="wc-row"><span class="wc-label">${t('lbl-hourly-rate')}</span><span class="wc-val" style="color:var(--green)">${sym()}${w.rate.toFixed(2)}/h</span></div>
         <div class="wc-row"><span class="wc-label">${lang==='ja'?'深夜割増':'Night (+'+( settings.nightPct??25)+'%)'}</span><span class="wc-val" style="color:var(--purple)">${sym()}${(w.rate*(1+(settings.nightPct??25)/100)).toFixed(2)}/h</span></div>
         <div class="wc-row"><span class="wc-label">${t('lbl-transport')}</span><span class="wc-val" style="color:var(--yellow)">${sym()}${w.transport.toFixed(2)}</span></div>
+        <div class="wc-row"><span class="wc-label">${lang==='ja'?'給料日':'Payday'}</span><span class="wc-val" style="color:var(--accent)">${payLabel(w)}</span></div>
       </div>
       <div class="wc-actions">
         <button class="btn btn-ghost btn-sm" onclick="openEdit('${w.id}')">${lang==='ja'?'編集':'Edit'}</button>
@@ -2639,6 +2753,10 @@ function openEdit(id){
   document.getElementById('edit-rate').value=w.rate;
   document.getElementById('edit-transport').value=w.transport;
   document.getElementById('edit-color').value=w.color;
+  fillPaySelects();
+  document.getElementById('edit-pay-timing').value=w.payTiming||'none';
+  document.getElementById('edit-pay-day').value=String(Number.isInteger(w.payDay)?w.payDay:25);
+  payFieldToggle('edit');
   document.getElementById('edit-modal').classList.add('open');
 }
 function closeModal(){document.getElementById('edit-modal').classList.remove('open');}
@@ -2737,6 +2855,100 @@ function renderMiniCal(){
   cal.innerHTML=`<div class="mini-cal-grid">${headers}${empties}${cells}</div>`;
   updateMultiCountNote();
 }
+
+// ════════════════════════════════════════════════
+// Single-date picker: same calendar look as Multiple Dates
+// ════════════════════════════════════════════════
+let sdYear=0,sdMonth=0,sdPop=null,sdScrim=null;
+const sdInput=()=>document.getElementById('shift-date');
+function sdFmt(v){
+  if(!v)return lang==='ja'?'日付を選択':'Pick a date';
+  const [y,m,d]=v.split('-').map(Number);
+  return new Date(y,m-1,d).toLocaleDateString(lang==='ja'?'ja-JP':'en-US',{year:'numeric',month:'short',day:'numeric',weekday:'short'});
+}
+function syncSDBtn(){const t=document.getElementById('sd-text');const i=sdInput();if(t&&i)t.textContent=sdFmt(i.value);}
+(function(){
+  const inp=sdInput();if(!inp)return;
+  const desc=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
+  Object.defineProperty(inp,'value',{configurable:true,get(){return desc.get.call(this);},set(v){desc.set.call(this,v);syncSDBtn();}});
+  syncSDBtn();
+})();
+function sdBuild(){
+  if(sdPop)return;
+  sdPop=document.createElement('div');
+  sdPop.className='sd-pop';sdPop.id='sd-pop';sdPop.hidden=true;
+  sdPop.setAttribute('role','dialog');sdPop.setAttribute('aria-label','Choose date');
+  sdPop.innerHTML='<div class="sd-head"><button type="button" class="mc-nav-btn" data-sd="prev" aria-label="Previous month">&#8249;</button><span class="sd-month" id="sd-month"></span><button type="button" class="mc-nav-btn" data-sd="next" aria-label="Next month">&#8250;</button></div><div class="mini-cal" id="sd-cal"></div><div class="sd-foot"><button type="button" class="btn btn-ghost btn-sm" data-sd="today" id="sd-today"></button></div>';
+  sdScrim=document.createElement('div');sdScrim.className='sd-scrim';sdScrim.hidden=true;
+  document.body.appendChild(sdScrim);
+  document.body.appendChild(sdPop);
+  sdPop.addEventListener('click',e=>{
+    const b=e.target.closest('[data-sd],[data-date]');if(!b)return;
+    if(b.dataset.date){sdPick(b.dataset.date);return;}
+    const a=b.dataset.sd;
+    if(a==='prev'){sdMonth--;if(sdMonth<0){sdMonth=11;sdYear--;}sdRender();}
+    else if(a==='next'){sdMonth++;if(sdMonth>11){sdMonth=0;sdYear++;}sdRender();}
+    else if(a==='today'){sdPick(today());}
+  });
+}
+function sdRender(){
+  const MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const names=lang==='ja'?['日','月','火','水','木','金','土']:['Su','Mo','Tu','We','Th','Fr','Sa'];
+  document.getElementById('sd-month').textContent=lang==='ja'?`${sdYear}年 ${sdMonth+1}月`:`${MONTHS_EN[sdMonth]} ${sdYear}`;
+  document.getElementById('sd-today').textContent=lang==='ja'?'今日':'Today';
+  const days=new Date(sdYear,sdMonth+1,0).getDate(),first=new Date(sdYear,sdMonth,1).getDay();
+  const sel=sdInput().value,todayStr=today();
+  const heads=names.map(n=>`<div class="mc-day-name">${n}</div>`).join('');
+  const empties=Array(first).fill('<div class="mc-day empty"></div>').join('');
+  const cells=Array.from({length:days},(_,i)=>{
+    const d=i+1,ds=`${sdYear}-${String(sdMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    let cls='mc-day normal';if(ds===todayStr)cls='mc-day today';if(ds===sel)cls='mc-day selected';
+    return `<button type="button" class="${cls}" data-date="${ds}" aria-pressed="${ds===sel}" aria-label="${ds}">${d}</button>`;
+  }).join('');
+  document.getElementById('sd-cal').innerHTML=`<div class="mini-cal-grid">${heads}${empties}${cells}</div>`;
+}
+function sdPosition(){
+  if(!sdPop||sdPop.hidden)return;
+  const btn=document.getElementById('sd-btn');if(!btn)return;
+  const r=btn.getBoundingClientRect(),w=Math.min(300,window.innerWidth-24);
+  sdPop.style.width=w+'px';
+  const left=Math.round((window.innerWidth-w)/2);
+  const h=sdPop.offsetHeight;
+  let top=r.bottom+8;
+  if(top+h>window.innerHeight-12)top=Math.max(12,r.top-h-8);
+  top=Math.max(12,Math.round((window.innerHeight-h)/2));
+  sdPop.style.left=left+'px';sdPop.style.top=top+'px';
+}
+function sdOpen(){
+  sdBuild();
+  const v=sdInput().value||today();
+  sdYear=+v.slice(0,4);sdMonth=+v.slice(5,7)-1;
+  sdRender();
+  sdPop.hidden=false;if(sdScrim)sdScrim.hidden=false;
+  document.getElementById('sd-btn').setAttribute('aria-expanded','true');
+  sdPosition();
+  const f=sdPop.querySelector('.mc-day.selected,.mc-day.today,.mc-day.normal');if(f)f.focus({preventScroll:true});
+}
+function sdClose(focusBtn){
+  if(!sdPop||sdPop.hidden)return;
+  sdPop.hidden=true;if(sdScrim)sdScrim.hidden=true;
+  const b=document.getElementById('sd-btn');if(b){b.setAttribute('aria-expanded','false');if(focusBtn)b.focus();}
+}
+function sdToggle(){(sdPop&&!sdPop.hidden)?sdClose():sdOpen();}
+function sdPick(v){
+  const i=sdInput();i.value=v;
+  i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));
+  if(typeof recalcPreview==='function'&&shiftMode==='single')recalcPreview();
+  sdClose(true);
+}
+document.addEventListener('pointerdown',e=>{
+  if(!sdPop||sdPop.hidden)return;
+  if(sdPop.contains(e.target)||e.target.closest('#sd-btn'))return;
+  sdClose();
+},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sdPop&&!sdPop.hidden){e.stopPropagation();sdClose(true);}},true);
+window.addEventListener('resize',sdPosition);
+window.addEventListener('scroll',sdPosition,true);
 
 function recalcMultiPreview(){
   const start=document.getElementById('m-start').value;
@@ -3500,6 +3712,85 @@ function renderBillsTotals(){
 }
 
 // ════════════════════════════════════════════════
+// Payday per work
+// ════════════════════════════════════════════════
+const PAY_TIMINGS=[
+  {k:'none', en:'Not set',               ja:'未設定'},
+  {k:'daily',en:'Same day (daily pay)',  ja:'当日払い'},
+  {k:'same', en:'Same month',            ja:'当月払い'},
+  {k:'next', en:'Next month',            ja:'翌月払い'}
+];
+const ordEn=n=>{const v=n%100;if(v>=11&&v<=13)return n+'th';return n+({1:'st',2:'nd',3:'rd'}[n%10]||'th');};
+const payDayText=n=>n===0?(lang==='ja'?'月末':'End of month'):(lang==='ja'?n+'日':ordEn(n));
+function fillPaySelects(){
+  [['w-pay-timing','w-pay-day'],['edit-pay-timing','edit-pay-day']].forEach(([tid,did])=>{
+    const ts=document.getElementById(tid),ds=document.getElementById(did);if(!ts||!ds)return;
+    const tv=ts.value||'none',dv=ds.value||'25';
+    ts.innerHTML=PAY_TIMINGS.map(o=>`<option value="${o.k}">${lang==='ja'?o.ja:o.en}</option>`).join('');
+    ds.innerHTML=[...Array.from({length:31},(_,i)=>i+1),0].map(n=>`<option value="${n}">${payDayText(n)}</option>`).join('');
+    ts.value=tv;ds.value=dv;
+  });
+  payFieldToggle('w');payFieldToggle('edit');
+}
+function payFieldToggle(prefix){
+  const ts=document.getElementById(prefix==='w'?'w-pay-timing':'edit-pay-timing');
+  const f=document.getElementById(prefix==='w'?'w-pay-day-field':'edit-pay-day-field');
+  if(!ts||!f)return;
+  f.hidden=!(ts.value==='same'||ts.value==='next');
+}
+function payLabel(w){
+  const k=w.payTiming||'none';
+  const o=PAY_TIMINGS.find(x=>x.k===k)||PAY_TIMINGS[0];
+  const base=lang==='ja'?o.ja:o.en;
+  if(k==='same'||k==='next')return base+' · '+payDayText(Number.isInteger(w.payDay)?w.payDay:25);
+  return k==='daily'?(lang==='ja'?'当日払い':'Same day'):base;
+}
+// Date when the wages of a shift worked on `d` are paid (null if the work has no payday)
+function payDateFor(w,d){
+  const k=w&&w.payTiming;
+  if(!k||k==='none')return null;
+  if(k==='daily')return new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const base=new Date(d.getFullYear(),d.getMonth()+(k==='next'?1:0),1);
+  const last=new Date(base.getFullYear(),base.getMonth()+1,0).getDate();
+  const pd=Number.isInteger(w.payDay)?w.payDay:25;
+  return new Date(base.getFullYear(),base.getMonth(),pd===0?last:Math.min(pd,last));
+}
+const dkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function renderPayday(){
+  const list=document.getElementById('payday-list');if(!list)return;
+  const note=document.getElementById('payday-note');
+  const loc=lang==='ja'?'ja-JP':'en-US',s=sym();
+  const ev={};
+  shifts.forEach(sh=>{
+    const w=works.find(x=>x.id===sh.workId);if(!w)return;
+    const pd=payDateFor(w,new Date(sh.clockIn));if(!pd)return;
+    const k=dkey(pd);
+    const e=ev[k]||(ev[k]={date:pd,total:0,parts:{}});
+    const amt=(sh.wages||0)+(sh.transport||0);
+    e.total+=amt;
+    const part=e.parts[w.id]||(e.parts[w.id]={name:w.name,color:w.color});
+  });
+  const now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const upcoming=Object.values(ev).filter(e=>e.date>=t0).sort((a,b)=>a.date-b.date).slice(0,6);
+  if(!upcoming.length){
+    list.innerHTML=`<div class="empty-state">${lang==='ja'?'予定されている給料日はありません':'No upcoming paydays yet.'}</div>`;
+  }else{
+    list.innerHTML=upcoming.map(e=>{
+      const days=Math.round((e.date-t0)/86400000);
+      const when=days===0?(lang==='ja'?'今日':'Today'):days===1?(lang==='ja'?'明日':'Tomorrow'):(lang==='ja'?`${days}日後`:`in ${days} days`);
+      const label=e.date.toLocaleDateString(loc,{month:'short',day:'numeric',weekday:'short'});
+      const dots=Object.values(e.parts).map(p=>`<span class="pay-work"><span class="pay-dot" style="background:${p.color}"></span>${esc(p.name)}</span>`).join('');
+      return `<div class="pay-row"><div class="pay-main"><div class="pay-date">${label}</div><div class="pay-when">${when}</div></div><div class="pay-works">${dots}</div><div class="pay-amt">${s}${e.total.toFixed(2)}</div></div>`;
+    }).join('');
+  }
+  const unset=works.filter(w=>!w.payTiming||w.payTiming==='none');
+  if(note){
+    note.textContent=(lang==='ja'?'金額は税引き前（賃金＋交通費）です。':'Amounts are before tax (wages + transport).')
+      +(unset.length&&works.length?(lang==='ja'?' 給料日が未設定の仕事：':' No payday set for: ')+unset.map(w=>w.name).join(', ')+'.':'');
+  }
+}
+
+// ════════════════════════════════════════════════
 // Daily expenses
 // ════════════════════════════════════════════════
 let expenses=[];
@@ -3525,7 +3816,11 @@ async function loadExpenses(){
 function setExpCat(k){expCat=k;renderExpCats();}
 function renderExpCats(){
   const el=document.getElementById('exp-cats');if(!el)return;
-  el.innerHTML=EXP_CATS.map(c=>`<button type="button" class="exp-cat${c.k===expCat?' sel':''}" aria-pressed="${c.k===expCat}" onclick="setExpCat('${c.k}')"><span aria-hidden="true">${c.icon}</span><span>${lang==='ja'?c.ja:c.en}</span></button>`).join('');
+  if(el.children.length!==EXP_CATS.length||el.dataset.lang!==lang){
+    el.dataset.lang=lang;
+    el.innerHTML=EXP_CATS.map(c=>{const n=lang==='ja'?c.ja:c.en;return `<button type="button" class="exp-cat" data-k="${c.k}" aria-label="${n}" title="${n}" onclick="setExpCat('${c.k}')"><span class="exp-cat-ico" aria-hidden="true">${c.icon}</span><span class="exp-cat-lbl">${n}</span></button>`;}).join('');
+  }
+  el.querySelectorAll('.exp-cat').forEach(b=>{const on=b.dataset.k===expCat;b.classList.toggle('sel',on);b.setAttribute('aria-pressed',on?'true':'false');});
 }
 
 async function addExpense(){
@@ -4929,6 +5224,15 @@ function closeBreakDial(apply){
     openBreakDial(b.dataset.select);
   });
   syncBreakChips();
+})();
+</script>
+<script>
+/* Refresh the Payday list whenever the Summary recalculates */
+(function(){
+  var o=window.recalcSummary;
+  if(typeof o==='function'){
+    window.recalcSummary=function(){var r=o.apply(this,arguments);try{renderPayday();}catch(e){}return r;};
+  }
 })();
 </script>
 <script>
