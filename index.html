@@ -1416,6 +1416,17 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .pay-work{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .pay-dot{width:6px;height:6px;border-radius:50%;flex:none}
 .pay-amt{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green);margin-left:auto}
+.pd-view{overflow:hidden;touch-action:pan-y}
+.pd-track{display:flex;transition:transform .32s var(--out)}
+.pd-pane{flex:0 0 100%;min-width:0}
+.pd-cap{text-align:center;font-size:11px;color:var(--accent);margin:-2px 0 6px}
+.pd-dots{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.pd-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .2s,transform .2s}
+.pd-dot.on{background:var(--accent);transform:scale(1.25)}
+.pd-foot{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pd-foot .btn{flex:1 1 auto;white-space:nowrap}
+.pd-pop button.mc-day.sel-eom{outline:1px dashed var(--accent)}
+@media (prefers-reduced-motion:reduce){.pd-track{transition:none}}
 .pay-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
 </style>
 </head>
@@ -1512,13 +1523,14 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
         <div><button class="btn btn-primary" id="btn-add-work" onclick="addWork()">Add</button></div>
       </div>
       <div class="row" id="w-pay-row">
-        <div class="field" style="max-width:220px">
+        <div class="field" style="max-width:260px">
           <label id="lbl-pay-timing">Payday</label>
-          <select id="w-pay-timing" onchange="payFieldToggle('w')"></select>
+          <button type="button" class="sd-btn" id="pd-btn-w" aria-haspopup="dialog" aria-expanded="false" onclick="pdToggle('w')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span></span></button>
+          <select id="w-pay-timing" class="sr-only" tabindex="-1" aria-hidden="true"></select>
         </div>
-        <div class="field" id="w-pay-day-field" style="max-width:160px" hidden>
+        <div class="field" id="w-pay-day-field" hidden>
           <label id="lbl-pay-day">Pay day</label>
-          <select id="w-pay-day"></select>
+          <select id="w-pay-day" class="sr-only" tabindex="-1" aria-hidden="true"></select>
         </div>
       </div>
       <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono',monospace;margin-top:2px" id="night-bonus-note">
@@ -2355,8 +2367,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <div class="field"><label id="lbl-edit-rate">Hourly Rate</label><input type="number" id="edit-rate" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-transport">Transport Fee / Day</label><input type="number" id="edit-transport" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-color">Color</label><input type="color" id="edit-color"></div>
-      <div class="field"><label id="lbl-edit-pay-timing">Payday</label><select id="edit-pay-timing" onchange="payFieldToggle('edit')"></select></div>
-      <div class="field" id="edit-pay-day-field" hidden><label id="lbl-edit-pay-day">Pay day</label><select id="edit-pay-day"></select></div>
+      <div class="field"><label id="lbl-edit-pay-timing">Payday</label><button type="button" class="sd-btn" id="pd-btn-edit" aria-haspopup="dialog" aria-expanded="false" onclick="pdToggle('edit')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span></span></button><select id="edit-pay-timing" class="sr-only" tabindex="-1" aria-hidden="true"></select></div>
+      <div class="field" id="edit-pay-day-field" hidden><label id="lbl-edit-pay-day">Pay day</label><select id="edit-pay-day" class="sr-only" tabindex="-1" aria-hidden="true"></select></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal()" id="btn-cancel-edit">Cancel</button>
@@ -2573,6 +2585,7 @@ function applyLang(rerender){
     renderWorks(); renderWorkPicker(); renderFilterRow();
     updateStats(); renderShifts(); updateDataStats(); updateBadges();
     if(document.getElementById('page-monthly').classList.contains('active')) renderMonthly();
+    try{renderPayday();}catch(e){}
   }
 }
 function setLang(l){
@@ -2705,7 +2718,7 @@ async function addWork(){
   toast(t('toast-work-added'));
   ['w-name','w-rate','w-transport'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('w-color').value='#ffc233';
-  document.getElementById('w-pay-timing').value='none';payFieldToggle('w');
+  document.getElementById('w-pay-timing').value='none';document.getElementById('w-pay-day').value='25';payFieldToggle('w');
   btn.disabled=false;
 }
 async function saveEditWork(){
@@ -3733,11 +3746,139 @@ function fillPaySelects(){
   payFieldToggle('w');payFieldToggle('edit');
 }
 function payFieldToggle(prefix){
-  const ts=document.getElementById(prefix==='w'?'w-pay-timing':'edit-pay-timing');
+  // the day is now chosen in the calendar popup, so the separate day field stays hidden
   const f=document.getElementById(prefix==='w'?'w-pay-day-field':'edit-pay-day-field');
-  if(!ts||!f)return;
-  f.hidden=!(ts.value==='same'||ts.value==='next');
+  if(f)f.hidden=true;
+  pdSync(prefix==='w'?'w':'edit');
 }
+// ── Payday: one calendar at a time — this month / next month (slide between them) ──
+let pdPop=null,pdScrim=null,pdFor='w',pdPage=0,pdTrack=null;
+const pdEl=(k,what)=>document.getElementById((k==='edit'?'edit-':'w-')+what);
+const pdBtnEl=k=>document.getElementById(k==='edit'?'pd-btn-edit':'pd-btn-w');
+function pdCur(k){
+  const ts=pdEl(k,'pay-timing'),ds=pdEl(k,'pay-day');
+  const t=ts?ts.value:'none',n=parseInt(ds?ds.value:'');
+  return {payTiming:t||'none',payDay:Number.isInteger(n)?n:25};
+}
+function pdSync(k){
+  const b=pdBtnEl(k);if(!b)return;
+  const sp=b.querySelector('span');if(sp)sp.textContent=payLabel(pdCur(k));
+}
+(function(){
+  const desc=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value');
+  [['w-pay-timing','w'],['w-pay-day','w'],['edit-pay-timing','edit'],['edit-pay-day','edit']].forEach(([id,k])=>{
+    const el=document.getElementById(id);if(!el)return;
+    Object.defineProperty(el,'value',{configurable:true,get(){return desc.get.call(this);},set(v){desc.set.call(this,v);pdSync(k);}});
+  });
+  pdSync('w');pdSync('edit');
+})();
+function pdBuild(){
+  if(pdPop)return;
+  pdPop=document.createElement('div');
+  pdPop.className='sd-pop pd-pop';pdPop.id='pd-pop';pdPop.hidden=true;
+  pdPop.setAttribute('role','dialog');
+  pdPop.innerHTML='<div class="sd-head"><button type="button" class="mc-nav-btn" data-pd="prev" aria-label="Previous">&#8249;</button><span class="sd-month" id="pd-title"></span><button type="button" class="mc-nav-btn" data-pd="next" aria-label="Next">&#8250;</button></div><div class="pd-cap" id="pd-cap"></div><div class="pd-view" id="pd-view"><div class="pd-track" id="pd-track"></div></div><div class="pd-dots"><span class="pd-dot" id="pd-dot0"></span><span class="pd-dot" id="pd-dot1"></span></div><div class="pd-foot" id="pd-foot"></div>';
+  pdScrim=document.createElement('div');pdScrim.className='sd-scrim';pdScrim.hidden=true;
+  document.body.appendChild(pdScrim);document.body.appendChild(pdPop);
+  pdTrack=pdPop.querySelector('#pd-track');
+  pdPop.addEventListener('click',e=>{
+    const b=e.target.closest('[data-pd],[data-day],[data-timing]');if(!b)return;
+    if(b.dataset.day!==undefined){pdPick(b.dataset.t,parseInt(b.dataset.day));return;}
+    if(b.dataset.timing){pdPick(b.dataset.timing,null);return;}
+    if(b.dataset.pd==='prev')pdGo(0);else if(b.dataset.pd==='next')pdGo(1);
+  });
+  // swipe left/right to slide between the two months
+  const view=pdPop.querySelector('#pd-view');let x0=null;
+  view.addEventListener('pointerdown',e=>{x0=e.clientX;});
+  view.addEventListener('pointerup',e=>{
+    if(x0===null)return;const dx=e.clientX-x0;x0=null;
+    if(Math.abs(dx)>40)pdGo(dx<0?1:0);
+  });
+  view.addEventListener('pointercancel',()=>{x0=null;});
+}
+function pdMonthInfo(off){
+  const n=new Date(),base=new Date(n.getFullYear(),n.getMonth()+off,1);
+  return {y:base.getFullYear(),m:base.getMonth(),days:new Date(base.getFullYear(),base.getMonth()+1,0).getDate(),first:base.getDay()};
+}
+function pdRender(){
+  const cur=pdCur(pdFor);
+  const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const names=lang==='ja'?['日','月','火','水','木','金','土']:['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const now=new Date(),todayStr=dkey(now);
+  pdTrack.innerHTML=[0,1].map(off=>{
+    const mi=pdMonthInfo(off),t=off?'next':'same';
+    const eff=cur.payTiming===t?(cur.payDay===0?mi.days:Math.min(cur.payDay,mi.days)):-1;
+    const heads=names.map(n=>`<div class="mc-day-name">${n}</div>`).join('');
+    const empties=Array(mi.first).fill('<div class="mc-day empty"></div>').join('');
+    const cells=Array.from({length:mi.days},(_,i)=>{
+      const d=i+1,ds=mi.y+'-'+String(mi.m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      let cls='mc-day normal';if(ds===todayStr)cls='mc-day today';if(d===eff)cls='mc-day selected'+(cur.payDay===0?' sel-eom':'');
+      return `<button type="button" class="${cls}" data-t="${t}" data-day="${d}" aria-pressed="${d===eff}">${d}</button>`;
+    }).join('');
+    return `<div class="pd-pane" data-off="${off}"><div class="mini-cal"><div class="mini-cal-grid">${heads}${empties}${cells}</div></div></div>`;
+  }).join('');
+  const f=document.getElementById('pd-foot');
+  const on=k=>cur.payTiming===k?'btn-primary':'btn-ghost';
+  f.innerHTML=`<button type="button" class="btn btn-sm ${on('none')}" data-timing="none">${lang==='ja'?'未設定':'Not set'}</button>`
+    +`<button type="button" class="btn btn-sm ${on('daily')}" data-timing="daily">${lang==='ja'?'当日払い':'Same day'}</button>`
+    +`<button type="button" class="btn btn-sm ${(cur.payTiming==='same'||cur.payTiming==='next')&&cur.payDay===0?'btn-primary':'btn-ghost'}" data-day="0" data-t="${pdPage?'next':'same'}" id="pd-eom">${payDayText(0)}</button>`;
+  pdGo(pdPage,true);
+}
+function pdGo(page,instant){
+  pdPage=page;
+  if(pdTrack){
+    if(instant){const tr=pdTrack.style.transition;pdTrack.style.transition='none';pdTrack.style.transform=`translateX(${-100*page}%)`;void pdTrack.offsetWidth;pdTrack.style.transition=tr;}
+    else pdTrack.style.transform=`translateX(${-100*page}%)`;
+  }
+  const mi=pdMonthInfo(page);
+  const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('pd-title').textContent=lang==='ja'?`${mi.y}年 ${mi.m+1}月`:`${MON[mi.m]} ${mi.y}`;
+  document.getElementById('pd-cap').textContent=page?(lang==='ja'?'翌月払い':'Next month'):(lang==='ja'?'当月払い':'Same month');
+  document.getElementById('pd-dot0').classList.toggle('on',page===0);
+  document.getElementById('pd-dot1').classList.toggle('on',page===1);
+  const eom=document.getElementById('pd-eom');if(eom)eom.dataset.t=page?'next':'same';
+  pdPosition();
+}
+function pdPosition(){
+  if(!pdPop||pdPop.hidden)return;
+  const w=Math.min(320,window.innerWidth-24);
+  pdPop.style.width=w+'px';
+  pdPop.style.left=Math.round((window.innerWidth-w)/2)+'px';
+  pdPop.style.top=Math.max(12,Math.round((window.innerHeight-pdPop.offsetHeight)/2))+'px';
+}
+function pdOpen(k){
+  pdBuild();pdFor=k;
+  pdPage=pdCur(k).payTiming==='next'?1:0;
+  pdPop.hidden=false;pdScrim.hidden=false;
+  pdRender();
+  pdBtnEl(k).setAttribute('aria-expanded','true');
+  pdPosition();
+}
+function pdClose(focusBtn){
+  if(!pdPop||pdPop.hidden)return;
+  pdPop.hidden=true;pdScrim.hidden=true;
+  ['w','edit'].forEach(k=>{const b=pdBtnEl(k);if(b)b.setAttribute('aria-expanded','false');});
+  if(focusBtn){const b=pdBtnEl(pdFor);if(b)b.focus();}
+}
+function pdToggle(k){(pdPop&&!pdPop.hidden&&pdFor===k)?pdClose():pdOpen(k);}
+function pdPick(timing,day){
+  const ts=pdEl(pdFor,'pay-timing'),ds=pdEl(pdFor,'pay-day');
+  if(day!==null&&!Number.isNaN(day))ds.value=String(day);
+  ts.value=timing;
+  ts.dispatchEvent(new Event('change',{bubbles:true}));
+  pdClose(true);
+}
+document.addEventListener('pointerdown',e=>{
+  if(!pdPop||pdPop.hidden)return;
+  if(pdPop.contains(e.target)||e.target.closest('#pd-btn-w,#pd-btn-edit'))return;
+  pdClose();
+},true);
+document.addEventListener('keydown',e=>{
+  if(!pdPop||pdPop.hidden)return;
+  if(e.key==='Escape'){e.stopPropagation();pdClose(true);}
+  else if(e.key==='ArrowLeft')pdGo(0);else if(e.key==='ArrowRight')pdGo(1);
+},true);
+window.addEventListener('resize',pdPosition);
 function payLabel(w){
   const k=w.payTiming||'none';
   const o=PAY_TIMINGS.find(x=>x.k===k)||PAY_TIMINGS[0];
@@ -3768,7 +3909,7 @@ function renderPayday(){
     const e=ev[k]||(ev[k]={date:pd,total:0,parts:{}});
     const amt=(sh.wages||0)+(sh.transport||0);
     e.total+=amt;
-    const part=e.parts[w.id]||(e.parts[w.id]={name:w.name,color:w.color});
+    if(!e.parts[w.id])e.parts[w.id]={name:w.name,color:w.color};
   });
   const now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const upcoming=Object.values(ev).filter(e=>e.date>=t0).sort((a,b)=>a.date-b.date).slice(0,6);
