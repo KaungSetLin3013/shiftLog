@@ -1257,29 +1257,81 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
 /* ---- Settings on PC: list on the left, opened section on the right ---- */
 .set-pane{display:none}
-@media(min-width:901px){
-  #settings-modal .modal{max-width:980px;padding:24px 20px 20px}
-  .set-wrap{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:22px;align-items:start}
-  .set-pane{display:block;position:sticky;top:0;min-height:360px;padding:20px;background:var(--surface2);border:1px solid var(--border);border-radius:20px}
-  .set-pane-title{display:none;font-size:16px;font-weight:800;margin-bottom:14px}
-  .set-pane.has-detail .set-pane-title{display:block}
-  .set-pane-empty{display:flex;align-items:center;justify-content:center;min-height:300px;text-align:center;color:var(--muted);font-size:13px}
-  .set-pane.has-detail .set-pane-empty{display:none}
-  #settings-modal .set-pane .setting-detail.open{margin:0;padding:0;background:none;border-radius:0}
-  .set-pane .palette-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
-  #settings-modal .modal-close{top:12px;right:12px}
-}
 
-/* PC: the window itself doesn't scroll; the list and the right panel scroll on their own */
-@media(min-width:901px){
-  #settings-modal .modal{overflow:hidden;display:flex;flex-direction:column;height:min(760px,90vh);max-height:90vh}
-  .set-wrap{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch}
-  .set-list{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin}
-  .set-pane{position:static;min-height:0;height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
-}
 
 .theme-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .set-subhead{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+
+/* ---- Settings: icon rail on the left, details on the right ---- */
+.set-rail{display:none}
+.rb-text{display:none}
+  #settings-modal .modal{max-width:780px;padding:0;overflow:hidden;display:flex;flex-direction:column;height:min(580px,90vh);max-height:90vh}
+  #settings-modal .modal-close{top:14px;right:14px;z-index:3}
+  .set-wrap{display:grid;grid-template-columns:84px minmax(0,1fr);flex:1;min-height:0}
+  .set-list{display:none}
+  .set-rail{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 0;background:var(--surface2);border-right:1px solid var(--border);overflow-y:auto;scrollbar-width:none}
+  .set-rail::-webkit-scrollbar{display:none}
+  .rail-btn{position:relative;flex:none;width:52px;height:52px;padding:0;border:0;border-radius:50%;background:transparent;display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .rail-btn .sr-ico{width:44px;height:44px;transition:background-color .2s,color .2s,transform 450ms var(--spring),box-shadow .25s}
+  .rail-btn:hover .sr-ico{transform:scale(1.12)}
+  .rail-btn:active .sr-ico{transform:scale(.86);transition-duration:80ms}
+  .rail-btn.active .sr-ico{background:var(--ic,var(--accent));color:var(--surface);transform:scale(1.08);
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--ic,var(--accent)) 28%,transparent),0 6px 16px color-mix(in srgb,var(--ic,var(--accent)) 35%,transparent)}
+  .rail-btn.active::before{content:'';position:absolute;left:-16px;top:13px;bottom:13px;width:4px;border-radius:0 4px 4px 0;background:var(--accent);animation:barIn 280ms var(--out)}
+  .rail-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .set-pane{display:block;position:static;overflow-y:auto;min-height:0;height:auto;padding:30px 34px 28px;background:none;border:0;border-radius:0;scrollbar-width:thin;overscroll-behavior:contain}
+  .set-pane-title{display:none;font-size:20px;font-weight:800;margin:0 40px 18px 0}
+  .set-pane.has-detail .set-pane-title{display:block}
+  .set-pane-empty{display:flex;align-items:center;justify-content:center;min-height:300px;text-align:center;color:var(--muted);font-size:13px}
+  .set-pane.has-detail .set-pane-empty{display:none}
+  #settings-modal .set-pane .setting-detail.open{margin:0;padding:0;background:none;border-radius:0;animation:rise 260ms var(--out)}
+  .set-pane .palette-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  #settings-modal .set-pane .setting-row{flex-direction:column;align-items:flex-start;gap:16px;min-height:0;padding:0;background:none;animation:rise 260ms var(--out)}
+  #settings-modal .set-pane .setting-row:hover{background:none}
+  #settings-modal .set-pane .setting-row .sr-ico,#settings-modal .set-pane .setting-row .setting-label{display:none}
+  #settings-modal .set-pane .setting-row .setting-sub{font-size:13px;color:var(--muted)}
+
+/* PC: settings bar shows icon + name + short description */
+@media(min-width:900px){
+  #settings-modal .modal{max-width:980px}
+  .set-wrap{grid-template-columns:270px minmax(0,1fr)}
+  .set-rail{align-items:stretch;gap:6px;padding:22px 12px}
+  .rail-btn{display:flex;align-items:center;gap:12px;width:auto;height:auto;min-height:58px;padding:6px 12px 6px 8px;border-radius:18px;text-align:left;color:var(--text);transition:background-color .2s}
+  .rail-btn:hover{background:var(--surface3)}
+  .rail-btn.active{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+  .rail-btn.active::before{left:-12px}
+  .rb-text{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .rb-label{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rb-sub{font-size:11px;line-height:1.3;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rb-sub:empty{display:none}
+  .rail-btn.active .rb-label{color:var(--accent)}
+  /* bottom nav labels a little larger on PC */
+  .bn-item:not(.active){font-size:11px}
+  .bn-item.active{font-size:12px}
+}
+/* Phones/small windows: bottom nav is icons only (labels stay for screen readers) */
+@media(max-width:899px){
+  .bn-item>span:not(.bn-icon):not(.bn-badge){position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:-1px;padding:0;border:0}
+  .bn-item{min-height:48px;padding-top:6px;padding-bottom:6px}
+  .bn-item.active{padding-top:6px}
+  .bn-item:not(.active){opacity:.85}
+  .bn-item:not(.active) .bn-icon{transform:scale(1.05)}
+  .bn-icon{font-size:calc(var(--s) * .4)}
+}
+
+/* small screens: slimmer icon bar */
+@media(max-width:559px){
+  #settings-modal.modal-overlay{padding:12px}
+  #settings-modal .modal{height:min(640px,90vh)}
+  .set-wrap{grid-template-columns:66px minmax(0,1fr)}
+  .set-rail{padding:20px 0;gap:8px}
+  .rail-btn{width:48px;height:48px}
+  .rail-btn .sr-ico{width:42px;height:42px}
+  .rail-btn.active::before{left:-9px}
+  .set-pane{padding:22px 16px 20px}
+  .set-pane-title{font-size:18px;margin-bottom:14px}
+  .set-pane .palette-grid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+}
 </style>
 </head>
 <body>
@@ -2229,7 +2281,7 @@ function dbGetAll(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'r
 function dbPut(s,o){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).put(o);r.onsuccess=()=>{res(r.result);cloudHook('put',s,null,o);};r.onerror=()=>rej(r.error);});}
 function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).delete(id);r.onsuccess=()=>{res();cloudHook('del',s,id,null);};r.onerror=()=>rej(r.error);});}
 function dbClear(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).clear();r.onsuccess=()=>{res();cloudHook('clear',s,null,null);};r.onerror=()=>rej(r.error);});}
-const _setMQ=window.matchMedia('(min-width:901px)');
+const _setMQ=window.matchMedia('(min-width:0px)');
 function setSettingOpen(k,open){
   const btn=document.getElementById('st-'+k),box=document.getElementById('sd-'+k);
   if(!btn||!box)return;
@@ -2526,7 +2578,7 @@ function openSettings(){
   const ds=document.getElementById('data-stats-s');
   if(ds) ds.innerHTML=`Works: ${works.length} &nbsp;·&nbsp; Shifts: ${shifts.length} &nbsp;·&nbsp; Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th2)} &nbsp;·&nbsp; Earnings: ${fmtMoney(te)}`;
   document.getElementById('settings-modal').classList.add('open');
-  if(_setMQ.matches&&!document.querySelector('#settings-modal .setting-toggle[aria-expanded="true"]'))setSettingOpen('theme',true);
+  if(_setMQ.matches&&window.selectSettingKey)window.selectSettingKey();
 }
 function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
 
@@ -5204,6 +5256,86 @@ function closeBreakDial(apply){
   watch();
   new MutationObserver(function(){watch();sync();}).observe(document.body,{childList:true});
   sync();
+})();
+</script>
+<script>
+/* Settings on PC: build the icon rail and move the chosen setting into the right-hand pane */
+(function(){
+  var modal=document.getElementById('settings-modal');if(!modal)return;
+  var wrap=modal.querySelector('.set-wrap'),list=wrap&&wrap.querySelector('.set-list'),pane=document.getElementById('set-pane');
+  if(!wrap||!list||!pane)return;
+  var items=[];
+  Array.prototype.forEach.call(list.children,function(el){
+    var col=el.classList.contains('setting-collapse'),row=el.classList.contains('setting-row');
+    if(!col&&!row)return;
+    var lbl=el.querySelector('.setting-label');
+    var key=col?el.id.slice(3):(lbl&&lbl.id?lbl.id.replace(/^lbl-/,'').replace(/-title$/,''):'row'+items.length);
+    items.push({key:key,el:el,type:col?'col':'row',lbl:lbl,ico:el.querySelector('.sr-ico'),ph:null,btn:null});
+  });
+  var rail=document.createElement('div');
+  rail.className='set-rail';rail.setAttribute('role','tablist');rail.setAttribute('aria-orientation','vertical');
+  items.forEach(function(it){
+    var b=document.createElement('button');
+    b.type='button';b.className='rail-btn';b.setAttribute('role','tab');b.setAttribute('aria-selected','false');
+    if(it.ico){
+      var ic=document.createElement('span');ic.className='sr-ico';
+      ic.setAttribute('style',it.ico.getAttribute('style')||'');ic.setAttribute('aria-hidden','true');
+      ic.innerHTML=it.ico.innerHTML;b.appendChild(ic);
+    }
+    var tx=document.createElement('span');tx.className='rb-text';
+    tx.innerHTML='<span class="rb-label"></span><span class="rb-sub"></span>';
+    b.appendChild(tx);it.tx=tx;
+    b.addEventListener('click',function(){selectKey(it.key);});
+    it.btn=b;rail.appendChild(b);
+  });
+  wrap.insertBefore(rail,list);
+  function label(it){return it.lbl?it.lbl.textContent.trim():it.key;}
+  function tips(){items.forEach(function(it){
+    var t=label(it),sb=it.el.querySelector('.setting-sub');
+    it.btn.title=t;it.btn.setAttribute('aria-label',t);
+    it.tx.firstChild.textContent=t;
+    it.tx.lastChild.textContent=sb?sb.textContent.trim():'';
+  });}
+  tips();
+  var mo=new MutationObserver(tips);
+  mo.observe(list,{subtree:true,characterData:true,childList:true});
+  mo.observe(pane,{subtree:true,characterData:true,childList:true});
+
+  var cur=null;
+  function leave(it){
+    if(it.type==='col'){window.setSettingOpen(it.key,false);}
+    else if(it.ph&&it.el.parentNode===pane){it.ph.parentNode.insertBefore(it.el,it.ph);it.ph.parentNode.removeChild(it.ph);it.ph=null;}
+  }
+  function selectKey(k){
+    if(!_setMQ.matches)return;
+    var it=items.filter(function(x){return x.key===k;})[0]||cur||items[0];
+    if(!it)return;
+    if(cur&&cur!==it)leave(cur);
+    cur=it;
+    items.forEach(function(x){var on=x===it;x.btn.classList.toggle('active',on);x.btn.setAttribute('aria-selected',on?'true':'false');});
+    var tt=document.getElementById('set-pane-title');
+    if(it.type==='col'){
+      window.setSettingOpen(it.key,true);
+    }else if(it.el.parentNode!==pane){
+      it.ph=document.createComment('');
+      it.el.parentNode.insertBefore(it.ph,it.el);
+      pane.appendChild(it.el);
+    }
+    if(tt)tt.textContent=label(it);
+    pane.classList.add('has-detail');
+  }
+  window.selectSettingKey=function(k){selectKey(k||(cur&&cur.key)||items[0].key);};
+
+  var onChange=function(){
+    if(!_setMQ.matches){
+      if(cur&&cur.type==='row')leave(cur);
+      items.forEach(function(x){x.btn.classList.remove('active');});
+      cur=null;
+    }else if(modal.classList.contains('open')){
+      selectKey(cur?cur.key:items[0].key);
+    }
+  };
+  if(_setMQ.addEventListener)_setMQ.addEventListener('change',onChange);else _setMQ.addListener(onChange);
 })();
 </script>
 </body>
