@@ -119,9 +119,10 @@ body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;heig
   .works-grid{grid-template-columns:repeat(3,1fr);}
   .monthly-layout{grid-template-columns:1fr 340px;}
   .stats-row{grid-template-columns:repeat(5,1fr);}
-  .monthly-stats{grid-template-columns:repeat(4,1fr);}
+  .monthly-stats{grid-template-columns:repeat(5,1fr);}
   /* Tax/summary top cards */
-  #tax-stats-grid,#sum-top-cards{grid-template-columns:repeat(3,1fr)!important;}
+  #tax-stats-grid{grid-template-columns:repeat(3,1fr)!important;}
+  #sum-top-cards{grid-template-columns:repeat(4,1fr)!important;}
   /* Bills summary bar */
   
 }
@@ -313,7 +314,7 @@ select option{background:var(--surface2);}
 .month-nav-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 12px;font-size:15px;cursor:pointer;transition:all .2s;}
 .month-nav-btn:hover{border-color:var(--accent);}
 .month-title{font-size:19px;font-weight:800;min-width:160px;text-align:center;}
-.monthly-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.monthly-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
 
 /* Calendar */
 .calendar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;position:sticky;top:20px;}
@@ -1427,6 +1428,28 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .cur-custom label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
 .cur-custom input{max-width:84px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
 #w-night-row{align-items:flex-end}
+/* Expenses in Monthly + Summary */
+.cd-exp{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);border-top:1px dashed color-mix(in srgb,var(--red) 35%,transparent);padding-top:4px}
+.cd-exp b{font-size:11px;font-weight:700;white-space:nowrap}
+.cd-exp-ico{font-size:10px;letter-spacing:1px}
+.cd-total+.cd-exp{margin-top:0}
+.cd-exp-short{display:none}
+.cal-day.cd.has-exp:not(.has-shift){background:color-mix(in srgb,var(--red) 6%,transparent);cursor:pointer}
+.cal-day.cd.has-exp:not(.has-shift):hover{background:color-mix(in srgb,var(--red) 12%,transparent)}
+.dd-total b.neg{color:var(--red)}
+.dd-exp-head{margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.dd-exp{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+.dd-exp-ico{font-size:15px}
+.dd-exp-name{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dd-exp-name em{font-style:normal;font-weight:400;color:var(--muted)}
+.dd-exp b{font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:700}
+@media(max-width:640px){
+  .cd-exp{display:none}
+  .cd-exp-short{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--red);line-height:1}
+  .cal-day.cd{min-height:62px}
+  #sum-top-cards{grid-template-columns:1fr 1fr!important}
+  .monthly-stats .stat-card:last-child:nth-child(odd){grid-column:1/-1}
+}
 /* Payday */
 .field[hidden]{display:none}
 .pay-row{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;flex-wrap:wrap}
@@ -1757,6 +1780,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="stat-card"><div class="stat-val" id="m-hrs">0h 0m</div><div class="stat-lbl" id="lbl-m-hrs">Work Hours</div></div>
       <div class="stat-card money"><div class="stat-val" id="m-wages">$0.00</div><div class="stat-lbl" id="lbl-m-wages">Wages</div></div>
       <div class="stat-card money"><div class="stat-val" id="m-total">$0.00</div><div class="stat-lbl" id="lbl-m-total">Total inc. Transport</div></div>
+      <div class="stat-card" style="border-color:rgba(255,68,102,.3)"><div class="stat-val" id="m-exp" style="color:var(--red)">-$0.00</div><div class="stat-lbl" id="lbl-m-exp">Expenses</div></div>
     </div>
 
     <!-- Calendar + stats side by side -->
@@ -1995,7 +2019,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     </div>
 
     <!-- Big result cards -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px" id="sum-top-cards">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px" id="sum-top-cards">
       <div class="stat-card money">
         <div class="stat-val" id="sum-gross">$0.00</div>
         <div class="stat-lbl" id="lbl-sum-gross">Gross Income</div>
@@ -2007,6 +2031,10 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="stat-card" style="border-color:rgba(255,212,100,.3)">
         <div class="stat-val" style="color:var(--yellow)" id="sum-bills-out">$0.00</div>
         <div class="stat-lbl" id="lbl-sum-bills-out">Bills (period)</div>
+      </div>
+      <div class="stat-card" style="border-color:rgba(255,68,102,.3)">
+        <div class="stat-val" style="color:var(--red)" id="sum-exp-out">$0.00</div>
+        <div class="stat-lbl" id="lbl-sum-exp-out">Expenses (period)</div>
       </div>
     </div>
 
@@ -2028,6 +2056,11 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     <div class="panel">
       <div class="panel-label" id="lbl-sum-bills-detail">Bills Applied</div>
       <div id="sum-bills-detail"></div>
+    </div>
+    <!-- Expenses in this period -->
+    <div class="panel">
+      <div class="panel-label" id="lbl-sum-exp-detail">Expenses</div>
+      <div id="sum-exp-detail"></div>
     </div>
     <!-- Payday: when each month's wages arrive -->
     <div class="panel" id="payday-panel">
@@ -3455,6 +3488,10 @@ function renderMonthly(){
   document.getElementById('m-hrs').textContent=fmtDur(td);
   document.getElementById('m-wages').textContent=fmtMoney(tw);
   document.getElementById('m-total').textContent=fmtMoney(tw+tt);
+  {const mp=currentYear+'-'+String(currentMonth+1).padStart(2,'0');
+   const et=expenses.filter(x=>x.date&&x.date.startsWith(mp)).reduce((a,x)=>a+(x.amount||0),0);
+   const me=document.getElementById('m-exp');if(me)me.textContent=et>0?'-'+fmtMoney(et):fmtMoney(0);
+   const ml=document.getElementById('lbl-m-exp');if(ml)ml.textContent=lang==='ja'?'支出':'Expenses';}
 
   // Graph
   const days=new Date(currentYear,currentMonth+1,0).getDate();
@@ -3497,6 +3534,17 @@ function renderCalendar(monthShifts){
   }
   Object.values(shiftDays).forEach(l=>l.sort((x,y)=>x.clockIn-y.clockIn));
 
+  // Expenses in this month, grouped by day (shown with a leading "-")
+  const mPrefix=currentYear+'-'+String(currentMonth+1).padStart(2,'0');
+  const expDays={};
+  for(const x of expenses){
+    if(!x.date||!x.date.startsWith(mPrefix))continue;
+    const d=parseInt(x.date.slice(8,10),10);
+    const e=expDays[d]||(expDays[d]={total:0,items:[]});
+    e.total+=x.amount||0;e.items.push(x);
+  }
+  const minus=n=>'-'+fmtMoney(n);
+
   const headers=dayNames.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
   const empties=Array(firstDow).fill('<div class="cal-day cd empty"></div>').join('');
 
@@ -3508,11 +3556,13 @@ function renderCalendar(monthShifts){
     const d=i+1;
     const list=shiftDays[d]||[];
     const hasShift=list.length>0;
+    const ex=expDays[d],hasExp=!!ex;
     let cls='cal-day cd';
     cls+=hasShift?' has-shift':' normal';
+    if(hasExp)cls+=' has-exp';
     if(d===todayDay)cls+=' today';
     if(calSelectedDay===d)cls+=' selected';
-    const clickable=hasShift||d===todayDay;
+    const clickable=hasShift||hasExp||d===todayDay;
     let inner=`<div class="cd-top"><span class="cd-num">${d}</span></div>`;
     if(hasShift){
       let tot=0,dayMs=0;list.forEach(s=>{tot+=shiftTotal(s);dayMs+=s.duration||0;});
@@ -3525,22 +3575,27 @@ function renderCalendar(monthShifts){
         +`<div class="cd-dots">${list.slice(0,4).map(s=>`<i style="background:${safeColor(s.workColor||'#888')}"></i>`).join('')}</div>`
         +`<div class="cd-short">${shortMoney(tot)}</div>`;
     }
+    if(hasExp){
+      const icons=[...new Set(ex.items.map(x=>expCatInfo(x.cat).icon))].slice(0,3).join('');
+      inner+=`<div class="cd-exp"><span class="cd-exp-ico">${icons}</span><b>${minus(ex.total)}</b></div><div class="cd-exp-short">-${shortMoney(ex.total)}</div>`;
+    }
     return `<div class="${cls}" ${clickable?`onclick="selectCalDay(${d})"`:''}>${inner}</div>`;
   }).join('');
 
   grid.innerHTML=headers+empties+cells;
 
-  // Selected-day detail (shown right under the calendar)
+  // Selected-day detail (shown right under the calendar): shifts + expenses
   const detail=document.getElementById('day-detail');
-  const list=calSelectedDay?shiftDays[calSelectedDay]:null;
-  if(list&&list.length){
+  const list=calSelectedDay?(shiftDays[calSelectedDay]||[]):[];
+  const exs=calSelectedDay&&expDays[calSelectedDay]?expDays[calSelectedDay]:null;
+  if(list.length||exs){
     detail.style.display='block';
     const dateLabel=new Date(currentYear,currentMonth,calSelectedDay).toLocaleDateString(ja?'ja-JP':'en-US',{weekday:'long',month:'long',day:'numeric'});
     document.getElementById('day-detail-title').textContent=dateLabel;
     let tW=0,tT=0,tD=0;
-    const rows=list.map(s=>{
+    let html=list.map(s=>{
       const w=s.wages||0,tr=s.transport||0;tW+=w;tT+=tr;tD+=s.duration||0;
-      return `<div class="dd-shift" style="--c:${safeColor(s.workColor||'#888')}">
+      return `<div class="dd-shift" style="--c:${s.workColor||'#888'}">
         <div class="dd-head"><span class="dd-name">${esc(s.workName)}</span><span class="dd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span><span class="dd-money">${fmtMoney(w+tr)}</span></div>
         <div class="dd-meta">
           <span>${ja?'勤務':'Worked'} ${fmtDur(s.duration||0)}</span>
@@ -3551,8 +3606,14 @@ function renderCalendar(monthShifts){
         </div>
       </div>`;
     }).join('');
-    document.getElementById('day-detail-body').innerHTML=rows
-      +`<div class="dd-total"><span>${ja?'この日の合計':'Day total'} · ${fmtDur(tD)}</span><b>${fmtMoney(tW+tT)}</b></div>`;
+    if(list.length)html+=`<div class="dd-total"><span>${ja?'この日の合計':'Day total'} · ${fmtDur(tD)}</span><b>${fmtMoney(tW+tT)}</b></div>`;
+    if(exs){
+      html+=`<div class="dd-exp-head">${ja?'支出':'Expenses'}</div>`
+        +exs.items.map(x=>{const c=expCatInfo(x.cat);return `<div class="dd-exp"><span class="dd-exp-ico">${c.icon}</span><span class="dd-exp-name">${esc(ja?c.ja:c.en)}${x.note?` · <em>${esc(x.note)}</em>`:''}</span><b>${minus(x.amount||0)}</b></div>`;}).join('');
+      if(exs.items.length>1)html+=`<div class="dd-total"><span>${ja?'支出合計':'Expenses total'}</span><b class="neg">${minus(exs.total)}</b></div>`;
+      if(list.length){const net=tW+tT-exs.total;html+=`<div class="dd-total"><span>${ja?'差引（収入 − 支出）':'Net (income − expenses)'}</span><b style="color:${net>=0?'var(--green)':'var(--red)'}">${net<0?'-':''}${fmtMoney(Math.abs(net))}</b></div>`;}
+    }
+    document.getElementById('day-detail-body').innerHTML=html;
   } else {
     detail.style.display='none';
   }
@@ -4222,6 +4283,20 @@ function getSumShifts(){
   return sl;
 }
 
+// Expenses (Expenses tab) that fall inside the selected Summary period, by the date of the expense
+function getSumExpenses(){
+  const now=new Date(),pad=n=>String(n).padStart(2,'0');
+  const ym=(y,m)=>y+'-'+pad(m+1);
+  if(sumPeriod==='month')return expenses.filter(x=>x.date.startsWith(ym(now.getFullYear(),now.getMonth())));
+  if(sumPeriod==='last-month'){const lm=new Date(now.getFullYear(),now.getMonth()-1,1);return expenses.filter(x=>x.date.startsWith(ym(lm.getFullYear(),lm.getMonth())));}
+  if(sumPeriod==='year')return expenses.filter(x=>x.date.startsWith(String(now.getFullYear())+'-'));
+  if(sumPeriod==='custom-month'){
+    const cm=parseInt(document.getElementById('sump-cm-month')?.value);const cy=parseInt(document.getElementById('sump-cm-year')?.value);
+    return expenses.filter(x=>x.date.startsWith(ym(Number.isFinite(cy)?cy:now.getFullYear(),Number.isFinite(cm)?cm:now.getMonth())));
+  }
+  return expenses.slice();
+}
+
 function getSumBills(){
   const monthly=bills.reduce((a,b)=>a+b.amount,0);
   if(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month') return monthly;
@@ -4285,15 +4360,19 @@ function recalcSummary(){
   const rateTxt=_rates.length===1?_rates[0]+'%':(_rates.length>1?(lang==='ja'?'仕事ごと':'per work'):workTaxRate(null)+'%');
   const afterTax=gross-totalTax;
   const billsAmt=getSumBills();
-  const finalNet=afterTax-billsAmt;
+  const expList=getSumExpenses(),expAmt=expList.reduce((a,x)=>a+(x.amount||0),0);
+  const finalNet=afterTax-billsAmt-expAmt;
 
   const el=id=>document.getElementById(id);
   if(el('sum-gross'))    el('sum-gross').textContent=fmtMoney(gross);
   if(el('sum-tax-out'))  el('sum-tax-out').textContent=fmtMoney(totalTax);
   if(el('sum-bills-out'))el('sum-bills-out').textContent=fmtMoney(billsAmt);
+  if(el('sum-exp-out'))  el('sum-exp-out').textContent=fmtMoney(expAmt);
+  if(el('lbl-sum-exp-out'))el('lbl-sum-exp-out').textContent=lang==='ja'?'支出（期間）':'Expenses (period)';
+  if(el('lbl-sum-exp-detail'))el('lbl-sum-exp-detail').textContent=lang==='ja'?'支出':'Expenses';
   if(el('sum-final'))    el('sum-final').textContent=fmtMoney(finalNet);
   if(el('sum-final'))    el('sum-final').style.color=finalNet>=0?'var(--green)':'var(--red)';
-  if(el('sum-final-sub')) el('sum-final-sub').textContent=lang==='ja'?`税金・請求書控除後 (${periodLabel})`:`after tax & bills (${periodLabel})`;
+  if(el('sum-final-sub')) el('sum-final-sub').textContent=lang==='ja'?`税金・請求書・支出控除後 (${periodLabel})`:`after tax, bills & expenses (${periodLabel})`;
 
   // Waterfall breakdown
   const wf=el('sum-waterfall');
@@ -4302,6 +4381,7 @@ function recalcSummary(){
       {label:lang==='ja'?'総収入':'Gross Income',val:gross,color:'var(--green)',sign:''},
       {label:lang==='ja'?`所得税 (${rateTxt}, 7万超の月)`:`Tax (${rateTxt}, months over 70k)`,val:-totalTax,color:'var(--red)',sign:'−'},
       {label:lang==='ja'?'請求書合計':'Total Bills',val:-billsAmt,color:'var(--yellow)',sign:'−'},
+      {label:lang==='ja'?'支出合計':'Total Expenses',val:-expAmt,color:'var(--red)',sign:'−'},
       {label:lang==='ja'?'手取り':'Take-Home',val:finalNet,color:finalNet>=0?'var(--green)':'var(--red)',sign:'=',bold:true},
     ].filter(x=>x.sign===''||Math.abs(x.val)>0.001||x.bold);
     const maxAbs=Math.max(...steps.map(x=>Math.abs(x.val)),0.01);
@@ -4346,6 +4426,25 @@ function recalcSummary(){
       </div>`).join('');
     }
     basis.innerHTML=h;
+  }
+
+  // Expenses detail: by category for the selected period
+  const ed=el('sum-exp-detail');
+  if(ed){
+    if(!expList.length){
+      ed.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${lang==='ja'?'この期間の支出はありません。「支出」タブから追加できます':'No expenses in this period. Add them in the Expenses tab.'}</div>`;
+    } else {
+      const byCat={};
+      expList.forEach(x=>{const k=x.cat||'other';(byCat[k]=byCat[k]||{sum:0,n:0});byCat[k].sum+=x.amount||0;byCat[k].n++;});
+      ed.innerHTML=Object.entries(byCat).sort((a,b)=>b[1].sum-a[1].sum).map(([k,v])=>{
+        const c=expCatInfo(k);
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:16px">${c.icon}</span>
+          <span style="flex:1;font-size:13px;font-weight:600">${esc(lang==='ja'?c.ja:c.en)} <span style="color:var(--muted);font-weight:400;font-size:11px">× ${v.n}</span></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red)">-${fmtMoney(v.sum)}</span>
+        </div>`;}).join('')
+        +`<div style="display:flex;justify-content:space-between;padding:10px 0 2px;font-size:13px;font-weight:800"><span>${lang==='ja'?'合計':'Total'}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--red)">-${fmtMoney(expAmt)}</span></div>`;
+    }
   }
 
   // Bills detail
