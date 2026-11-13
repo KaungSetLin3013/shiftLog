@@ -1144,6 +1144,32 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .acc-btns .btn{flex:1;min-width:120px}
 .btn-danger{background:transparent;color:var(--red);border:1px solid var(--red)}
 .header-login-ico{display:block}
+
+/* ---- Desktop layout fixes ---- */
+@media(min-width:641px){
+  /* input forms stop stretching edge to edge */
+  #page-works>.panel:first-child,#page-shifts>.panel:first-child,#page-expenses>.panel:first-child{max-width:900px}
+}
+@media(min-width:901px){
+  /* Single date: Start / Break / End and Add Shift on one line */
+  #page-shifts>.panel:not(.is-multi){display:grid;grid-template-columns:minmax(0,520px) auto;column-gap:20px;justify-content:start;align-items:end}
+  #page-shifts>.panel:not(.is-multi)>*{grid-column:1/-1}
+  #page-shifts>.panel:not(.is-multi)>#single-time-line{grid-column:1;order:1}
+  #page-shifts>.panel:not(.is-multi)>.add-shift-btn-row{grid-column:2;order:1;margin:0 0 12px;align-self:end}
+  #page-shifts>.panel:not(.is-multi)>.add-shift-btn-row .btn{min-height:44px}
+  #page-shifts>.panel:not(.is-multi)>.earn-preview{order:2}
+}
+@media(min-width:1000px){
+  /* keep content readable on large monitors */
+  .container{max-width:1360px}
+}
+
+/* ---- Round icon buttons (equal width/height, never squeezed into ovals) ---- */
+.icon-btn{flex:none;aspect-ratio:1/1;border-radius:50%}
+.lang-btn.icon-only{width:44px;height:44px;min-width:44px;flex:none;border-radius:50%}
+.del-btn{flex:none;aspect-ratio:1/1;border-radius:50%}
+.mc-nav-btn{flex:none;border-radius:50%}
+.month-nav-btn{width:40px;height:40px;padding:0;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;line-height:1}
 </style>
 </head>
 <body>
@@ -2384,6 +2410,7 @@ function closeModal(){document.getElementById('edit-modal').classList.remove('op
 // ════════════════════════════════════════════════
 function setShiftMode(mode){
   shiftMode=mode;
+  const _fp=document.querySelector('#page-shifts>.panel'); if(_fp) _fp.classList.toggle('is-multi',mode==='multi');
   document.getElementById('mode-single').classList.toggle('active',mode==='single');
   document.getElementById('mode-multi').classList.toggle('active',mode==='multi');
   document.getElementById('single-date-row').style.display=mode==='single'?'':'none';
