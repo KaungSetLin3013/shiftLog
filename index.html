@@ -22,6 +22,10 @@ Syne by Bonjour Monde; JetBrains Mono by JetBrains.
 supabase-js (MIT, Supabase).
 -->
 <meta charset="UTF-8">
+<!-- Security: only allow what this app really uses. Blocks injected external scripts/forms/frames and data exfiltration to other sites. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){document.documentElement.style.display='none';try{window.top.location=window.location;}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker</title>
 <meta name="description" content="Track shift work hours across multiple jobs, auto-calculate wages with night-shift bonuses, log recurring bills, estimate take-home pay after tax. Free, bilingual (EN/JA), works fully offline.">
@@ -2358,6 +2362,74 @@ function toggleSettingSection(k){
   if(!_setMQ.matches){const pane=document.getElementById('set-pane');if(pane)pane.classList.remove('has-detail');}
 });
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+// ════════════════════════════════════════════════
+// Security helpers — everything that comes from outside (database, imported file) is validated before use
+// ════════════════════════════════════════════════
+const safeId=v=>String(v==null?'':v).replace(/[^A-Za-z0-9_-]/g,'').slice(0,64);                 // ids are only letters, digits, _ and -
+const safeColor=c=>{c=String(c==null?'':c).trim();return(/^#[0-9a-fA-F]{3,8}$/.test(c)||/^var\(--[a-z0-9-]{1,30}\)$/.test(c)||/^(rgb|rgba|hsl|hsla)\(\s*[\d.%\s,\/-]{1,40}\)$/.test(c))?c:'#888888';};
+const _str=(v,n)=>String(v==null?'':v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g,'').slice(0,n);
+const _num=(v,min,max,def)=>{const n=Number(v);return Number.isFinite(n)?Math.min(max,Math.max(min,n)):def;};
+const _ts=v=>{const n=Number(v);return(Number.isFinite(n)&&n>0&&n<8.64e15)?Math.round(n):null;};
+const _cur=v=>_str(v,8).replace(/[<>&"'`\\]/g,'');
+const catIcon=c=>Object.prototype.hasOwnProperty.call(CAT_ICONS,c)?CAT_ICONS[c]:'📦';
+function cleanExtra(o,known){
+  const x={};
+  Object.keys(o||{}).forEach(k=>{
+    if(known&&known.has(k))return;
+    if(!/^[A-Za-z][A-Za-z0-9_]{0,39}$/.test(k)||k==='constructor'||k==='prototype')return;   // blocks __proto__ etc.
+    const v=o[k];
+    if(typeof v==='string')x[k]=_str(v,1000);else if(typeof v==='number'&&Number.isFinite(v))x[k]=v;else if(typeof v==='boolean')x[k]=v;
+  });
+  return x;
+}
+const _KNOWN={
+  works:['id','name','rate','transport','color','payTiming','payDay','createdAt'],
+  shifts:['id','workId','workName','workColor','rate','clockIn','clockOut','breakMin','duration','wages','transport','nightMin','createdAt'],
+  bills:['id','name','amount','cat','createdAt'],
+  expenses:['id','date','amount','cat','note','createdAt']
+};
+// Returns a clean copy of a works/shifts/bills/expenses record, or null if it is unusable.
+function sanitizeRecord(store,o){
+  if(!o||typeof o!=='object'||Array.isArray(o))return null;
+  const id=safeId(o.id);if(!id)return null;
+  const base=cleanExtra(o,new Set(_KNOWN[store]));
+  const now=Date.now();
+  if(store==='works'){
+    return Object.assign(base,{id,name:_str(o.name,100).trim()||'Work',rate:_num(o.rate,0,1e9,0),transport:_num(o.transport,0,1e9,0),color:safeColor(o.color),
+      payTiming:['none','daily','same','next'].includes(o.payTiming)?o.payTiming:'none',payDay:Math.round(_num(o.payDay,0,31,25)),createdAt:_ts(o.createdAt)||now});
+  }
+  if(store==='shifts'){
+    const ci=_ts(o.clockIn);if(!ci)return null;
+    return Object.assign(base,{id,workId:o.workId==null?null:(safeId(o.workId)||null),workName:_str(o.workName,100),workColor:safeColor(o.workColor),rate:_num(o.rate,0,1e9,0),
+      clockIn:ci,clockOut:_ts(o.clockOut)||ci,breakMin:_num(o.breakMin,0,1440,0),duration:_num(o.duration,0,1e10,0),wages:_num(o.wages,0,1e9,0),
+      transport:_num(o.transport,0,1e9,0),nightMin:_num(o.nightMin,0,1e6,0),createdAt:_ts(o.createdAt)||now});
+  }
+  if(store==='bills'){
+    return Object.assign(base,{id,name:_str(o.name,100),amount:_num(o.amount,0,1e9,0),cat:_str(o.cat,30),createdAt:_ts(o.createdAt)||now});
+  }
+  if(store==='expenses'){
+    const d=String(o.date==null?'':o.date);if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return null;
+    return Object.assign(base,{id,date:d,amount:_num(o.amount,0,1e9,0),cat:_str(o.cat,30),note:_str(o.note,500),createdAt:_ts(o.createdAt)||now});
+  }
+  return null;
+}
+function sanitizeSettings(o){
+  const x={key:'main'};if(!o||typeof o!=='object')return x;
+  const has=k=>Object.prototype.hasOwnProperty.call(o,k)&&o[k]!==null&&o[k]!==undefined;
+  if(has('currency'))x.currency=_cur(o.currency)||'$';
+  if(has('lang'))x.lang=o.lang==='ja'?'ja':'en';
+  if(has('theme'))x.theme=o.theme==='light'?'light':'dark';
+  if(has('palette')&&/^[a-z0-9_-]{1,30}$/.test(String(o.palette)))x.palette=String(o.palette);
+  if(has('nightStart')&&/^\d{2}:\d{2}$/.test(String(o.nightStart)))x.nightStart=String(o.nightStart);
+  if(has('nightEnd')&&/^\d{2}:\d{2}$/.test(String(o.nightEnd)))x.nightEnd=String(o.nightEnd);
+  if(has('nightPct'))x.nightPct=_num(o.nightPct,0,100,25);
+  if(has('taxRate'))x.taxRate=_num(o.taxRate,0,100,10);
+  if(has('taxCalc')&&typeof o.taxCalc==='object'){const t=o.taxCalc;x.taxCalc={rate:_str(t.rate,20),social:_str(t.social,20),deduct:_str(t.deduct,20),period:_str(t.period,20),from:_str(t.from,10),to:_str(t.to,10)};}
+  if(has('tsCompany'))x.tsCompany=_str(o.tsCompany,100);
+  if(has('tsStaffName'))x.tsStaffName=_str(o.tsStaffName,100);
+  return x;
+}
 function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
 // ════════════════════════════════════════════════
@@ -2536,7 +2608,7 @@ function renderPalettePicker(){
   const g=document.getElementById('palette-grid');if(!g)return;
   const cur=settings.palette||'default';
   {const _v=document.getElementById('st-palette-val'),_c=PALETTES.find(x=>x.id===cur);if(_v)_v.textContent=_c?_c.label:'';}
-  g.innerHTML=PALETTES.map(x=>`<button type="button" class="palette-opt" aria-pressed="${cur===x.id}" onclick="setPalette('${x.id}')"><span class="pal-dots">${((document.body.classList.contains('light-theme')&&x.lc)?x.lc:x.colors).map(c=>`<i style="background:${c}"></i>`).join('')}</span>${esc(x.label)}</button>`).join('');
+  g.innerHTML=PALETTES.map(x=>`<button type="button" class="palette-opt" aria-pressed="${cur===x.id}" onclick="setPalette('${safeId(x.id)}')"><span class="pal-dots">${((document.body.classList.contains('light-theme')&&x.lc)?x.lc:x.colors).map(c=>`<i style="background:${c}"></i>`).join('')}</span>${esc(x.label)}</button>`).join('');
 }
 function setPalette(id){
   settings.palette=id;
@@ -2563,7 +2635,7 @@ let selectedWorkId=null, filterWorkId=null, monthlyFilterId=null;
 let graphMode='earnings', currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear();
 let shiftMode='single', multiDates=[], calSelectedDay=null;
 
-const sym=()=>settings.currency||'$';
+const sym=()=>_cur(settings.currency||'$')||'$';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const fmtMoney=n=>sym()+(n||0).toFixed(2);
 const fmtDur=ms=>{const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}h ${m}m`:`${m}m`;};
@@ -2587,7 +2659,7 @@ async function saveSettings(){
 async function loadSettings(){
   const all=await dbGetAll('settings');
   const saved=all.find(s=>s.key==='main');
-  if(saved){settings={...settings,...saved};}
+  if(saved){settings={...settings,...sanitizeSettings(saved)};}
   document.getElementById('currency-sym').value=settings.currency||'$';
   document.getElementById('night-start').value=settings.nightStart||'22:00';
   document.getElementById('night-end').value=settings.nightEnd||'06:00';
@@ -2632,7 +2704,7 @@ function closeSettings(){document.getElementById('settings-modal').classList.rem
 // ════════════════════════════════════════════════
 // Works
 // ════════════════════════════════════════════════
-async function loadWorks(){const raw=await dbGetAll('works');works=raw.sort((a,b)=>a.createdAt-b.createdAt);}
+async function loadWorks(){const raw=await dbGetAll('works');works=raw.map(x=>sanitizeRecord('works',x)).filter(Boolean).sort((a,b)=>a.createdAt-b.createdAt);}
 async function addWork(){
   const name=document.getElementById('w-name').value.trim();
   if(!name){alert(t('alert-no-name'));return;}
@@ -2670,7 +2742,7 @@ function renderWorks(){
   if(!works.length){g.innerHTML=`<div class="empty-card"><div class="empty-icon">💼</div>${t('lbl-your-works')}<br>—</div>`;return;}
   g.innerHTML=works.map(w=>`
     <div class="work-card">
-      <div class="wc-header"><div class="wc-dot" style="background:${w.color}"></div><div class="wc-name">${esc(w.name)}</div></div>
+      <div class="wc-header"><div class="wc-dot" style="background:${safeColor(w.color)}"></div><div class="wc-name">${esc(w.name)}</div></div>
       <div class="wc-divider"></div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <div class="wc-row"><span class="wc-label">${t('lbl-hourly-rate')}</span><span class="wc-val" style="color:var(--green)">${sym()}${w.rate.toFixed(2)}/h</span></div>
@@ -2679,8 +2751,8 @@ function renderWorks(){
         <div class="wc-row"><span class="wc-label">${lang==='ja'?'給料日':'Payday'}</span><span class="wc-val" style="color:var(--accent)">${payLabel(w)}</span></div>
       </div>
       <div class="wc-actions">
-        <button class="btn btn-ghost btn-sm" onclick="openEdit('${w.id}')">${lang==='ja'?'編集':'Edit'}</button>
-        <button class="btn btn-del  btn-sm" onclick="deleteWork('${w.id}')">${lang==='ja'?'削除':'Delete'}</button>
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('${safeId(w.id)}')">${lang==='ja'?'編集':'Edit'}</button>
+        <button class="btn btn-del  btn-sm" onclick="deleteWork('${safeId(w.id)}')">${lang==='ja'?'削除':'Delete'}</button>
       </div>
     </div>`).join('');
 }
@@ -2924,8 +2996,8 @@ function renderWorkPicker(){
   warn.style.display='none';
   if(!selectedWorkId||!works.find(w=>w.id===selectedWorkId))selectedWorkId=works[0].id;
   picker.innerHTML=works.map(w=>`
-    <div class="wp-btn ${selectedWorkId===w.id?'sel':''}" onclick="selectWork('${w.id}')">
-      <span class="wp-name"><span class="wp-dot" style="background:${w.color}"></span>${esc(w.name)}</span>
+    <div class="wp-btn ${selectedWorkId===w.id?'sel':''}" onclick="selectWork('${safeId(w.id)}')">
+      <span class="wp-name"><span class="wp-dot" style="background:${safeColor(w.color)}"></span>${esc(w.name)}</span>
     </div>`).join('');
   if(shiftMode==='single')recalcPreview();else recalcMultiPreview();
 }
@@ -3057,7 +3129,7 @@ async function addShift(){
 // ════════════════════════════════════════════════
 // Shifts
 // ════════════════════════════════════════════════
-async function loadShifts(){const raw=await dbGetAll('shifts');shifts=raw.sort((a,b)=>b.clockIn-a.clockIn);}
+async function loadShifts(){const raw=await dbGetAll('shifts');shifts=raw.map(x=>sanitizeRecord('shifts',x)).filter(Boolean).sort((a,b)=>b.clockIn-a.clockIn);}
 async function deleteShift(id){
   if(!confirm(t('confirm-delete-shift')))return;
   await dbDelete('shifts',id);shifts=shifts.filter(s=>s.id!==id);
@@ -3076,7 +3148,7 @@ async function clearAllShifts(){
 function renderFilterRow(){
   const row=document.getElementById('filter-work-row');
   row.innerHTML=`<div class="fw-btn ${filterWorkId===null?'sel':''}" onclick="setFilter(null)">${lang==='ja'?'全て':'All'}</div>`
-    +works.map(w=>`<div class="fw-btn ${filterWorkId===w.id?'sel':''}" onclick="setFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${esc(w.name)}</div>`).join('');
+    +works.map(w=>`<div class="fw-btn ${filterWorkId===w.id?'sel':''}" onclick="setFilter('${safeId(w.id)}')"><span style="width:8px;height:8px;border-radius:50%;background:${safeColor(w.color)};display:inline-block"></span>${esc(w.name)}</div>`).join('');
 }
 function setFilter(id){filterWorkId=id;renderFilterRow();renderShifts();}
 
@@ -3127,7 +3199,7 @@ function shiftRowHTML(s,isLast,isMobile){
                 <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green)">${s.wages?fmtMoney(s.wages):'—'}</div>
                 ${s.transport?`<div style="font-size:11px;color:var(--yellow)">+${fmtMoney(s.transport)}</div>`:''}
               </div>
-              <button class="del-btn" onclick="deleteShift('${s.id}')" style="color:var(--muted);background:none;border:none;cursor:pointer;font-size:15px;padding:4px 2px">✕</button>
+              <button class="del-btn" onclick="deleteShift('${safeId(s.id)}')" style="color:var(--muted);background:none;border:none;cursor:pointer;font-size:15px;padding:4px 2px">✕</button>
             </div>
           </div>`;
   }
@@ -3141,7 +3213,7 @@ function shiftRowHTML(s,isLast,isMobile){
             <div class="si-hrs">${fmtDur(s.duration)}</div>
             <div class="si-wages">${s.wages?fmtMoney(s.wages):'—'}</div>
             <div class="si-transport">${s.transport?'+'+fmtMoney(s.transport):'—'}</div>
-            <button class="del-btn" onclick="deleteShift('${s.id}')" title="Delete">✕</button>
+            <button class="del-btn" onclick="deleteShift('${safeId(s.id)}')" title="Delete">✕</button>
           </div>`;
 }
 
@@ -3174,13 +3246,13 @@ function renderShifts(){
 
     // Group header
     html+=`<div class="work-group" style="margin-bottom:${collapsed?'10px':'4px'}">
-      <div class="work-group-header" onclick="toggleGroup('${g.workId}')" style="
+      <div class="work-group-header" onclick="toggleGroup('${safeId(g.workId)}')" style="
         display:flex;align-items:center;gap:10px;padding:10px 14px;
         background:var(--surface2);border:1px solid var(--border);
         border-radius:${collapsed?'12px':'12px 12px 0 0'};
         cursor:pointer;user-select:none;transition:border-color .2s;
-      " onmouseenter="this.style.borderColor='${g.workColor}'" onmouseleave="this.style.borderColor='var(--border)'">
-        <span style="width:11px;height:11px;border-radius:50%;background:${g.workColor};display:inline-block;flex-shrink:0"></span>
+      " onmouseenter="this.style.borderColor='${safeColor(g.workColor)}'" onmouseleave="this.style.borderColor='var(--border)'">
+        <span style="width:11px;height:11px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
         <span style="font-size:14px;font-weight:800;flex:1">${esc(g.workName)}</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${count} ${lang==='ja'?'件':'shift'+(count>1?'s':'')}</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent)">${fmtDur(totalHours)}</span>
@@ -3283,7 +3355,7 @@ function renderMonthly(){
   // Work filter
   const mwf=document.getElementById('monthly-work-filter');
   mwf.innerHTML=`<div class="fw-btn ${monthlyFilterId===null?'sel':''}" onclick="setMonthlyFilter(null)">${lang==='ja'?'全て':'All'}</div>`
-    +works.map(w=>`<div class="fw-btn ${monthlyFilterId===w.id?'sel':''}" onclick="setMonthlyFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block"></span>${esc(w.name)}</div>`).join('');
+    +works.map(w=>`<div class="fw-btn ${monthlyFilterId===w.id?'sel':''}" onclick="setMonthlyFilter('${safeId(w.id)}')"><span style="width:8px;height:8px;border-radius:50%;background:${safeColor(w.color)};display:inline-block"></span>${esc(w.name)}</div>`).join('');
 
   // Stats
   let td=0,tw=0,tt=0;for(const s of ms){td+=s.duration;tw+=(s.wages||0);tt+=(s.transport||0);}
@@ -3305,7 +3377,7 @@ function renderMonthly(){
   if(!rows.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:22px">${lang==='ja'?'今月のシフトはありません':'No shifts this month.'}</td></tr>`;}
   else{
     let ts=0,tD=0,tW=0,tT=0;
-    tbody.innerHTML=rows.map(r=>{ts+=r.shifts;tD+=r.dur;tW+=r.wages;tT+=r.transport;return`<tr><td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${esc(r.name)}</div></td><td>${r.shifts}</td><td class="r">${fmtDur(r.dur)}</td><td class="r">${fmtMoney(r.wages)}</td><td class="r">${fmtMoney(r.transport)}</td><td class="r" style="color:var(--green);font-weight:600">${fmtMoney(r.wages+r.transport)}</td></tr>`;}).join('')
+    tbody.innerHTML=rows.map(r=>{ts+=r.shifts;tD+=r.dur;tW+=r.wages;tT+=r.transport;return`<tr><td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${safeColor(r.color)};display:inline-block"></span>${esc(r.name)}</div></td><td>${r.shifts}</td><td class="r">${fmtDur(r.dur)}</td><td class="r">${fmtMoney(r.wages)}</td><td class="r">${fmtMoney(r.transport)}</td><td class="r" style="color:var(--green);font-weight:600">${fmtMoney(r.wages+r.transport)}</td></tr>`;}).join('')
     +`<tr class="td-total-row"><td style="font-weight:700">${lang==='ja'?'合計':'Total'}</td><td>${ts}</td><td class="r">${fmtDur(tD)}</td><td class="r">${fmtMoney(tW)}</td><td class="r">${fmtMoney(tT)}</td><td class="r">${fmtMoney(tW+tT)}</td></tr>`;
   }
 
@@ -3354,11 +3426,11 @@ function renderCalendar(monthShifts){
       let tot=0,dayMs=0;list.forEach(s=>{tot+=shiftTotal(s);dayMs+=s.duration||0;});
       const shown=list.slice(0,3),more=list.length-shown.length;
       inner+=`<div class="cd-shifts">`
-        +shown.map(s=>`<div class="cd-shift" style="--c:${s.workColor||'#888'}"><span class="cd-name">${esc(s.workName)}</span>${list.length>1?`<span class="cd-amt">${fmtMoney(shiftTotal(s))}</span>`:''}<span class="cd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span></div>`).join('')
+        +shown.map(s=>`<div class="cd-shift" style="--c:${safeColor(s.workColor||'#888')}"><span class="cd-name">${esc(s.workName)}</span>${list.length>1?`<span class="cd-amt">${fmtMoney(shiftTotal(s))}</span>`:''}<span class="cd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span></div>`).join('')
         +(more>0?`<div class="cd-more">+${more} ${ja?'件':'more'}</div>`:'')
         +`</div>`
         +`<div class="cd-total"><span>${fmtDur(dayMs)}</span><b>${fmtMoney(tot)}</b></div>`
-        +`<div class="cd-dots">${list.slice(0,4).map(s=>`<i style="background:${s.workColor||'#888'}"></i>`).join('')}</div>`
+        +`<div class="cd-dots">${list.slice(0,4).map(s=>`<i style="background:${safeColor(s.workColor||'#888')}"></i>`).join('')}</div>`
         +`<div class="cd-short">${shortMoney(tot)}</div>`;
     }
     return `<div class="${cls}" ${clickable?`onclick="selectCalDay(${d})"`:''}>${inner}</div>`;
@@ -3376,7 +3448,7 @@ function renderCalendar(monthShifts){
     let tW=0,tT=0,tD=0;
     const rows=list.map(s=>{
       const w=s.wages||0,tr=s.transport||0;tW+=w;tT+=tr;tD+=s.duration||0;
-      return `<div class="dd-shift" style="--c:${s.workColor||'#888'}">
+      return `<div class="dd-shift" style="--c:${safeColor(s.workColor||'#888')}">
         <div class="dd-head"><span class="dd-name">${esc(s.workName)}</span><span class="dd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span><span class="dd-money">${fmtMoney(w+tr)}</span></div>
         <div class="dd-meta">
           <span>${ja?'勤務':'Worked'} ${fmtDur(s.duration||0)}</span>
@@ -3516,10 +3588,10 @@ function recalcTax(){
       <div>
         <div style="display:flex;justify-content:space-between;margin-bottom:5px">
           <span style="font-size:12px;font-weight:600">${item.label}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${item.color}">${fmtMoney(item.val)} <span style="font-size:10px;color:var(--muted)">(${item.pct.toFixed(1)}%)</span></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${safeColor(item.color)}">${fmtMoney(item.val)} <span style="font-size:10px;color:var(--muted)">(${item.pct.toFixed(1)}%)</span></span>
         </div>
         <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden">
-          <div style="height:100%;width:${Math.min(100,item.pct)}%;background:${item.color};border-radius:4px;transition:width .4s ease"></div>
+          <div style="height:100%;width:${Math.min(100,item.pct)}%;background:${safeColor(item.color)};border-radius:4px;transition:width .4s ease"></div>
         </div>
       </div>`).join('');
   }
@@ -3542,7 +3614,7 @@ function recalcTax(){
         const tax=tGross*(taxRate+socialRate);
         const net2=r.gross-tax;
         return `<tr>
-          <td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};display:inline-block"></span>${esc(r.name)}</div></td>
+          <td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${safeColor(r.color)};display:inline-block"></span>${esc(r.name)}</div></td>
           <td class="r">${fmtMoney(r.gross)}</td>
           <td class="r" style="color:var(--red)">${fmtMoney(tax)}</td>
           <td class="r" style="color:var(--green)">${fmtMoney(net2)}</td>
@@ -3560,7 +3632,7 @@ let bills=[];
 const CAT_ICONS={housing:'🏠',electric:'⚡',gas:'🔥',water:'💧',internet:'🌐',phone:'📱',insurance:'🛡',other:'📦'};
 
 async function loadBills(){
-  const raw=await dbGetAll('bills');
+  const raw=(await dbGetAll('bills')).map(x=>sanitizeRecord('bills',x)).filter(Boolean);
   bills=raw.sort((a,b)=>a.createdAt-b.createdAt);
 }
 
@@ -3617,7 +3689,7 @@ function renderBills(){
   el.innerHTML=Object.entries(groups).map(([cat,items])=>`
     <div style="margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">
-        <span>${CAT_ICONS[cat]||'📦'}</span>
+        <span>${catIcon(cat)}</span>
         <span>${lang==='ja'?catNameJa(cat):catName(cat)}</span>
       </div>
       ${items.map(b=>`
@@ -3627,10 +3699,10 @@ function renderBills(){
             <span style="color:var(--muted);font-size:13px">${sym()}</span>
             <input type="number" value="${b.amount.toFixed(2)}" min="0" step="0.01"
               style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--red);width:90px;text-align:right;background:transparent;border:none;outline:none;border-bottom:1px solid var(--border);padding:2px 4px"
-              onchange="updateBillAmount('${b.id}',this.value)">
+              onchange="updateBillAmount('${safeId(b.id)}',this.value)">
             <span style="color:var(--muted);font-size:11px">/mo</span>
           </div>
-          <button class="del-btn" onclick="deleteBill('${b.id}')">✕</button>
+          <button class="del-btn" onclick="deleteBill('${safeId(b.id)}')">✕</button>
         </div>`).join('')}
     </div>`).join('');
 
@@ -3845,7 +3917,7 @@ function renderPayday(){
       const days=Math.round((e.date-t0)/86400000);
       const when=days===0?(lang==='ja'?'今日':'Today'):days===1?(lang==='ja'?'明日':'Tomorrow'):(lang==='ja'?`${days}日後`:`in ${days} days`);
       const label=e.date.toLocaleDateString(loc,{month:'short',day:'numeric',weekday:'short'});
-      const dots=Object.values(e.parts).map(p=>`<span class="pay-work"><span class="pay-dot" style="background:${p.color}"></span>${esc(p.name)}</span>`).join('');
+      const dots=Object.values(e.parts).map(p=>`<span class="pay-work"><span class="pay-dot" style="background:${safeColor(p.color)}"></span>${esc(p.name)}</span>`).join('');
       return `<div class="pay-row"><div class="pay-main"><div class="pay-date">${label}</div><div class="pay-when">${when}</div></div><div class="pay-works">${dots}</div><div class="pay-amt">${s}${e.total.toFixed(2)}</div></div>`;
     }).join('');
   }
@@ -3875,7 +3947,7 @@ const localToday=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.get
 const escHtml=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function loadExpenses(){
-  const raw=await dbGetAll('expenses');
+  const raw=(await dbGetAll('expenses')).map(x=>sanitizeRecord('expenses',x)).filter(Boolean);
   expenses=raw.sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
 }
 
@@ -3983,7 +4055,7 @@ function renderExpenses(){
           <span class="exp-item-ico" aria-hidden="true">${c.icon}</span>
           <div class="exp-item-main"><div class="exp-item-name">${x.note?escHtml(x.note):(lang==='ja'?c.ja:c.en)}</div>${x.note?`<div class="si-meta">${lang==='ja'?c.ja:c.en}</div>`:''}</div>
           <div class="exp-item-amt">${fmtMoney(x.amount)}</div>
-          <button type="button" class="del-btn" onclick="deleteExpense('${x.id}')" aria-label="${lang==='ja'?'削除':'Delete'}">✕</button>
+          <button type="button" class="del-btn" onclick="deleteExpense('${safeId(x.id)}')" aria-label="${lang==='ja'?'削除':'Delete'}">✕</button>
         </div>`;}).join('')}
     </div>`;
   }).join('');
@@ -4029,7 +4101,7 @@ function renderSumWorkFilter(){
   if(el._sig===_sig)return;
   el._sig=_sig;
   el.innerHTML=`<div class="fw-btn ${sumFilterId===null?'sel':''}" onclick="setSumFilter(null)">${lang==='ja'?'全て':'All'}</div>`
-    +works.map(w=>`<div class="fw-btn ${sumFilterId===w.id?'sel':''}" onclick="setSumFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block;margin-right:4px"></span>${esc(w.name)}</div>`).join('');
+    +works.map(w=>`<div class="fw-btn ${sumFilterId===w.id?'sel':''}" onclick="setSumFilter('${safeId(w.id)}')"><span style="width:8px;height:8px;border-radius:50%;background:${safeColor(w.color)};display:inline-block;margin-right:4px"></span>${esc(w.name)}</div>`).join('');
 }
 
 // The date a shift counts for in the Summary = the day its wages are paid (work's payday setting).
@@ -4142,8 +4214,8 @@ function recalcSummary(){
       <div style="display:flex;align-items:center;gap:10px;padding:9px 0;${i<steps.length-1?'border-bottom:1px solid var(--border)':'padding-top:12px;margin-top:4px'}">
         <div style="width:22px;text-align:center;font-size:14px;color:var(--muted);font-weight:800;flex-shrink:0">${step.sign}</div>
         <div style="flex:1;font-size:${step.bold?'14px':'13px'};font-weight:${step.bold?'800':'600'}">${step.label}</div>
-        <div style="height:6px;flex:0 0 ${Math.round(Math.abs(step.val)/maxAbs*100)}px;max-width:100px;background:${step.color};border-radius:3px;opacity:.7"></div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:${step.bold?'15px':'13px'};color:${step.color};font-weight:${step.bold?'800':'600'};min-width:80px;text-align:right">${fmtMoney(Math.abs(step.val))}</div>
+        <div style="height:6px;flex:0 0 ${Math.round(Math.abs(step.val)/maxAbs*100)}px;max-width:100px;background:${safeColor(step.color)};border-radius:3px;opacity:.7"></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:${step.bold?'15px':'13px'};color:${safeColor(step.color)};font-weight:${step.bold?'800':'600'};min-width:80px;text-align:right">${fmtMoney(Math.abs(step.val))}</div>
       </div>`).join('');
 
     // Tax detail: show which work×months were taxed
@@ -4152,7 +4224,7 @@ function recalcSummary(){
         <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${lang==='ja'?'課税対象（7万円超）':'Taxed months (wages ≥ 70,000)'}</div>
         ${taxedGroups.map(g=>`
           <div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(42,42,58,.3)">
-            <span style="width:8px;height:8px;border-radius:50%;background:${g.workColor};display:inline-block;flex-shrink:0"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
             <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
             <span style="color:var(--muted);font-size:11px">${g.monthKey}</span>
             <span style="font-family:'JetBrains Mono',monospace;color:var(--text)">${fmtMoney(g.wages)}</span>
@@ -4172,7 +4244,7 @@ function recalcSummary(){
       :'Income is counted in the month it is paid (from each work\'s payday setting). Works with no payday set are counted in the month worked.'}</div>`;
     if(moved.length){
       h+=moved.map(g=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid var(--border)">
-        <span style="width:8px;height:8px;border-radius:50%;background:${g.workColor};display:inline-block;flex-shrink:0"></span>
+        <span style="width:8px;height:8px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
         <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
         <span style="color:var(--muted);font-size:11px">${[...g.from].sort().map(mLbl).join(', ')} → ${mLbl(g.monthKey)}</span>
         <span style="font-family:'JetBrains Mono',monospace">${fmtMoney(g.wages+g.transport)}</span>
@@ -4190,7 +4262,7 @@ function recalcSummary(){
       const multiplier=sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:(bills.length?Math.max(1,(Date.now()-Math.min(...shifts.map(s=>s.clockIn)||[Date.now()]))/(1000*60*60*24*30.44)):1);
       bd.innerHTML=bills.map(b=>`
         <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:16px">${CAT_ICONS[b.cat]||'📦'}</span>
+          <span style="font-size:16px">${catIcon(b.cat)}</span>
           <div style="flex:1;font-size:13px;font-weight:600">${esc(b.name)}</div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
         </div>`).join('')+
@@ -4252,7 +4324,7 @@ const AT={
     works:'works',shifts:'shifts',bills:'bills',expenses:'expenses',never:'Never',
     configMissing:'config.js could not be loaded. Upload it next to index.html, then refresh (or clear the browser cache).',notConfigured:'Cloud login is not set up yet — add your Supabase URL and anon key in config.js.',
     offline:'Cloud service unavailable (are you offline?)',fillAll:'Please fill in email and password.',
-    passShort:'Password must be at least 6 characters.',passMismatch:'Passwords do not match.',
+    passShort:'Password must be at least 8 characters.',passMismatch:'Passwords do not match.',
     checkEmail:'Account created! Check your email to confirm, then log in.',alreadyReg:'This email is already registered — try logging in.',
     resetSent:'Password reset email sent. Check your inbox.',enterEmail:'Enter your email above first.',
     nameSaved:'Name updated ✓',passSaved:'Password updated ✓',setNewPass:'Enter a new password below.',
@@ -4266,7 +4338,7 @@ const AT={
     works:'勤務先',shifts:'シフト',bills:'請求',expenses:'支出',never:'なし',
     configMissing:'config.js を読み込めませんでした。index.html と同じ場所にアップロードして再読み込みしてください。',notConfigured:'クラウドログインが未設定です。config.js にSupabaseのURLとanonキーを入力してください。',
     offline:'クラウドに接続できません（オフラインですか？）',fillAll:'メールアドレスとパスワードを入力してください。',
-    passShort:'パスワードは6文字以上にしてください。',passMismatch:'パスワードが一致しません。',
+    passShort:'パスワードは8文字以上にしてください。',passMismatch:'パスワードが一致しません。',
     checkEmail:'アカウントを作成しました。メールを確認してからログインしてください。',alreadyReg:'このメールは登録済みです。ログインしてください。',
     resetSent:'パスワード再設定メールを送信しました。',enterEmail:'先にメールアドレスを入力してください。',
     nameSaved:'名前を更新しました ✓',passSaved:'パスワードを更新しました ✓',setNewPass:'新しいパスワードを入力してください。',
@@ -4401,7 +4473,7 @@ async function accRegister(ev){
   const pass2=document.getElementById('acc-r-pass2').value;
   if(!accReady('acc-msg-register'))return;
   if(!email||!pass){accMsg('acc-msg-register',at('fillAll'),'err');return;}
-  if(pass.length<6){accMsg('acc-msg-register',at('passShort'),'err');return;}
+  if(pass.length<8){accMsg('acc-msg-register',at('passShort'),'err');return;}
   if(pass!==pass2){accMsg('acc-msg-register',at('passMismatch'),'err');return;}
   accBusy('acc-btn-register',true);accMsg('acc-msg-register','…');
   const {data,error}=await sb.auth.signUp({email,password:pass,options:{
@@ -4437,7 +4509,7 @@ async function accSaveName(){
 async function accChangePass(){
   const pass=document.getElementById('acc-newpass').value;
   if(!sb||!acctUser)return;
-  if(pass.length<6){accMsg('acc-msg-in',at('passShort'),'err');return;}
+  if(pass.length<8){accMsg('acc-msg-in',at('passShort'),'err');return;}
   const {error}=await sb.auth.updateUser({password:pass});
   if(error){accMsg('acc-msg-in',error.message,'err');return;}
   document.getElementById('acc-newpass').value='';
@@ -4504,7 +4576,8 @@ function fromRow(store,r){
     if(ty==='ts')v=Date.parse(v);
     o[k]=v;
   }
-  return Object.assign(o,r.extra||{});
+  Object.assign(o,cleanExtra(r.extra||{},null));
+  return store==='settings'?sanitizeSettings(o):sanitizeRecord(store,o);
 }
 let cloudOps=[],cloudFlushTimer=null,cloudChain=Promise.resolve(),cloudInflight=0,cloudFailed=false,cloudRetryTimer=null;
 
@@ -4595,7 +4668,7 @@ async function fetchPaged(table,cols){
 }
 async function fetchRemote(){
   const out={};
-  for(const s of STORES)out[s]=(await fetchPaged(TABLES[s],'*')).map(r=>fromRow(s,r));
+  for(const s of STORES)out[s]=(await fetchPaged(TABLES[s],'*')).map(r=>fromRow(s,r)).filter(Boolean);
   const {data,error}=await sb.from(SETTINGS_TABLE).select('*').eq('user_id',acctUser.id).maybeSingle();
   if(error)throw error;
   out.settings=data?fromRow('settings',data):null;
@@ -4712,11 +4785,22 @@ async function exportBackup(){
 }
 async function importBackup(input){
   const file=input.files[0];if(!file)return;
+  if(file.size>5*1024*1024){toast('Import failed: file is too large (max 5 MB)','err');input.value='';return;}
   const reader=new FileReader();
   reader.onload=async e=>{
     try{
-      const data=JSON.parse(e.target.result);
-      if(!data.works||!data.shifts)throw new Error('Invalid backup file.');
+      const raw=JSON.parse(e.target.result);
+      if(!raw||typeof raw!=='object'||!Array.isArray(raw.works)||!Array.isArray(raw.shifts))throw new Error('Invalid backup file.');
+      const arr=k=>Array.isArray(raw[k])?raw[k]:[];
+      if(raw.works.length>500||raw.shifts.length>20000||arr('bills').length>2000||arr('expenses').length>20000)throw new Error('Backup file has too many records.');
+      // every record is validated/cleaned; unusable ones are skipped
+      const data={
+        works:raw.works.map(x=>sanitizeRecord('works',x)).filter(Boolean),
+        shifts:raw.shifts.map(x=>sanitizeRecord('shifts',x)).filter(Boolean),
+        bills:arr('bills').map(x=>sanitizeRecord('bills',x)).filter(Boolean),
+        expenses:arr('expenses').map(x=>sanitizeRecord('expenses',x)).filter(Boolean),
+        settings:(raw.settings&&typeof raw.settings==='object')?sanitizeSettings(raw.settings):null
+      };
       if(!confirm(`${t('confirm-import')}\n(${data.works.length} ${t('toast-works')}, ${data.shifts.length} ${t('toast-shifts')})`))return;
       loading(true);
       await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
