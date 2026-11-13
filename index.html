@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!--
+CREDITS & LICENSES
+Color palettes: colors are based on the combinations in "A Dictionary of Color Combinations" (配色総鑑 / Haishoku Soukan)
+by Sanzo Wada (和田三造, 1883-1967), published by Seigensha Art Publishing. This app is not affiliated with or endorsed by the author, his estate or the publisher.
+Color values come from the open dataset https://github.com/mattdesl/dictionary-of-colour-combinations (Matt DesLauriers, MIT),
+originally compiled by Dain M. Blodorn Kim https://github.com/dblodorn/sanzo-wada . Dark backgrounds were darkened and light-mode variants derived by ShiftLog from these colors.
+--- Dataset license ---
+The MIT License (MIT)
+Copyright (c) 2020 Matt DesLauriers
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+--- Fonts (SIL Open Font License 1.1, via Google Fonts) ---
+Syne by Bonjour Monde; JetBrains Mono by JetBrains.
+--- Libraries loaded from CDN ---
+supabase-js (MIT, Supabase); pdf-lib (MIT, Andrew Dillon); @pdf-lib/fontkit (MIT).
+-->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker</title>
@@ -1074,6 +1094,40 @@ html[data-palette="wine"]{--bg:#250611;--accent:#f9c1ce;--text:#d3d9da;--green:#
 html[data-palette="teal"]{--bg:#071312;--accent:#fbe6a0;--text:#fdf0c6;--green:#96d1aa;--red:#da525d;--yellow:#e2b540;--purple:#97acc8;}
 html[data-palette="poel"]{--bg:#01131a;--accent:#a7d4e4;--text:#dacebe;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
 html[data-palette="violet"]{--bg:#120e1d;--accent:#bce4e5;--text:#d7efef;--green:#62c6bf;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="ember"]{--bg:#091a18;--accent:#f37420;--text:#d6b43e;--green:#96d1aa;--red:#f37f94;--yellow:#e2b540;--purple:#97acc8;}
+html[data-palette="grenadine"]{--bg:#091a18;--accent:#f48067;--text:#fbe6a0;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="lemonmoss"]{--bg:#121811;--accent:#62c6bf;--text:#f8ed43;--green:#62c6bf;--red:#f37f94;--yellow:#f8ed43;--purple:#c0a9b3;}
+html[data-palette="english"]{--bg:#0e1011;--accent:#d96629;--text:#ebd3a2;--green:#96d1aa;--red:#e5604d;--yellow:#ebd3a2;--purple:#c0a9b3;}
+html[data-palette="cotinga"]{--bg:#280a23;--accent:#f68c50;--text:#f8ed43;--green:#96d1aa;--red:#f37f94;--yellow:#fdbf68;--purple:#c0a9b3;}
+html[data-palette="calamine"]{--bg:#0e1011;--accent:#bb7125;--text:#78cdd0;--green:#78cdd0;--red:#f37f94;--yellow:#e2b540;--purple:#c0a9b3;}
+html[data-palette="rosenight"]{--bg:#110823;--accent:#d46d7a;--text:#ffdd00;--green:#96d1aa;--red:#d46d7a;--yellow:#ffdd00;--purple:#c0a9b3;}
+html[data-palette="springshell"]{--bg:#0e1011;--accent:#afd472;--text:#fdd4bd;--green:#afd472;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="salvia"]{--bg:#121811;--accent:#97acc8;--text:#f5ecc2;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#97acc8;}
+html[data-palette="glaucous"]{--bg:#121811;--accent:#f48067;--text:#a5c8d1;--green:#96d1aa;--red:#f37f94;--yellow:#fbe6a0;--purple:#c0a9b3;}
+html[data-palette="aconite"]{--bg:#0e1011;--accent:#a36aa5;--text:#fdc57e;--green:#96d1aa;--red:#f37f94;--yellow:#fdc57e;--purple:#a36aa5;}
+html[data-palette="citron"]{--bg:#0e1011;--accent:#b2b73e;--text:#fdc57e;--green:#b2b73e;--red:#f37f94;--yellow:#fdc57e;--purple:#c0a9b3;}
+/* Light-mode versions of every palette */
+html[data-palette="indigo"] body.light-theme{--bg:#eaeef4;--accent:#5c697a;--text:#040e26;}
+html[data-palette="mint"] body.light-theme{--bg:#f0f8f5;--accent:#596d64;--text:#0c0f11;}
+html[data-palette="olive"] body.light-theme{--bg:#fcf0e6;--accent:#836346;--text:#0d100b;}
+html[data-palette="plum"] body.light-theme{--bg:#f2eef0;--accent:#6f6268;--text:#1d0718;}
+html[data-palette="wine"] body.light-theme{--bg:#fef3f5;--accent:#81646b;--text:#21050f;}
+html[data-palette="teal"] body.light-theme{--bg:#fefaec;--accent:#736a4a;--text:#061110;}
+html[data-palette="poel"] body.light-theme{--bg:#edf6fa;--accent:#576e77;--text:#011117;}
+html[data-palette="violet"] body.light-theme{--bg:#f2fafa;--accent:#5c7070;--text:#100d1a;}
+html[data-palette="ember"] body.light-theme{--bg:#fde3d2;--accent:#9c4a14;--text:#081716;}
+html[data-palette="grenadine"] body.light-theme{--bg:#fde6e1;--accent:#954e3f;--text:#081716;}
+html[data-palette="lemonmoss"] body.light-theme{--bg:#e0f4f2;--accent:#366d69;--text:#10160f;}
+html[data-palette="english"] body.light-theme{--bg:#faede5;--accent:#a54e1f;--text:#0d0e0f;}
+html[data-palette="cotinga"] body.light-theme{--bg:#fde8dc;--accent:#965531;--text:#240920;}
+html[data-palette="calamine"] body.light-theme{--bg:#f7eee5;--accent:#94591d;--text:#0d0e0f;}
+html[data-palette="rosenight"] body.light-theme{--bg:#faedef;--accent:#9b5059;--text:#0f0720;}
+html[data-palette="springshell"] body.light-theme{--bg:#eff6e3;--accent:#5b6e3b;--text:#0d0e0f;}
+html[data-palette="salvia"] body.light-theme{--bg:#eaeef4;--accent:#5c697a;--text:#10160f;}
+html[data-palette="glaucous"] body.light-theme{--bg:#fde6e1;--accent:#954e3f;--text:#10160f;}
+html[data-palette="aconite"] body.light-theme{--bg:#f4edf4;--accent:#865787;--text:#0d0e0f;}
+html[data-palette="citron"] body.light-theme{--bg:#f0f1d8;--accent:#676a24;--text:#0d0e0f;}
+html[data-palette] body.light-theme{--surface:color-mix(in srgb,var(--bg) 45%,#fff);--surface2:color-mix(in srgb,var(--bg) 90%,var(--text));--surface3:color-mix(in srgb,var(--bg) 80%,var(--text));--border:color-mix(in srgb,var(--bg) 76%,var(--text));--muted:color-mix(in srgb,var(--text) 62%,var(--bg));}
 html[data-palette]{--surface:color-mix(in srgb,var(--bg) 95%,var(--text));--surface2:color-mix(in srgb,var(--bg) 90%,var(--text));--surface3:color-mix(in srgb,var(--bg) 84%,var(--text));--border:color-mix(in srgb,var(--bg) 82%,var(--text));--muted:color-mix(in srgb,var(--text) 58%,var(--bg));}
 html[data-palette] body:not(.light-theme) .btn-primary,html[data-palette] body:not(.light-theme) .tab-badge{color:var(--bg);}
 .palette-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
@@ -1170,6 +1224,62 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .del-btn{flex:none;aspect-ratio:1/1;border-radius:50%}
 .mc-nav-btn{flex:none;border-radius:50%}
 .month-nav-btn{width:40px;height:40px;padding:0;flex:none;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+
+.credits-body{font-size:12px;line-height:1.65;color:var(--muted)}
+.credits-body h4{margin:12px 0 4px;font-size:12px;color:var(--text);font-weight:700}
+.credits-body h4:first-child{margin-top:0}
+.credits-body a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.credits-body .lic{margin-top:6px;max-height:140px;overflow:auto;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.5;white-space:pre-wrap}
+#sd-credits.open{display:block}
+
+/* ---- Settings: grouped list with round icon badges ---- */
+#settings-modal .modal{padding:22px 12px 16px}
+#settings-modal .modal-title{font-size:20px;font-weight:800;padding:0 10px;margin-bottom:10px}
+.set-group{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:12px;padding:16px 10px 6px;border-top:1px solid var(--border)}
+.modal-title+.set-group{margin-top:0;padding-top:4px;border-top:0}
+#settings-modal .setting-row,#settings-modal .setting-toggle{display:flex;align-items:center;justify-content:flex-start;gap:14px;width:100%;min-height:60px;padding:8px 10px;border:0;border-radius:16px;background:transparent;text-align:left;transition:background-color .15s}
+#settings-modal .setting-row:hover,#settings-modal .setting-toggle:hover{background:var(--surface2);border:0}
+#settings-modal .setting-collapse{margin:0}
+.sr-ico{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;color:var(--ic,var(--accent));background:color-mix(in srgb,var(--ic,var(--accent)) 16%,transparent);transition:background-color .2s,color .2s}
+.sr-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sr-text,#settings-modal .st-text{flex:1;min-width:0}
+#settings-modal .setting-label{font-size:14px;font-weight:700}
+#settings-modal .setting-sub{font-size:12px;line-height:1.35}
+#settings-modal .setting-toggle[aria-expanded="true"]{background:color-mix(in srgb,var(--accent) 14%,transparent);border:0}
+#settings-modal .setting-toggle[aria-expanded="true"] .setting-label{color:var(--accent)}
+#settings-modal .setting-toggle[aria-expanded="true"] .sr-ico{background:var(--ic,var(--accent));color:var(--surface)}
+.st-val{font-size:11px;font-weight:700;color:var(--muted);background:var(--surface3);border-radius:999px;padding:3px 10px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+.setting-toggle .st-chev{margin-left:auto}
+#settings-modal .setting-detail{margin:0 6px}
+#settings-modal .setting-detail.open{margin:4px 6px 10px;padding:14px;background:var(--surface2);border-radius:16px}
+#sd-data.open{display:block}
+#sd-data .icon-row{margin-bottom:0}
+
+/* ---- Settings on PC: list on the left, opened section on the right ---- */
+.set-pane{display:none}
+@media(min-width:901px){
+  #settings-modal .modal{max-width:980px;padding:24px 20px 20px}
+  .set-wrap{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:22px;align-items:start}
+  .set-pane{display:block;position:sticky;top:0;min-height:360px;padding:20px;background:var(--surface2);border:1px solid var(--border);border-radius:20px}
+  .set-pane-title{display:none;font-size:16px;font-weight:800;margin-bottom:14px}
+  .set-pane.has-detail .set-pane-title{display:block}
+  .set-pane-empty{display:flex;align-items:center;justify-content:center;min-height:300px;text-align:center;color:var(--muted);font-size:13px}
+  .set-pane.has-detail .set-pane-empty{display:none}
+  #settings-modal .set-pane .setting-detail.open{margin:0;padding:0;background:none;border-radius:0}
+  .set-pane .palette-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  #settings-modal .modal-close{top:12px;right:12px}
+}
+
+/* PC: the window itself doesn't scroll; the list and the right panel scroll on their own */
+@media(min-width:901px){
+  #settings-modal .modal{overflow:hidden;display:flex;flex-direction:column;height:min(760px,90vh);max-height:90vh}
+  .set-wrap{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);align-items:stretch}
+  .set-list{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin}
+  .set-pane{position:static;min-height:0;height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
+
+.theme-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.set-subhead{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -1804,10 +1914,14 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 <div class="modal-overlay" id="settings-modal">
   <div class="modal">
     <button type="button" class="modal-close" onclick="closeSettings()" aria-label="Close">✕</button>
+    <div class="set-wrap"><div class="set-list">
     <div class="modal-title" id="lbl-settings-title">Settings</div>
 
+    <div class="set-group" id="lbl-grp-general">General</div>
+
     <div class="setting-row">
-      <div>
+      <span class="sr-ico" style="--ic:var(--accent)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></span>
+      <div class="sr-text">
         <div class="setting-label" id="lbl-lang-title">Language</div>
         <div class="setting-sub" id="lbl-lang-sub">Display language / 表示言語</div>
       </div>
@@ -1817,29 +1931,32 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       </div>
     </div>
 
-    <div class="setting-row">
-      <div>
-        <div class="setting-label" id="lbl-theme-title">Theme</div>
-        <div class="setting-sub" id="lbl-theme-sub">Dark or light mode</div>
-      </div>
-      <div class="lang-toggle">
-        <button class="lang-btn icon-only active" id="theme-dark"  onclick="setTheme('dark')" aria-label="Dark" title="Dark">🌙</button>
-        <button class="lang-btn icon-only" id="theme-light" onclick="setTheme('light')" aria-label="Light" title="Light">☀️</button>
-      </div>
-    </div>
-
-    <div class="setting-collapse" id="sc-palette">
-      <button type="button" class="setting-toggle" id="st-palette" aria-expanded="false" aria-controls="sd-palette" onclick="toggleSettingSection('palette')">
-        <span class="st-text"><span class="setting-label" id="lbl-palette-title">Color Palette</span><span class="setting-sub" id="lbl-palette-sub">Pale color schemes for dark mode</span></span>
+    <div class="setting-collapse" id="sc-theme">
+      <button type="button" class="setting-toggle" id="st-theme" aria-expanded="false" aria-controls="sd-theme" onclick="toggleSettingSection('theme')">
+        <span class="sr-ico" style="--ic:var(--yellow)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.2 0-1.1.9-2 2-2H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/></svg></span>
+        <span class="st-text"><span class="setting-label" id="lbl-theme-title">Theme</span><span class="setting-sub" id="lbl-theme-sub">Dark or light mode and color palette</span></span>
+        <span class="st-val" id="st-palette-val"></span>
         <span class="st-chev" aria-hidden="true">›</span>
       </button>
-      <div class="setting-detail" id="sd-palette" style="flex-direction:column;gap:10px">
-        <div class="palette-grid" id="palette-grid"></div>
+      <div class="setting-detail" id="sd-theme" style="flex-direction:column;gap:16px">
+        <div class="theme-top">
+          <span class="setting-label" id="lbl-mode-title">Mode</span>
+          <div class="lang-toggle">
+            <button class="lang-btn icon-only active" id="theme-dark"  onclick="setTheme('dark')" aria-label="Dark" title="Dark">🌙</button>
+            <button class="lang-btn icon-only" id="theme-light" onclick="setTheme('light')" aria-label="Light" title="Light">☀️</button>
+          </div>
+        </div>
+        <div>
+          <div class="set-subhead" id="lbl-palette-title">Color Palette</div>
+          <div class="palette-grid" id="palette-grid"></div>
+        </div>
       </div>
     </div>
 
+    <div class="set-group" id="lbl-grp-money">Pay &amp; money</div>
     <div class="setting-row">
-      <div>
+      <span class="sr-ico" style="--ic:var(--green)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.4 0-2.5.8-2.5 1.9 0 2.6 5.2 1.3 5.2 4 0 1.1-1.1 2-2.7 2-1.2 0-2.2-.5-2.8-1.3M12 6.5V8m0 8v1.5"/></svg></span>
+      <div class="sr-text">
         <div class="setting-label" id="lbl-currency-title">Currency Symbol</div>
         <div class="setting-sub" id="lbl-currency-sub">Used in all earnings displays</div>
       </div>
@@ -1850,6 +1967,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
     <div class="setting-collapse" id="sc-night">
       <button type="button" class="setting-toggle" id="st-night" aria-expanded="false" aria-controls="sd-night" onclick="toggleSettingSection('night')">
+        <span class="sr-ico" style="--ic:var(--purple)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></span>
         <span class="st-text"><span class="setting-label" id="lbl-night-title">Night Bonus</span><span class="setting-sub" id="lbl-night-sub">Set the time range and bonus % for night hours</span></span>
         <span class="st-chev" aria-hidden="true">›</span>
       </button>
@@ -1877,7 +1995,8 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     </div>
 
     <div class="setting-row">
-      <div>
+      <span class="sr-ico" style="--ic:var(--yellow)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.2"/><circle cx="17" cy="17" r="2.2"/></svg></span>
+      <div class="sr-text">
         <div class="setting-label" id="lbl-tax-setting-title">Income Tax Rate</div>
         <div class="setting-sub" id="lbl-tax-setting-sub">Applied monthly when a work's wages exceed 70,000</div>
       </div>
@@ -1892,6 +2011,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     <!-- Monthly bills (collapsed; click to show) -->
     <div class="setting-collapse" id="sc-bills">
       <button type="button" class="setting-toggle" id="st-bills" aria-expanded="false" aria-controls="sd-bills" onclick="toggleSettingSection('bills')">
+        <span class="sr-ico" style="--ic:var(--red)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span>
         <span class="st-text"><span class="setting-label" id="lbl-bills-title">Monthly Bills</span></span>
         <span class="st-chev" aria-hidden="true">›</span>
       </button>
@@ -1935,8 +2055,14 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     </div>
 
     <!-- Data & Backup section inside settings -->
-    <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
-      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Data &amp; Backup</div>
+    <div class="set-group" id="lbl-grp-data">Data</div>
+    <div class="setting-collapse" id="sc-data">
+      <button type="button" class="setting-toggle" id="st-data" aria-expanded="false" aria-controls="sd-data" onclick="toggleSettingSection('data')">
+        <span class="sr-ico" style="--ic:var(--green)" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></span>
+        <span class="st-text"><span class="setting-label" id="lbl-data-title">Data &amp; Backup</span><span class="setting-sub" id="lbl-data-sub">Export, import and reset</span></span>
+        <span class="st-chev" aria-hidden="true">›</span>
+      </button>
+      <div class="setting-detail" id="sd-data">
 
       <!-- Local backup -->
       <div class="icon-row">
@@ -1950,7 +2076,42 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       </div>
 
       <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
+      </div>
     </div>
+
+    <div class="set-group" id="lbl-grp-about">About</div>
+    <div class="setting-collapse" id="sc-credits">
+      <button type="button" class="setting-toggle" id="st-credits" aria-expanded="false" aria-controls="sd-credits" onclick="toggleSettingSection('credits')">
+        <span class="sr-ico" style="--ic:var(--muted)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span>
+        <span class="st-text"><span class="setting-label" id="lbl-credits-title">Credits &amp; licenses</span><span class="setting-sub" id="lbl-credits-sub">Color palettes, fonts and libraries</span></span>
+        <span class="st-chev" aria-hidden="true">›</span>
+      </button>
+      <div class="setting-detail" id="sd-credits">
+        <div class="credits-body">
+          <h4>Color palettes</h4>
+          <div>Palette colors are based on the combinations in <i>A Dictionary of Color Combinations</i> (配色総鑑 / Haishoku Soukan) by <b>Sanzo Wada</b> (和田三造, 1883–1967), published by Seigensha Art Publishing. ShiftLog is not affiliated with or endorsed by the author, his estate or the publisher. If you like these colors, please support the book.</div>
+          <div style="margin-top:6px">Color values come from the open dataset <a href="https://github.com/mattdesl/dictionary-of-colour-combinations" target="_blank" rel="noopener noreferrer">dictionary-of-colour-combinations</a> by Matt DesLauriers, originally compiled by Dain M. Blodorn Kim (<a href="https://github.com/dblodorn/sanzo-wada" target="_blank" rel="noopener noreferrer">sanzo-wada</a>). Dark backgrounds were darkened and the light-mode versions derived by ShiftLog from these colors.</div>
+          <div class="lic">The MIT License (MIT)
+Copyright (c) 2020 Matt DesLauriers
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</div>
+          <h4>Fonts</h4>
+          <div>Syne by Bonjour Monde and JetBrains Mono by JetBrains, both under the SIL Open Font License 1.1, served by Google Fonts.</div>
+          <h4>Libraries</h4>
+          <div>supabase-js (MIT, Supabase), pdf-lib (MIT, Andrew Dillon) and @pdf-lib/fontkit (MIT), loaded from public CDNs.</div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /set-list -->
+    <aside class="set-pane" id="set-pane" aria-live="polite">
+      <div class="set-pane-title" id="set-pane-title"></div>
+      <div class="set-pane-empty" id="set-pane-empty">Choose a setting on the left to see its options.</div>
+    </aside>
+    </div><!-- /set-wrap -->
   </div>
 </div>
 
@@ -2068,13 +2229,36 @@ function dbGetAll(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'r
 function dbPut(s,o){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).put(o);r.onsuccess=()=>{res(r.result);cloudHook('put',s,null,o);};r.onerror=()=>rej(r.error);});}
 function dbDelete(s,id){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).delete(id);r.onsuccess=()=>{res();cloudHook('del',s,id,null);};r.onerror=()=>rej(r.error);});}
 function dbClear(s){return new Promise((res,rej)=>{const tx=db.transaction(s,'readwrite');const r=tx.objectStore(s).clear();r.onsuccess=()=>{res();cloudHook('clear',s,null,null);};r.onerror=()=>rej(r.error);});}
-function toggleSettingSection(k){
+const _setMQ=window.matchMedia('(min-width:901px)');
+function setSettingOpen(k,open){
   const btn=document.getElementById('st-'+k),box=document.getElementById('sd-'+k);
   if(!btn||!box)return;
-  const open=btn.getAttribute('aria-expanded')!=='true';
   btn.setAttribute('aria-expanded',open?'true':'false');
   box.classList.toggle('open',open);
+  const pane=document.getElementById('set-pane'),home=document.getElementById('sc-'+k);
+  if(!pane||!home)return;
+  if(_setMQ.matches&&open){
+    pane.appendChild(box);
+    const lb=document.getElementById('lbl-'+k+'-title'),tt=document.getElementById('set-pane-title');
+    if(tt)tt.textContent=lb?lb.textContent:'';
+  }else if(box.parentNode===pane){
+    home.appendChild(box);
+  }
+  pane.classList.toggle('has-detail',!!pane.querySelector('.setting-detail'));
 }
+function toggleSettingSection(k){
+  const btn=document.getElementById('st-'+k);
+  if(!btn)return;
+  const open=btn.getAttribute('aria-expanded')!=='true';
+  if(_setMQ.matches&&open){
+    document.querySelectorAll('#settings-modal .setting-toggle[aria-expanded="true"]').forEach(b=>{if(b!==btn)setSettingOpen(b.id.slice(3),false);});
+  }
+  setSettingOpen(k,open);
+}
+(_setMQ.addEventListener?_setMQ.addEventListener.bind(_setMQ,'change'):_setMQ.addListener.bind(_setMQ))(()=>{
+  document.querySelectorAll('#settings-modal .setting-toggle[aria-expanded="true"]').forEach(b=>setSettingOpen(b.id.slice(3),true));
+  if(!_setMQ.matches){const pane=document.getElementById('set-pane');if(pane)pane.classList.remove('has-detail');}
+});
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
@@ -2110,7 +2294,7 @@ const T={
     'lbl-delete-all':'Delete All Data','lbl-delete-all-sub':'Permanently delete everything. Cannot be undone.',
     'btn-export-bk':'⬇ Export Backup','btn-import-bk':'⬆ Import Backup','btn-export-csv2':'⬇ Export CSV','btn-nuke':'Delete Everything',
     'lbl-settings-title':'Settings','lbl-lang-title':'Language','lbl-lang-sub':'Display language / 表示言語',
-    'lbl-theme-title':'Theme','lbl-theme-sub':'Dark or light mode','lbl-palette-title':'Color Palette','lbl-palette-sub':'Pale color schemes for dark mode',
+    'lbl-theme-title':'Theme','lbl-theme-sub':'Dark or light mode and color palette','lbl-mode-title':'Mode','lbl-palette-title':'Color Palette','lbl-palette-sub':'Color schemes for dark and light mode','lbl-credits-title':'Credits & licenses','lbl-credits-sub':'Color palettes, fonts and libraries','lbl-grp-general':'General','lbl-grp-money':'Pay & money','lbl-grp-data':'Data','lbl-grp-about':'About','lbl-data-title':'Data & Backup','lbl-data-sub':'Export, import and reset',
     'lbl-currency-title':'Currency Symbol','lbl-currency-sub':'Used in all earnings displays',
     'lbl-night-title':'Night Bonus','lbl-night-sub':'Set the time range and bonus % for night hours',
     'lbl-night-from':'From','lbl-night-to':'To','lbl-night-pct':'Bonus %',
@@ -2164,7 +2348,7 @@ const T={
     'lbl-delete-all':'全データ削除','lbl-delete-all-sub':'すべてのデータを完全に削除します。元に戻せません。',
     'btn-export-bk':'⬇ バックアップ出力','btn-import-bk':'⬆ バックアップ読込','btn-export-csv2':'⬇ CSV 出力','btn-nuke':'全て削除する',
     'lbl-settings-title':'設定','lbl-lang-title':'言語','lbl-lang-sub':'Display language / 表示言語',
-    'lbl-theme-title':'テーマ','lbl-theme-sub':'ダークまたはライトモード','lbl-palette-title':'カラーパレット','lbl-palette-sub':'ダークモード用の淡いカラー',
+    'lbl-theme-title':'テーマ','lbl-theme-sub':'ダーク・ライトとカラーパレット','lbl-mode-title':'モード','lbl-palette-title':'カラーパレット','lbl-palette-sub':'ダーク・ライト両対応のカラー','lbl-credits-title':'クレジットとライセンス','lbl-credits-sub':'配色・フォント・ライブラリ','lbl-grp-general':'一般','lbl-grp-money':'給与・お金','lbl-grp-data':'データ','lbl-grp-about':'情報','lbl-data-title':'データとバックアップ','lbl-data-sub':'書き出し・読み込み・初期化',
     'lbl-currency-title':'通貨記号','lbl-currency-sub':'収入表示に使用されます',
     'lbl-night-title':'深夜割増','lbl-night-sub':'深夜割増の時間帯と割増率を設定',
     'lbl-night-from':'開始','lbl-night-to':'終了','lbl-night-pct':'割増率 %',
@@ -2236,12 +2420,12 @@ function setLang(l){
   applyLang(true);
 }
 
-const PALETTES=[{"id": "default", "label": "Default", "colors": ["#121016", "#ffc233", "#f6efe2", "#7fd1ae"]}, {"id": "indigo", "label": "Deep Indigo", "colors": ["#04102a", "#97acc8", "#d3d9da", "#96d1aa"]}, {"id": "mint", "label": "Slate Mint", "colors": ["#0d1113", "#b5decc", "#d3ebe0", "#96d1aa"]}, {"id": "olive", "label": "Olive Cream", "colors": ["#0e120c", "#eeb480", "#f9f4da", "#96d1aa"]}, {"id": "plum", "label": "Plum Lavender", "colors": ["#20081b", "#c0a9b3", "#fed9a4", "#96d1aa"]}, {"id": "wine", "label": "Wine Pink", "colors": ["#250611", "#f9c1ce", "#d3d9da", "#96d1aa"]}, {"id": "teal", "label": "Teal Naples", "colors": ["#071312", "#fbe6a0", "#fdf0c6", "#96d1aa"]}, {"id": "poel", "label": "Poel's Blue", "colors": ["#01131a", "#a7d4e4", "#dacebe", "#96d1aa"]}, {"id": "violet", "label": "Violet Nile", "colors": ["#120e1d", "#bce4e5", "#d7efef", "#62c6bf"]}];
+const PALETTES=[{"id": "default", "label": "Default", "colors": ["#121016", "#ffc233", "#f6efe2", "#7fd1ae"], "lc": ["#f5efe3", "#b85c00", "#2a2118", "#2f7d57"], "lbg": "#f5efe3"}, {"id": "indigo", "label": "Deep Indigo", "colors": ["#04102a", "#97acc8", "#d3d9da", "#96d1aa"], "lbg": "#eaeef4", "lc": ["#eaeef4", "#5c697a", "#040e26", "#2f7d57"]}, {"id": "mint", "label": "Slate Mint", "colors": ["#0d1113", "#b5decc", "#d3ebe0", "#96d1aa"], "lbg": "#f0f8f5", "lc": ["#f0f8f5", "#596d64", "#0c0f11", "#2f7d57"]}, {"id": "olive", "label": "Olive Cream", "colors": ["#0e120c", "#eeb480", "#f9f4da", "#96d1aa"], "lbg": "#fcf0e6", "lc": ["#fcf0e6", "#836346", "#0d100b", "#2f7d57"]}, {"id": "plum", "label": "Plum Lavender", "colors": ["#20081b", "#c0a9b3", "#fed9a4", "#96d1aa"], "lbg": "#f2eef0", "lc": ["#f2eef0", "#6f6268", "#1d0718", "#2f7d57"]}, {"id": "wine", "label": "Wine Pink", "colors": ["#250611", "#f9c1ce", "#d3d9da", "#96d1aa"], "lbg": "#fef3f5", "lc": ["#fef3f5", "#81646b", "#21050f", "#2f7d57"]}, {"id": "teal", "label": "Teal Naples", "colors": ["#071312", "#fbe6a0", "#fdf0c6", "#96d1aa"], "lbg": "#fefaec", "lc": ["#fefaec", "#736a4a", "#061110", "#2f7d57"]}, {"id": "poel", "label": "Poel's Blue", "colors": ["#01131a", "#a7d4e4", "#dacebe", "#96d1aa"], "lbg": "#edf6fa", "lc": ["#edf6fa", "#576e77", "#011117", "#2f7d57"]}, {"id": "violet", "label": "Violet Nile", "colors": ["#120e1d", "#bce4e5", "#d7efef", "#62c6bf"], "lbg": "#f2fafa", "lc": ["#f2fafa", "#5c7070", "#100d1a", "#2f7d57"]}, {"id": "ember", "label": "Forest Ember", "colors": ["#091a18", "#f37420", "#d6b43e", "#96d1aa"], "lbg": "#fde3d2", "lc": ["#fde3d2", "#9c4a14", "#081716", "#2f7d57"]}, {"id": "grenadine", "label": "Grenadine", "colors": ["#091a18", "#f48067", "#fbe6a0", "#96d1aa"], "lbg": "#fde6e1", "lc": ["#fde6e1", "#954e3f", "#081716", "#2f7d57"]}, {"id": "lemonmoss", "label": "Lemon Moss", "colors": ["#121811", "#62c6bf", "#f8ed43", "#62c6bf"], "lbg": "#e0f4f2", "lc": ["#e0f4f2", "#366d69", "#10160f", "#2f7d57"]}, {"id": "english", "label": "English Red", "colors": ["#0e1011", "#d96629", "#ebd3a2", "#96d1aa"], "lbg": "#faede5", "lc": ["#faede5", "#a54e1f", "#0d0e0f", "#2f7d57"]}, {"id": "cotinga", "label": "Cotinga", "colors": ["#280a23", "#f68c50", "#f8ed43", "#96d1aa"], "lbg": "#fde8dc", "lc": ["#fde8dc", "#965531", "#240920", "#2f7d57"]}, {"id": "calamine", "label": "Calamine", "colors": ["#0e1011", "#bb7125", "#78cdd0", "#78cdd0"], "lbg": "#f7eee5", "lc": ["#f7eee5", "#94591d", "#0d0e0f", "#2f7d57"]}, {"id": "rosenight", "label": "Old Rose Night", "colors": ["#110823", "#d46d7a", "#ffdd00", "#96d1aa"], "lbg": "#faedef", "lc": ["#faedef", "#9b5059", "#0f0720", "#2f7d57"]}, {"id": "springshell", "label": "Spring Shell", "colors": ["#0e1011", "#afd472", "#fdd4bd", "#afd472"], "lbg": "#eff6e3", "lc": ["#eff6e3", "#5b6e3b", "#0d0e0f", "#2f7d57"]}, {"id": "salvia", "label": "Salvia Olive", "colors": ["#121811", "#97acc8", "#f5ecc2", "#96d1aa"], "lbg": "#eaeef4", "lc": ["#eaeef4", "#5c697a", "#10160f", "#2f7d57"]}, {"id": "glaucous", "label": "Glaucous", "colors": ["#121811", "#f48067", "#a5c8d1", "#96d1aa"], "lbg": "#fde6e1", "lc": ["#fde6e1", "#954e3f", "#10160f", "#2f7d57"]}, {"id": "aconite", "label": "Aconite", "colors": ["#0e1011", "#a36aa5", "#fdc57e", "#96d1aa"], "lbg": "#f4edf4", "lc": ["#f4edf4", "#865787", "#0d0e0f", "#2f7d57"]}, {"id": "citron", "label": "Citron", "colors": ["#0e1011", "#b2b73e", "#fdc57e", "#b2b73e"], "lbg": "#f0f1d8", "lc": ["#f0f1d8", "#676a24", "#0d0e0f", "#2f7d57"]}];
 function syncThemeColor(){
   const m=document.querySelector('meta[name="theme-color"]');if(!m)return;
   const light=document.body.classList.contains('light-theme');
   const pl=PALETTES.find(x=>x.id===settings.palette);
-  m.setAttribute('content',light?'#f5efe3':(pl?pl.colors[0]:'#121016'));
+  m.setAttribute('content',light?(pl&&pl.lbg?pl.lbg:'#f5efe3'):(pl?pl.colors[0]:'#121016'));
 }
 function applyPalette(){
   const id=settings.palette||'default';
@@ -2252,11 +2436,11 @@ function applyPalette(){
 function renderPalettePicker(){
   const g=document.getElementById('palette-grid');if(!g)return;
   const cur=settings.palette||'default';
-  g.innerHTML=PALETTES.map(x=>`<button type="button" class="palette-opt" aria-pressed="${cur===x.id}" onclick="setPalette('${x.id}')"><span class="pal-dots">${x.colors.map(c=>`<i style="background:${c}"></i>`).join('')}</span>${esc(x.label)}</button>`).join('');
+  {const _v=document.getElementById('st-palette-val'),_c=PALETTES.find(x=>x.id===cur);if(_v)_v.textContent=_c?_c.label:'';}
+  g.innerHTML=PALETTES.map(x=>`<button type="button" class="palette-opt" aria-pressed="${cur===x.id}" onclick="setPalette('${x.id}')"><span class="pal-dots">${((document.body.classList.contains('light-theme')&&x.lc)?x.lc:x.colors).map(c=>`<i style="background:${c}"></i>`).join('')}</span>${esc(x.label)}</button>`).join('');
 }
 function setPalette(id){
   settings.palette=id;
-  if(document.body.classList.contains('light-theme'))setTheme('dark');
   applyPalette();renderPalettePicker();saveSettings();
   if(document.getElementById('page-monthly').classList.contains('active'))renderMonthly();
 }
@@ -2266,6 +2450,7 @@ function setTheme(th){
   document.getElementById('theme-dark').classList.toggle('active', th==='dark');
   document.getElementById('theme-light').classList.toggle('active', th==='light');
   syncThemeColor();
+  if(typeof renderPalettePicker==='function')renderPalettePicker();
   saveSettings();
   // Redraw chart with correct colors
   if(document.getElementById('page-monthly').classList.contains('active')) renderMonthly();
@@ -2341,6 +2526,7 @@ function openSettings(){
   const ds=document.getElementById('data-stats-s');
   if(ds) ds.innerHTML=`Works: ${works.length} &nbsp;·&nbsp; Shifts: ${shifts.length} &nbsp;·&nbsp; Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th2)} &nbsp;·&nbsp; Earnings: ${fmtMoney(te)}`;
   document.getElementById('settings-modal').classList.add('open');
+  if(_setMQ.matches&&!document.querySelector('#settings-modal .setting-toggle[aria-expanded="true"]'))setSettingOpen('theme',true);
 }
 function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
 
