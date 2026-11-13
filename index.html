@@ -1407,6 +1407,26 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 @keyframes sdFade{from{opacity:0}}
 .sd-pop{transform-origin:center}
 
+/* Currency (Settings → Language): one button, table pops out */
+.cur-btn{min-height:56px}
+.cur-big{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:var(--accent);min-width:44px;text-align:center}
+.cur-btn-hint{flex:1;color:var(--muted);font-family:'Syne',sans-serif;font-size:12px}
+.cur-btn-chev{color:var(--muted);font-size:20px}
+.cur-pop{padding:14px}
+.cur-table{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cur-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:border-color .2s,background .2s,transform 200ms}
+.cur-chip b{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800}
+.cur-chip small{font-size:9px;letter-spacing:.5px;color:var(--muted);font-weight:600}
+.cur-chip:hover{border-color:var(--accent)}
+.cur-chip:active{transform:scale(.94)}
+.cur-chip.sel{background:var(--accent);border-color:var(--accent);color:#000}
+.cur-chip.sel small{color:rgba(0,0,0,.65)}
+body.light-theme .cur-chip.sel{color:#fff}
+body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
+.cur-custom{display:flex;align-items:center;gap:10px;margin-top:12px}
+.cur-custom label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.cur-custom input{max-width:84px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
+#w-night-row{align-items:flex-end}
 /* Payday */
 .field[hidden]{display:none}
 .pay-row{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;flex-wrap:wrap}
@@ -1532,6 +1552,24 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
         <div class="field" id="w-pay-day-field" hidden>
           <label id="lbl-pay-day">Pay day</label>
           <select id="w-pay-day" class="sr-only" tabindex="-1" aria-hidden="true"></select>
+        </div>
+      </div>
+      <div class="row" id="w-night-row">
+        <div class="field" style="max-width:140px">
+          <label id="lbl-w-night-from">Night from</label>
+          <input type="time" id="w-night-start" value="22:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono',monospace">
+        </div>
+        <div class="field" style="max-width:140px">
+          <label id="lbl-w-night-to">Night to</label>
+          <input type="time" id="w-night-end" value="06:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono',monospace">
+        </div>
+        <div class="field" style="max-width:120px">
+          <label id="lbl-w-night-pct">Night bonus %</label>
+          <input type="number" id="w-night-pct" value="25" min="0" max="200" step="1" inputmode="decimal" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono',monospace">
+        </div>
+        <div class="field" style="max-width:130px">
+          <label id="lbl-w-tax">Income tax %</label>
+          <input type="number" id="w-tax-rate" value="10" min="0" max="100" step="0.1" inputmode="decimal" style="font-family:'JetBrains Mono',monospace">
         </div>
       </div>
       <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono',monospace;margin-top:2px" id="night-bonus-note">
@@ -1873,7 +1911,11 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
       <div class="exp-line">
         <div class="field">
           <label id="lbl-exp-date">Date</label>
-          <input type="date" id="exp-date">
+          <button type="button" class="sd-btn" id="exp-sd-btn" aria-haspopup="dialog" aria-expanded="false" onclick="sdToggle('exp')">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+            <span id="exp-sd-text"></span>
+          </button>
+          <input type="date" id="exp-date" class="sr-only" tabindex="-1" aria-hidden="true">
         </div>
         <div class="field">
           <label id="lbl-exp-amount">Amount</label>
@@ -2089,15 +2131,31 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
     <div class="set-group" id="lbl-grp-general">General</div>
 
-    <div class="setting-row">
-      <span class="sr-ico" style="--ic:var(--accent)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></span>
-      <div class="sr-text">
-        <div class="setting-label" id="lbl-lang-title">Language</div>
-        <div class="setting-sub" id="lbl-lang-sub">Display language / 表示言語</div>
-      </div>
-      <div class="lang-toggle">
-        <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
-        <button class="lang-btn"        id="lang-ja" onclick="setLang('ja')">日本語</button>
+    <div class="setting-collapse" id="sc-lang">
+      <button type="button" class="setting-toggle" id="st-lang" aria-expanded="false" aria-controls="sd-lang" onclick="toggleSettingSection('lang')">
+        <span class="sr-ico" style="--ic:var(--accent)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></span>
+        <span class="st-text"><span class="setting-label" id="lbl-lang-title">Language</span><span class="setting-sub" id="lbl-lang-sub">Display language / 表示言語</span></span>
+        <span class="st-val" id="st-lang-val"></span>
+        <span class="st-chev" aria-hidden="true">›</span>
+      </button>
+      <div class="setting-detail" id="sd-lang" style="flex-direction:column;gap:18px">
+        <div class="theme-top">
+          <span class="setting-label">Language / 言語</span>
+          <div class="lang-toggle">
+            <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
+            <button class="lang-btn"        id="lang-ja" onclick="setLang('ja')">日本語</button>
+          </div>
+        </div>
+        <div>
+          <div class="set-subhead" id="lbl-currency-title">Currency Symbol</div>
+          <div class="setting-sub" id="lbl-currency-sub" style="margin-bottom:10px">Used in all earnings displays</div>
+          <button type="button" class="sd-btn cur-btn" id="cur-btn" aria-haspopup="dialog" aria-expanded="false" onclick="curToggle()">
+            <span class="cur-big" id="cur-btn-sym">円</span>
+            <span class="cur-btn-hint" id="cur-btn-hint">Tap to change</span>
+            <span class="cur-btn-chev" aria-hidden="true">›</span>
+          </button>
+          <input type="hidden" id="currency-sym" value="円">
+        </div>
       </div>
     </div>
 
@@ -2124,60 +2182,6 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     </div>
 
     <div class="set-group" id="lbl-grp-money">Pay &amp; money</div>
-    <div class="setting-row">
-      <span class="sr-ico" style="--ic:var(--green)" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.4 0-2.5.8-2.5 1.9 0 2.6 5.2 1.3 5.2 4 0 1.1-1.1 2-2.7 2-1.2 0-2.2-.5-2.8-1.3M12 6.5V8m0 8v1.5"/></svg></span>
-      <div class="sr-text">
-        <div class="setting-label" id="lbl-currency-title">Currency Symbol</div>
-        <div class="setting-sub" id="lbl-currency-sub">Used in all earnings displays</div>
-      </div>
-      <input type="text" id="currency-sym" value="$" maxlength="3"
-        style="max-width:70px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700"
-        oninput="saveSettings();updateStats();renderShifts();renderMonthly()">
-    </div>
-
-    <div class="setting-collapse" id="sc-night">
-      <button type="button" class="setting-toggle" id="st-night" aria-expanded="false" aria-controls="sd-night" onclick="toggleSettingSection('night')">
-        <span class="sr-ico" style="--ic:var(--purple)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></span>
-        <span class="st-text"><span class="setting-label" id="lbl-night-title">Night Bonus</span><span class="setting-sub" id="lbl-night-sub">Set the time range and bonus % for night hours</span></span>
-        <span class="st-chev" aria-hidden="true">›</span>
-      </button>
-      <div class="setting-detail" id="sd-night" style="flex-direction:column;gap:10px">
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:90px">
-          <label style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)" id="lbl-night-from">From</label>
-          <input type="time" id="night-start" value="22:00" oninput="saveNightSettings()" style="font-family:'JetBrains Mono',monospace;font-size:15px;padding:10px 10px">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:90px">
-          <label style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)" id="lbl-night-to">To</label>
-          <input type="time" id="night-end" value="06:00" oninput="saveNightSettings()" style="font-family:'JetBrains Mono',monospace;font-size:15px;padding:10px 10px">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:80px">
-          <label style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)" id="lbl-night-pct">Bonus %</label>
-          <div style="display:flex;align-items:center;gap:4px">
-            <input type="number" id="night-pct" value="25" min="0" max="200" step="1" oninput="saveNightSettings()" style="font-family:'JetBrains Mono',monospace;font-size:15px;padding:10px 10px;max-width:80px;text-align:center">
-            <span style="color:var(--purple);font-weight:700">%</span>
-          </div>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--purple);font-family:'JetBrains Mono',monospace;padding:6px 10px;background:color-mix(in srgb,var(--purple) 7%,transparent);border-radius:7px;border:1px solid color-mix(in srgb,var(--purple) 20%,transparent)" id="night-preview-text">★ Night bonus: +25% from 22:00 to 06:00</div>
-    
-      </div>
-    </div>
-
-    <div class="setting-row">
-      <span class="sr-ico" style="--ic:var(--yellow)" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.2"/><circle cx="17" cy="17" r="2.2"/></svg></span>
-      <div class="sr-text">
-        <div class="setting-label" id="lbl-tax-setting-title">Income Tax Rate</div>
-        <div class="setting-sub" id="lbl-tax-setting-sub">Applied monthly when a work's wages exceed 70,000</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <input type="number" id="setting-tax-rate" value="10" min="0" max="100" step="0.1"
-          style="max-width:70px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700"
-          oninput="saveSettings();recalcSummary()">
-        <span style="font-size:18px;font-weight:800;color:var(--purple)">%</span>
-      </div>
-    </div>
-
     <!-- Monthly bills (collapsed; click to show) -->
     <div class="setting-collapse" id="sc-bills">
       <button type="button" class="setting-toggle" id="st-bills" aria-expanded="false" aria-controls="sd-bills" onclick="toggleSettingSection('bills')">
@@ -2296,6 +2300,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <div class="field"><label id="lbl-edit-rate">Hourly Rate</label><input type="number" id="edit-rate" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-transport">Transport Fee / Day</label><input type="number" id="edit-transport" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-color">Color</label><input type="color" id="edit-color"></div>
+      <div class="field"><label id="lbl-edit-night-from">Night from</label><input type="time" id="edit-night-start" style="font-family:'JetBrains Mono',monospace"></div>
+      <div class="field"><label id="lbl-edit-night-to">Night to</label><input type="time" id="edit-night-end" style="font-family:'JetBrains Mono',monospace"></div>
+      <div class="field"><label id="lbl-edit-night-pct">Night bonus %</label><input type="number" id="edit-night-pct" min="0" max="200" step="1" inputmode="decimal"></div>
+      <div class="field"><label id="lbl-edit-tax">Income tax %</label><input type="number" id="edit-tax-rate" min="0" max="100" step="0.1" inputmode="decimal"></div>
       <div class="field"><label id="lbl-edit-pay-timing">Payday</label><button type="button" class="sd-btn" id="pd-btn-edit" aria-haspopup="dialog" aria-expanded="false" onclick="pdToggle('edit')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span></span></button><select id="edit-pay-timing" class="sr-only" tabindex="-1" aria-hidden="true"></select></div>
       <div class="field" id="edit-pay-day-field" hidden><label id="lbl-edit-pay-day">Pay day</label><select id="edit-pay-day" class="sr-only" tabindex="-1" aria-hidden="true"></select></div>
     </div>
@@ -2384,7 +2392,7 @@ function cleanExtra(o,known){
   return x;
 }
 const _KNOWN={
-  works:['id','name','rate','transport','color','payTiming','payDay','createdAt'],
+  works:['id','name','rate','transport','color','payTiming','payDay','nightStart','nightEnd','nightPct','taxRate','createdAt'],
   shifts:['id','workId','workName','workColor','rate','clockIn','clockOut','breakMin','duration','wages','transport','nightMin','createdAt'],
   bills:['id','name','amount','cat','createdAt'],
   expenses:['id','date','amount','cat','note','createdAt']
@@ -2396,8 +2404,13 @@ function sanitizeRecord(store,o){
   const base=cleanExtra(o,new Set(_KNOWN[store]));
   const now=Date.now();
   if(store==='works'){
+    const wx={};
+    if(/^\d{2}:\d{2}$/.test(String(o.nightStart)))wx.nightStart=String(o.nightStart);
+    if(/^\d{2}:\d{2}$/.test(String(o.nightEnd)))wx.nightEnd=String(o.nightEnd);
+    if(o.nightPct!=null&&o.nightPct!==''&&Number.isFinite(+o.nightPct))wx.nightPct=_num(o.nightPct,0,200,25);
+    if(o.taxRate!=null&&o.taxRate!==''&&Number.isFinite(+o.taxRate))wx.taxRate=_num(o.taxRate,0,100,10);
     return Object.assign(base,{id,name:_str(o.name,100).trim()||'Work',rate:_num(o.rate,0,1e9,0),transport:_num(o.transport,0,1e9,0),color:safeColor(o.color),
-      payTiming:['none','daily','same','next'].includes(o.payTiming)?o.payTiming:'none',payDay:Math.round(_num(o.payDay,0,31,25)),createdAt:_ts(o.createdAt)||now});
+      payTiming:['none','daily','same','next'].includes(o.payTiming)?o.payTiming:'none',payDay:Math.round(_num(o.payDay,0,31,25)),createdAt:_ts(o.createdAt)||now},wx);
   }
   if(store==='shifts'){
     const ci=_ts(o.clockIn);if(!ci)return null;
@@ -2417,7 +2430,7 @@ function sanitizeRecord(store,o){
 function sanitizeSettings(o){
   const x={key:'main'};if(!o||typeof o!=='object')return x;
   const has=k=>Object.prototype.hasOwnProperty.call(o,k)&&o[k]!==null&&o[k]!==undefined;
-  if(has('currency'))x.currency=_cur(o.currency)||'$';
+  if(has('currency'))x.currency=_cur(o.currency)||'円';
   if(has('lang'))x.lang=o.lang==='ja'?'ja':'en';
   if(has('theme'))x.theme=o.theme==='light'?'light':'dark';
   if(has('palette')&&/^[a-z0-9_-]{1,30}$/.test(String(o.palette)))x.palette=String(o.palette);
@@ -2440,7 +2453,7 @@ const T={
     'splash':'Loading local database…',
     'offline-badge':'Saved Locally',
     'lbl-create-work':'Create New Work','lbl-work-name':'Work Name','lbl-hourly-rate':'Hourly Rate','lbl-pay-timing':'Payday','lbl-pay-day':'Pay day','lbl-edit-pay-timing':'Payday','lbl-edit-pay-day':'Pay day','lbl-payday-title':'Payday',
-    'lbl-transport':'Transport / Day','lbl-color':'Color','night-bonus-note':'★ Night bonus: +25% auto-applied for hours between 10 PM – 6 AM',
+    'lbl-transport':'Transport / Day','lbl-color':'Color',
     'lbl-your-works':'Your Works','lbl-add-shift':'+ Add Shift',
     'mode-single':'Single Date','mode-multi':'Multiple Dates',
     'warn-no-works':'No works yet.','warn-create-link':'Create a work first →',
@@ -2465,7 +2478,7 @@ const T={
     'btn-export-bk':'⬇ Export Backup','btn-import-bk':'⬆ Import Backup','btn-export-csv2':'⬇ Export CSV','btn-nuke':'Delete Everything',
     'lbl-settings-title':'Settings','lbl-lang-title':'Language','lbl-lang-sub':'Display language / 表示言語',
     'lbl-theme-title':'Theme','lbl-theme-sub':'Dark or light mode and color palette','lbl-mode-title':'Mode','lbl-palette-title':'Color Palette','lbl-palette-sub':'Color schemes for dark and light mode','lbl-credits-title':'Credits & licenses','lbl-credits-sub':'Color palettes, fonts and libraries','lbl-grp-general':'General','lbl-grp-money':'Pay & money','lbl-grp-data':'Data','lbl-grp-about':'About','lbl-data-title':'Data & Backup','lbl-data-sub':'Export, import and reset',
-    'lbl-currency-title':'Currency Symbol','lbl-currency-sub':'Used in all earnings displays',
+    'lbl-currency-title':'Currency Symbol','lbl-currency-custom':'Custom','lbl-w-night-from':'Night from','lbl-w-night-to':'Night to','lbl-w-night-pct':'Night bonus %','lbl-w-tax':'Income tax %','lbl-edit-night-from':'Night from','lbl-edit-night-to':'Night to','lbl-edit-night-pct':'Night bonus %','lbl-edit-tax':'Income tax %','lbl-currency-sub':'Used in all earnings displays',
     'lbl-night-title':'Night Bonus','lbl-night-sub':'Set the time range and bonus % for night hours',
     'lbl-night-from':'From','lbl-night-to':'To','lbl-night-pct':'Bonus %',
     'lbl-edit-work-title':'Edit Work','lbl-edit-name':'Work Name','lbl-edit-rate':'Hourly Rate',
@@ -2494,7 +2507,7 @@ const T={
     'splash':'ローカルデータベースを読み込み中…',
     'offline-badge':'ローカル保存',
     'lbl-create-work':'新しい仕事を作成','lbl-work-name':'仕事名','lbl-hourly-rate':'時給','lbl-pay-timing':'給料日','lbl-pay-day':'支払日','lbl-edit-pay-timing':'給料日','lbl-edit-pay-day':'支払日','lbl-payday-title':'給料日',
-    'lbl-transport':'交通費（1日）','lbl-color':'カラー','night-bonus-note':'★ 深夜ボーナス：午後10時〜午前6時は+25%自動適用',
+    'lbl-transport':'交通費（1日）','lbl-color':'カラー',
     'lbl-your-works':'登録された仕事','lbl-add-shift':'+ シフトを追加',
     'mode-single':'単一日','mode-multi':'複数日',
     'warn-no-works':'仕事がまだありません。','warn-create-link':'先に仕事を作成してください →',
@@ -2519,7 +2532,7 @@ const T={
     'btn-export-bk':'⬇ バックアップ出力','btn-import-bk':'⬆ バックアップ読込','btn-export-csv2':'⬇ CSV 出力','btn-nuke':'全て削除する',
     'lbl-settings-title':'設定','lbl-lang-title':'言語','lbl-lang-sub':'Display language / 表示言語',
     'lbl-theme-title':'テーマ','lbl-theme-sub':'ダーク・ライトとカラーパレット','lbl-mode-title':'モード','lbl-palette-title':'カラーパレット','lbl-palette-sub':'ダーク・ライト両対応のカラー','lbl-credits-title':'クレジットとライセンス','lbl-credits-sub':'配色・フォント・ライブラリ','lbl-grp-general':'一般','lbl-grp-money':'給与・お金','lbl-grp-data':'データ','lbl-grp-about':'情報','lbl-data-title':'データとバックアップ','lbl-data-sub':'書き出し・読み込み・初期化',
-    'lbl-currency-title':'通貨記号','lbl-currency-sub':'収入表示に使用されます',
+    'lbl-currency-title':'通貨記号','lbl-currency-custom':'カスタム','lbl-w-night-from':'深夜 開始','lbl-w-night-to':'深夜 終了','lbl-w-night-pct':'深夜割増 %','lbl-w-tax':'所得税 %','lbl-edit-night-from':'深夜 開始','lbl-edit-night-to':'深夜 終了','lbl-edit-night-pct':'深夜割増 %','lbl-edit-tax':'所得税 %','lbl-currency-sub':'収入表示に使用されます',
     'lbl-night-title':'深夜割増','lbl-night-sub':'深夜割増の時間帯と割増率を設定',
     'lbl-night-from':'開始','lbl-night-to':'終了','lbl-night-pct':'割増率 %',
     'lbl-edit-work-title':'仕事を編集','lbl-edit-name':'仕事名','lbl-edit-rate':'時給',
@@ -2589,6 +2602,7 @@ function setLang(l){
   lang=l; settings.lang=l;
   saveSettings();
   applyLang(true);
+  refreshLangSummary();renderCurrencyChips();syncSDBtn();
 }
 
 const PALETTES=[{"id": "default", "label": "Default", "colors": ["#121016", "#ffc233", "#f6efe2", "#7fd1ae"], "lc": ["#f5efe3", "#b85c00", "#2a2118", "#2f7d57"], "lbg": "#f5efe3"}, {"id": "indigo", "label": "Deep Indigo", "colors": ["#04102a", "#97acc8", "#d3d9da", "#96d1aa"], "lbg": "#eaeef4", "lc": ["#eaeef4", "#5c697a", "#040e26", "#2f7d57"]}, {"id": "mint", "label": "Slate Mint", "colors": ["#0d1113", "#b5decc", "#d3ebe0", "#96d1aa"], "lbg": "#f0f8f5", "lc": ["#f0f8f5", "#596d64", "#0c0f11", "#2f7d57"]}, {"id": "olive", "label": "Olive Cream", "colors": ["#0e120c", "#eeb480", "#f9f4da", "#96d1aa"], "lbg": "#fcf0e6", "lc": ["#fcf0e6", "#836346", "#0d100b", "#2f7d57"]}, {"id": "plum", "label": "Plum Lavender", "colors": ["#20081b", "#c0a9b3", "#fed9a4", "#96d1aa"], "lbg": "#f2eef0", "lc": ["#f2eef0", "#6f6268", "#1d0718", "#2f7d57"]}, {"id": "wine", "label": "Wine Pink", "colors": ["#250611", "#f9c1ce", "#d3d9da", "#96d1aa"], "lbg": "#fef3f5", "lc": ["#fef3f5", "#81646b", "#21050f", "#2f7d57"]}, {"id": "teal", "label": "Teal Naples", "colors": ["#071312", "#fbe6a0", "#fdf0c6", "#96d1aa"], "lbg": "#fefaec", "lc": ["#fefaec", "#736a4a", "#061110", "#2f7d57"]}, {"id": "poel", "label": "Poel's Blue", "colors": ["#01131a", "#a7d4e4", "#dacebe", "#96d1aa"], "lbg": "#edf6fa", "lc": ["#edf6fa", "#576e77", "#011117", "#2f7d57"]}, {"id": "violet", "label": "Violet Nile", "colors": ["#120e1d", "#bce4e5", "#d7efef", "#62c6bf"], "lbg": "#f2fafa", "lc": ["#f2fafa", "#5c7070", "#100d1a", "#2f7d57"]}, {"id": "ember", "label": "Forest Ember", "colors": ["#091a18", "#f37420", "#d6b43e", "#96d1aa"], "lbg": "#fde3d2", "lc": ["#fde3d2", "#9c4a14", "#081716", "#2f7d57"]}, {"id": "grenadine", "label": "Grenadine", "colors": ["#091a18", "#f48067", "#fbe6a0", "#96d1aa"], "lbg": "#fde6e1", "lc": ["#fde6e1", "#954e3f", "#081716", "#2f7d57"]}, {"id": "lemonmoss", "label": "Lemon Moss", "colors": ["#121811", "#62c6bf", "#f8ed43", "#62c6bf"], "lbg": "#e0f4f2", "lc": ["#e0f4f2", "#366d69", "#10160f", "#2f7d57"]}, {"id": "english", "label": "English Red", "colors": ["#0e1011", "#d96629", "#ebd3a2", "#96d1aa"], "lbg": "#faede5", "lc": ["#faede5", "#a54e1f", "#0d0e0f", "#2f7d57"]}, {"id": "cotinga", "label": "Cotinga", "colors": ["#280a23", "#f68c50", "#f8ed43", "#96d1aa"], "lbg": "#fde8dc", "lc": ["#fde8dc", "#965531", "#240920", "#2f7d57"]}, {"id": "calamine", "label": "Calamine", "colors": ["#0e1011", "#bb7125", "#78cdd0", "#78cdd0"], "lbg": "#f7eee5", "lc": ["#f7eee5", "#94591d", "#0d0e0f", "#2f7d57"]}, {"id": "rosenight", "label": "Old Rose Night", "colors": ["#110823", "#d46d7a", "#ffdd00", "#96d1aa"], "lbg": "#faedef", "lc": ["#faedef", "#9b5059", "#0f0720", "#2f7d57"]}, {"id": "springshell", "label": "Spring Shell", "colors": ["#0e1011", "#afd472", "#fdd4bd", "#afd472"], "lbg": "#eff6e3", "lc": ["#eff6e3", "#5b6e3b", "#0d0e0f", "#2f7d57"]}, {"id": "salvia", "label": "Salvia Olive", "colors": ["#121811", "#97acc8", "#f5ecc2", "#96d1aa"], "lbg": "#eaeef4", "lc": ["#eaeef4", "#5c697a", "#10160f", "#2f7d57"]}, {"id": "glaucous", "label": "Glaucous", "colors": ["#121811", "#f48067", "#a5c8d1", "#96d1aa"], "lbg": "#fde6e1", "lc": ["#fde6e1", "#954e3f", "#10160f", "#2f7d57"]}, {"id": "aconite", "label": "Aconite", "colors": ["#0e1011", "#a36aa5", "#fdc57e", "#96d1aa"], "lbg": "#f4edf4", "lc": ["#f4edf4", "#865787", "#0d0e0f", "#2f7d57"]}, {"id": "citron", "label": "Citron", "colors": ["#0e1011", "#b2b73e", "#fdc57e", "#b2b73e"], "lbg": "#f0f1d8", "lc": ["#f0f1d8", "#676a24", "#0d0e0f", "#2f7d57"]}];
@@ -2630,12 +2644,12 @@ function setTheme(th){
 // ════════════════════════════════════════════════
 // State
 // ════════════════════════════════════════════════
-let works=[], shifts=[], settings={currency:'$',lang:'en'};
+let works=[], shifts=[], settings={currency:'円',lang:'en'};
 let selectedWorkId=null, filterWorkId=null, monthlyFilterId=null;
 let graphMode='earnings', currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear();
 let shiftMode='single', multiDates=[], calSelectedDay=null;
 
-const sym=()=>_cur(settings.currency||'$')||'$';
+const sym=()=>_cur(settings.currency||'円')||'円';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const fmtMoney=n=>sym()+(n||0).toFixed(2);
 const fmtDur=ms=>{const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}h ${m}m`:`${m}m`;};
@@ -2649,9 +2663,8 @@ function toast(msg,type='ok'){const t=document.getElementById('toast');t.textCon
 // Settings
 // ════════════════════════════════════════════════
 async function saveSettings(){
-  settings.currency=document.getElementById('currency-sym').value||'$';
+  settings.currency=document.getElementById('currency-sym').value||'円';
   settings.lang=lang;
-  settings.taxRate=parseFloat(document.getElementById('setting-tax-rate')?.value)||10;
   {const g=id=>document.getElementById(id);
    if(g('tax-rate'))settings.taxCalc={rate:g('tax-rate').value,social:g('tax-social')?.value,deduct:g('tax-deduct')?.value,period:taxPeriod,from:g('tax-from')?.value||'',to:g('tax-to')?.value||''};}
   await dbPut('settings',{key:'main',...settings});
@@ -2660,12 +2673,7 @@ async function loadSettings(){
   const all=await dbGetAll('settings');
   const saved=all.find(s=>s.key==='main');
   if(saved){settings={...settings,...sanitizeSettings(saved)};}
-  document.getElementById('currency-sym').value=settings.currency||'$';
-  document.getElementById('night-start').value=settings.nightStart||'22:00';
-  document.getElementById('night-end').value=settings.nightEnd||'06:00';
-  document.getElementById('night-pct').value=settings.nightPct??25;
-  const trEl=document.getElementById('setting-tax-rate');
-  if(trEl) trEl.value=settings.taxRate??10;
+  document.getElementById('currency-sym').value=settings.currency||'円';
   applyTaxUI();
   if(settings.lang) lang=settings.lang;
   // Apply saved theme
@@ -2676,20 +2684,15 @@ async function loadSettings(){
   if(btnDark) btnDark.classList.toggle('active', th==='dark');
   if(btnLight) btnLight.classList.toggle('active', th==='light');
   applyPalette();
-  updateNightPreview();
+  renderCurrencyChips();refreshLangSummary();
 }
 function openSettings(){
-  document.getElementById('currency-sym').value=settings.currency||'$';
-  document.getElementById('night-start').value=settings.nightStart||'22:00';
-  document.getElementById('night-end').value=settings.nightEnd||'06:00';
-  document.getElementById('night-pct').value=settings.nightPct??25;
-  const trEl=document.getElementById('setting-tax-rate');
-  if(trEl) trEl.value=settings.taxRate??10;
+  document.getElementById('currency-sym').value=settings.currency||'円';
   const th=settings.theme||'dark';
   document.getElementById('theme-dark').classList.toggle('active', th==='dark');
   document.getElementById('theme-light').classList.toggle('active', th==='light');
   renderPalettePicker();
-  updateNightPreview();
+  renderCurrencyChips();refreshLangSummary();
   renderBills();
   // Refresh data stats in settings panel
   const te=shifts.reduce((a,s)=>a+(s.wages||0)+(s.transport||0),0);
@@ -2701,6 +2704,75 @@ function openSettings(){
 }
 function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
 
+// Currency: starts with 円; tap it to open a table of symbols (Settings → Language)
+const CURRENCIES=[['円','JPY'],['¥','JPY·CNY'],['$','USD'],['€','EUR'],['£','GBP'],['₩','KRW'],['₹','INR'],['฿','THB'],['₱','PHP'],['₫','VND'],['₪','ILS'],['₺','TRY'],['₽','RUB'],['R$','BRL'],['A$','AUD'],['C$','CAD'],['S$','SGD'],['HK$','HKD'],['NT$','TWD'],['RM','MYR'],['Rp','IDR'],['CHF','CHF']];
+let curPop=null,curScrim=null;
+function curBuild(){
+  if(curPop)return;
+  curPop=document.createElement('div');
+  curPop.className='sd-pop cur-pop';curPop.id='cur-pop';curPop.hidden=true;
+  curPop.setAttribute('role','dialog');curPop.setAttribute('aria-labelledby','cur-pop-title');
+  curPop.innerHTML='<div class="sd-head"><span class="sd-month" id="cur-pop-title"></span><button type="button" class="mc-nav-btn" data-cur-close aria-label="Close">✕</button></div>'
+    +'<div class="cur-table" id="cur-table" role="group" aria-labelledby="cur-pop-title">'
+    +CURRENCIES.map(c=>`<button type="button" class="cur-chip" data-c="${esc(c[0])}" aria-pressed="false"><b>${esc(c[0])}</b><small>${esc(c[1])}</small></button>`).join('')
+    +'</div><div class="cur-custom"><label for="cur-custom-input" id="cur-custom-lbl"></label><input type="text" id="cur-custom-input" maxlength="3" autocomplete="off"></div>';
+  curScrim=document.createElement('div');curScrim.className='sd-scrim';curScrim.hidden=true;
+  document.body.appendChild(curScrim);document.body.appendChild(curPop);
+  curPop.addEventListener('click',e=>{
+    if(e.target.closest('[data-cur-close]')){curClose(true);return;}
+    const b=e.target.closest('.cur-chip');if(b){applyCurrency(b.dataset.c);curClose(true);}
+  });
+  curPop.querySelector('#cur-custom-input').addEventListener('input',e=>applyCurrency(e.target.value));
+}
+function curPosition(){
+  if(!curPop||curPop.hidden)return;
+  const w=Math.min(360,window.innerWidth-24);
+  curPop.style.width=w+'px';
+  curPop.style.left=Math.round((window.innerWidth-w)/2)+'px';
+  curPop.style.top=Math.max(12,Math.round((window.innerHeight-curPop.offsetHeight)/2))+'px';
+}
+function curOpen(){
+  curBuild();renderCurrencyChips();
+  curPop.hidden=false;curScrim.hidden=false;
+  document.getElementById('cur-btn').setAttribute('aria-expanded','true');
+  curPosition();
+}
+function curClose(focusBtn){
+  if(!curPop||curPop.hidden)return;
+  curPop.hidden=true;curScrim.hidden=true;
+  const b=document.getElementById('cur-btn');if(b){b.setAttribute('aria-expanded','false');if(focusBtn)b.focus();}
+}
+function curToggle(){(curPop&&!curPop.hidden)?curClose():curOpen();}
+document.addEventListener('pointerdown',e=>{
+  if(!curPop||curPop.hidden)return;
+  if(curPop.contains(e.target)||e.target.closest('#cur-btn'))return;
+  curClose();
+},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&curPop&&!curPop.hidden){e.stopPropagation();curClose(true);}},true);
+window.addEventListener('resize',curPosition);
+function renderCurrencyChips(){
+  const cur=settings.currency||'円',ja=lang==='ja';
+  const sb=document.getElementById('cur-btn-sym');if(sb)sb.textContent=cur;
+  const hint=document.getElementById('cur-btn-hint');if(hint)hint.textContent=ja?'タップして変更':'Tap to change';
+  const hid=document.getElementById('currency-sym');if(hid)hid.value=cur;
+  if(!curPop)return;
+  curPop.querySelectorAll('.cur-chip').forEach(b=>{const on=b.dataset.c===cur;b.classList.toggle('sel',on);b.setAttribute('aria-pressed',on?'true':'false');});
+  const ci=document.getElementById('cur-custom-input');if(ci&&ci!==document.activeElement)ci.value=CURRENCIES.some(c=>c[0]===cur)?'':cur;
+  const tt=document.getElementById('cur-pop-title');if(tt)tt.textContent=ja?'通貨記号':'Currency Symbol';
+  const cl=document.getElementById('cur-custom-lbl');if(cl)cl.textContent=ja?'カスタム':'Custom';
+}
+function applyCurrency(v){
+  const c=_cur(v).trim()||'円';
+  settings.currency=c;
+  const hid=document.getElementById('currency-sym');if(hid)hid.value=c;
+  saveSettings();
+  renderCurrencyChips();refreshLangSummary();
+  updateStats();renderShifts();renderMonthly();renderWorks();
+  try{renderExpenses();}catch(e){}
+  try{recalcSummary();}catch(e){}
+}
+function refreshLangSummary(){const v=document.getElementById('st-lang-val');if(v)v.textContent=(lang==='ja'?'日本語':'EN')+' · '+(settings.currency||'円');}
+
 // ════════════════════════════════════════════════
 // Works
 // ════════════════════════════════════════════════
@@ -2709,12 +2781,13 @@ async function addWork(){
   const name=document.getElementById('w-name').value.trim();
   if(!name){alert(t('alert-no-name'));return;}
   const btn=document.getElementById('btn-add-work');btn.disabled=true;
-  const w={id:genId(),name,rate:parseFloat(document.getElementById('w-rate').value)||0,transport:parseFloat(document.getElementById('w-transport').value)||0,color:document.getElementById('w-color').value,payTiming:document.getElementById('w-pay-timing').value,payDay:parseInt(document.getElementById('w-pay-day').value),createdAt:Date.now()};
+  const w={id:genId(),name,rate:parseFloat(document.getElementById('w-rate').value)||0,transport:parseFloat(document.getElementById('w-transport').value)||0,color:document.getElementById('w-color').value,payTiming:document.getElementById('w-pay-timing').value,payDay:parseInt(document.getElementById('w-pay-day').value),createdAt:Date.now(),...readWorkExtra('w-')};
   await dbPut('works',w);works.push(w);
   renderWorks();renderWorkPicker();renderFilterRow();updateBadges();
   toast(t('toast-work-added'));
   ['w-name','w-rate','w-transport'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('w-color').value='#ffc233';
+  fillWorkExtra('w-',null);updateWorkNightNote();
   document.getElementById('w-pay-timing').value='none';document.getElementById('w-pay-day').value='25';payFieldToggle('w');
   btn.disabled=false;
 }
@@ -2726,6 +2799,7 @@ async function saveEditWork(){
   w.color=document.getElementById('edit-color').value;
   w.payTiming=document.getElementById('edit-pay-timing').value;
   w.payDay=parseInt(document.getElementById('edit-pay-day').value);
+  Object.assign(w,readWorkExtra('edit-'));
   await dbPut('works',w);
   renderWorks();renderWorkPicker();renderFilterRow();updateStats();renderShifts();renderMonthly();
   toast(t('toast-work-updated'));closeModal();
@@ -2738,6 +2812,7 @@ async function deleteWork(id){
 }
 function renderWorks(){
   fillPaySelects();
+  updateWorkNightNote();
   const g=document.getElementById('works-grid');
   if(!works.length){g.innerHTML=`<div class="empty-card"><div class="empty-icon">💼</div>${t('lbl-your-works')}<br>—</div>`;return;}
   g.innerHTML=works.map(w=>`
@@ -2746,8 +2821,10 @@ function renderWorks(){
       <div class="wc-divider"></div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <div class="wc-row"><span class="wc-label">${t('lbl-hourly-rate')}</span><span class="wc-val" style="color:var(--green)">${sym()}${w.rate.toFixed(2)}/h</span></div>
-        <div class="wc-row"><span class="wc-label">${lang==='ja'?'深夜割増':'Night (+'+( settings.nightPct??25)+'%)'}</span><span class="wc-val" style="color:var(--purple)">${sym()}${(w.rate*(1+(settings.nightPct??25)/100)).toFixed(2)}/h</span></div>
+        <div class="wc-row"><span class="wc-label">${lang==='ja'?'深夜割増 (+'+workNight(w).pctRaw+'%)':'Night (+'+workNight(w).pctRaw+'%)'}</span><span class="wc-val" style="color:var(--purple)">${sym()}${(w.rate*(1+workNight(w).pct)).toFixed(2)}/h</span></div>
+        <div class="wc-row"><span class="wc-label">${lang==='ja'?'深夜の時間帯':'Night hours'}</span><span class="wc-val" style="color:var(--purple)">${workNight(w).ns}–${workNight(w).ne}</span></div>
         <div class="wc-row"><span class="wc-label">${t('lbl-transport')}</span><span class="wc-val" style="color:var(--yellow)">${sym()}${w.transport.toFixed(2)}</span></div>
+        <div class="wc-row"><span class="wc-label">${lang==='ja'?'所得税':'Income tax'}</span><span class="wc-val" style="color:var(--red)">${workTaxRate(w)}%</span></div>
         <div class="wc-row"><span class="wc-label">${lang==='ja'?'給料日':'Payday'}</span><span class="wc-val" style="color:var(--accent)">${payLabel(w)}</span></div>
       </div>
       <div class="wc-actions">
@@ -2763,6 +2840,7 @@ function openEdit(id){
   document.getElementById('edit-rate').value=w.rate;
   document.getElementById('edit-transport').value=w.transport;
   document.getElementById('edit-color').value=w.color;
+  fillWorkExtra('edit-',w);
   fillPaySelects();
   document.getElementById('edit-pay-timing').value=w.payTiming||'none';
   document.getElementById('edit-pay-day').value=String(Number.isInteger(w.payDay)?w.payDay:25);
@@ -2870,17 +2948,22 @@ function renderMiniCal(){
 // Single-date picker: same calendar look as Multiple Dates
 // ════════════════════════════════════════════════
 let sdYear=0,sdMonth=0,sdPop=null,sdScrim=null;
-const sdInput=()=>document.getElementById('shift-date');
+let sdFor='shift';
+const SD_CFG={shift:{inp:'shift-date',btn:'sd-btn',txt:'sd-text'},exp:{inp:'exp-date',btn:'exp-sd-btn',txt:'exp-sd-text'}};
+const sdInput=()=>document.getElementById(SD_CFG[sdFor].inp);
+const sdBtn=()=>document.getElementById(SD_CFG[sdFor].btn);
 function sdFmt(v){
   if(!v)return lang==='ja'?'日付を選択':'Pick a date';
   const [y,m,d]=v.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString(lang==='ja'?'ja-JP':'en-US',{year:'numeric',month:'short',day:'numeric',weekday:'short'});
 }
-function syncSDBtn(){const t=document.getElementById('sd-text');const i=sdInput();if(t&&i)t.textContent=sdFmt(i.value);}
+function syncSDBtn(){Object.keys(SD_CFG).forEach(k=>{const c=SD_CFG[k],t=document.getElementById(c.txt),i=document.getElementById(c.inp);if(t&&i)t.textContent=sdFmt(i.value);});}
 (function(){
-  const inp=sdInput();if(!inp)return;
   const desc=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
-  Object.defineProperty(inp,'value',{configurable:true,get(){return desc.get.call(this);},set(v){desc.set.call(this,v);syncSDBtn();}});
+  Object.keys(SD_CFG).forEach(k=>{
+    const inp=document.getElementById(SD_CFG[k].inp);if(!inp)return;
+    Object.defineProperty(inp,'value',{configurable:true,get(){return desc.get.call(this);},set(v){desc.set.call(this,v);syncSDBtn();}});
+  });
   syncSDBtn();
 })();
 function sdBuild(){
@@ -2919,7 +3002,7 @@ function sdRender(){
 }
 function sdPosition(){
   if(!sdPop||sdPop.hidden)return;
-  const btn=document.getElementById('sd-btn');if(!btn)return;
+  const btn=sdBtn();if(!btn)return;
   const r=btn.getBoundingClientRect(),w=Math.min(300,window.innerWidth-24);
   sdPop.style.width=w+'px';
   const left=Math.round((window.innerWidth-w)/2);
@@ -2929,31 +3012,32 @@ function sdPosition(){
   top=Math.max(12,Math.round((window.innerHeight-h)/2));
   sdPop.style.left=left+'px';sdPop.style.top=top+'px';
 }
-function sdOpen(){
+function sdOpen(k){
+  sdFor=k||'shift';
   sdBuild();
   const v=sdInput().value||today();
   sdYear=+v.slice(0,4);sdMonth=+v.slice(5,7)-1;
   sdRender();
   sdPop.hidden=false;if(sdScrim)sdScrim.hidden=false;
-  document.getElementById('sd-btn').setAttribute('aria-expanded','true');
+  sdBtn().setAttribute('aria-expanded','true');
   sdPosition();
   const f=sdPop.querySelector('.mc-day.selected,.mc-day.today,.mc-day.normal');if(f)f.focus({preventScroll:true});
 }
 function sdClose(focusBtn){
   if(!sdPop||sdPop.hidden)return;
   sdPop.hidden=true;if(sdScrim)sdScrim.hidden=true;
-  const b=document.getElementById('sd-btn');if(b){b.setAttribute('aria-expanded','false');if(focusBtn)b.focus();}
+  const b=sdBtn();if(b){b.setAttribute('aria-expanded','false');if(focusBtn)b.focus();}
 }
-function sdToggle(){(sdPop&&!sdPop.hidden)?sdClose():sdOpen();}
+function sdToggle(k){k=k||'shift';(sdPop&&!sdPop.hidden&&sdFor===k)?sdClose():sdOpen(k);}
 function sdPick(v){
   const i=sdInput();i.value=v;
   i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));
-  if(typeof recalcPreview==='function'&&shiftMode==='single')recalcPreview();
+  if(sdFor==='shift'&&typeof recalcPreview==='function'&&shiftMode==='single')recalcPreview();
   sdClose(true);
 }
 document.addEventListener('pointerdown',e=>{
   if(!sdPop||sdPop.hidden)return;
-  if(sdPop.contains(e.target)||e.target.closest('#sd-btn'))return;
+  if(sdPop.contains(e.target)||e.target.closest('#sd-btn,#exp-sd-btn'))return;
   sdClose();
 },true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sdPop&&!sdPop.hidden){e.stopPropagation();sdClose(true);}},true);
@@ -2973,7 +3057,7 @@ function recalcMultiPreview(){
   const h=Math.floor(workMs/3600000),m=Math.floor((workMs%3600000)/60000);
   document.getElementById('m-dur-box').textContent=h>0?`${h}h ${m}m`:`${m}m`;
   if(w&&w.rate>0){
-    const wages=calcWages(ci,workEnd,w.rate),nm=nightMinutes(ci,workEnd);
+    const wages=calcWages(ci,workEnd,w.rate,w),nm=nightMinutes(ci,workEnd,w);
     document.getElementById('earn-preview').style.display='flex';
     document.getElementById('ep-h').textContent=(workMs/3600000).toFixed(2)+'h';
     document.getElementById('ep-r').textContent=s+w.rate.toFixed(2);
@@ -2982,7 +3066,7 @@ function recalcMultiPreview(){
     document.getElementById('ep-total').textContent=multiDates.length>1?`${s}${(wages+w.transport).toFixed(2)} × ${multiDates.length}`:s+(wages+w.transport).toFixed(2);
     const nn=document.getElementById('night-note');
     nn.style.display=nm>0?'block':'none';
-    if(nm>0)nn.textContent=`★ ${nm} ${t('lbl-night-min')} (${settings.nightStart||'22:00'}–${settings.nightEnd||'06:00'}) × +${settings.nightPct??25}%`;
+    if(nm>0)nn.textContent=nightNoteText(nm,w);
   } else document.getElementById('earn-preview').style.display='none';
 }
 
@@ -3007,45 +3091,53 @@ function getWork(){return works.find(w=>w.id===selectedWorkId)||null;}
 // ════════════════════════════════════════════════
 // Wage calc
 // ════════════════════════════════════════════════
-function getNightRange(){
-  const ns=settings.nightStart||'22:00', ne=settings.nightEnd||'06:00', pct=(settings.nightPct??25)/100;
-  const [sh,sm]=ns.split(':').map(Number), [eh,em]=ne.split(':').map(Number);
-  const startMin=sh*60+sm, endMin=eh*60+em;
-  return {startMin, endMin, crosses:startMin>=endMin, pct};
+// Night bonus + income tax rate are set per work (older works fall back to the previous global values)
+const NIGHT_DEF={start:'22:00',end:'06:00',pct:25,tax:10};
+function workNight(w){
+  const okT=v=>/^\d{2}:\d{2}$/.test(String(v||''));
+  const ns=(w&&okT(w.nightStart))?w.nightStart:(okT(settings.nightStart)?settings.nightStart:NIGHT_DEF.start);
+  const ne=(w&&okT(w.nightEnd))?w.nightEnd:(okT(settings.nightEnd)?settings.nightEnd:NIGHT_DEF.end);
+  const pr=(w&&Number.isFinite(w.nightPct))?w.nightPct:(Number.isFinite(settings.nightPct)?settings.nightPct:NIGHT_DEF.pct);
+  const [sh,sm]=ns.split(':').map(Number),[eh,em]=ne.split(':').map(Number);
+  const startMin=sh*60+sm,endMin=eh*60+em;
+  return {ns,ne,pctRaw:pr,pct:pr/100,startMin,endMin,crosses:startMin>=endMin};
 }
-function isNightMinute(dateMs){
-  const d=new Date(dateMs), minOfDay=d.getHours()*60+d.getMinutes();
-  const {startMin,endMin,crosses}=getNightRange();
-  return crosses ? (minOfDay>=startMin||minOfDay<endMin) : (minOfDay>=startMin&&minOfDay<endMin);
+function workTaxRate(w){return (w&&Number.isFinite(w.taxRate))?w.taxRate:(Number.isFinite(settings.taxRate)?settings.taxRate:NIGHT_DEF.tax);}
+function isNightMinute(dateMs,nr){
+  const d=new Date(dateMs),m=d.getHours()*60+d.getMinutes();
+  return nr.crosses?(m>=nr.startMin||m<nr.endMin):(m>=nr.startMin&&m<nr.endMin);
 }
-function calcWages(s,e,r){
-  const {pct}=getNightRange();
-  let w=0,c=s;
-  while(c<e){w+=r*(1+(isNightMinute(c)?pct:0))/60;c+=60000;}
-  return w;
+function calcWages(s,e,r,w){
+  const nr=workNight(w);
+  let tot=0,c=s;
+  while(c<e){tot+=r*(1+(isNightMinute(c,nr)?nr.pct:0))/60;c+=60000;}
+  return tot;
 }
-function nightMinutes(s,e){let n=0,c=s;while(c<e){if(isNightMinute(c))n++;c+=60000;}return n;}
+function nightMinutes(s,e,w){const nr=workNight(w);let n=0,c=s;while(c<e){if(isNightMinute(c,nr))n++;c+=60000;}return n;}
+function nightNoteText(nm,w){const nr=workNight(w);return `★ ${nm} ${t('lbl-night-min')} (${nr.ns}–${nr.ne}) × +${nr.pctRaw}%`;}
 
-function saveNightSettings(){
-  settings.nightStart=document.getElementById('night-start').value||'22:00';
-  settings.nightEnd=document.getElementById('night-end').value||'06:00';
-  {const _np=parseFloat(document.getElementById('night-pct').value);settings.nightPct=Number.isFinite(_np)?Math.max(0,_np):25;}
-  updateNightPreview();
-  saveSettings();
-  // Refresh previews
-  if(document.getElementById('page-shifts').classList.contains('active')){
-    if(document.getElementById('mode-multi').classList.contains('active'))recalcMultiPreview();
-    else recalcPreview();
-  }
+// Work form helpers (prefix 'w-' = Create New Work, 'edit-' = Edit Work modal)
+function readWorkExtra(p){
+  const g=id=>document.getElementById(p+id);
+  const ns=g('night-start').value,ne=g('night-end').value,np=parseFloat(g('night-pct').value),tx=parseFloat(g('tax-rate').value);
+  return {
+    nightStart:/^\d{2}:\d{2}$/.test(ns)?ns:NIGHT_DEF.start,
+    nightEnd:/^\d{2}:\d{2}$/.test(ne)?ne:NIGHT_DEF.end,
+    nightPct:Number.isFinite(np)?Math.min(200,Math.max(0,np)):NIGHT_DEF.pct,
+    taxRate:Number.isFinite(tx)?Math.min(100,Math.max(0,tx)):NIGHT_DEF.tax
+  };
 }
-function updateNightPreview(){
-  const ns=settings.nightStart||'22:00', ne=settings.nightEnd||'06:00', pct=settings.nightPct??25;
-  const el=document.getElementById('night-preview-text');
-  if(el) el.textContent=`★ Night bonus: +${pct}% from ${ns} to ${ne}`;
-  // also update the works page note
-  const note=document.getElementById('night-bonus-note');
-  if(note) note.textContent=`★ ${lang==='ja'?'深夜ボーナス':'Night bonus'}: +${pct}% (${ns} – ${ne})`;
+function fillWorkExtra(p,w){
+  const nr=workNight(w),g=id=>document.getElementById(p+id);
+  g('night-start').value=nr.ns;g('night-end').value=nr.ne;g('night-pct').value=nr.pctRaw;g('tax-rate').value=workTaxRate(w);
 }
+function updateWorkNightNote(){
+  const note=document.getElementById('night-bonus-note');if(!note)return;
+  const v=id=>document.getElementById(id)?.value;
+  const pct=v('w-night-pct')===''||v('w-night-pct')==null?NIGHT_DEF.pct:v('w-night-pct');
+  note.textContent=`★ ${lang==='ja'?'深夜ボーナス':'Night bonus'}: +${pct}% (${v('w-night-start')||NIGHT_DEF.start} – ${v('w-night-end')||NIGHT_DEF.end})`;
+}
+function updateNightPreview(){updateWorkNightNote();}
 
 // ════════════════════════════════════════════════
 // Preview (single)
@@ -3062,7 +3154,7 @@ function recalcPreview(){
   const h=Math.floor(workMs/3600000),m=Math.floor((workMs%3600000)/60000);
   document.getElementById('dur-box').textContent=h>0?`${h}h ${m}m`:`${m}m`;
   if(w&&w.rate>0){
-    const wages=calcWages(ci,workEnd,w.rate),nm=nightMinutes(ci,workEnd),total=wages+w.transport;
+    const wages=calcWages(ci,workEnd,w.rate,w),nm=nightMinutes(ci,workEnd,w),total=wages+w.transport;
     document.getElementById('earn-preview').style.display='flex';
     document.getElementById('ep-h').textContent=(workMs/3600000).toFixed(2)+'h';
     document.getElementById('ep-r').textContent=s+w.rate.toFixed(2);
@@ -3071,7 +3163,7 @@ function recalcPreview(){
     document.getElementById('ep-total').textContent=s+total.toFixed(2);
     const nn=document.getElementById('night-note');
     nn.style.display=nm>0?'block':'none';
-    if(nm>0)nn.textContent=`★ ${nm} ${t('lbl-night-min')} (${settings.nightStart||'22:00'}–${settings.nightEnd||'06:00'}) × +${settings.nightPct??25}%`;
+    if(nm>0)nn.textContent=nightNoteText(nm,w);
   } else document.getElementById('earn-preview').style.display='none';
 }
 
@@ -3093,7 +3185,7 @@ async function addShift(){
     let ci=new Date(`${dv}T${start}`).getTime(),co=new Date(`${dv}T${end}`).getTime();
     if(co<=ci)co+=86400000;
     const workMs=Math.max(0,(co-ci)-brk*60000),workEnd=co-brk*60000;
-    const sh={id:genId(),workId:w?w.id:null,workName:w?w.name:'Unknown',workColor:w?w.color:'#888',rate:w?w.rate:0,clockIn:ci,clockOut:co,breakMin:brk,duration:workMs,wages:w?calcWages(ci,workEnd,w.rate):0,transport:w?w.transport:0,nightMin:w?nightMinutes(ci,workEnd):0,createdAt:Date.now()};
+    const sh={id:genId(),workId:w?w.id:null,workName:w?w.name:'Unknown',workColor:w?w.color:'#888',rate:w?w.rate:0,clockIn:ci,clockOut:co,breakMin:brk,duration:workMs,wages:w?calcWages(ci,workEnd,w.rate,w):0,transport:w?w.transport:0,nightMin:w?nightMinutes(ci,workEnd,w):0,createdAt:Date.now()};
     await dbPut('shifts',sh);shifts.unshift(sh);
     toast(t('toast-shift-saved'));
     document.getElementById('shift-start').value='';document.getElementById('shift-end').value='';
@@ -3110,7 +3202,7 @@ async function addShift(){
       let ci=new Date(`${dv}T${start}`).getTime(),co=new Date(`${dv}T${end}`).getTime();
       if(co<=ci)co+=86400000;
       const workMs=Math.max(0,(co-ci)-brk*60000),workEnd=co-brk*60000;
-      const sh={id:genId(),workId:w?w.id:null,workName:w?w.name:'Unknown',workColor:w?w.color:'#888',rate:w?w.rate:0,clockIn:ci,clockOut:co,breakMin:brk,duration:workMs,wages:w?calcWages(ci,workEnd,w.rate):0,transport:w?w.transport:0,nightMin:w?nightMinutes(ci,workEnd):0,createdAt:Date.now()};
+      const sh={id:genId(),workId:w?w.id:null,workName:w?w.name:'Unknown',workColor:w?w.color:'#888',rate:w?w.rate:0,clockIn:ci,clockOut:co,breakMin:brk,duration:workMs,wages:w?calcWages(ci,workEnd,w.rate,w):0,transport:w?w.transport:0,nightMin:w?nightMinutes(ci,workEnd,w):0,createdAt:Date.now()};
       await dbPut('shifts',sh);newShifts.push(sh);
     }
     shifts.unshift(...newShifts);
@@ -4144,7 +4236,7 @@ function getSumBills(){
 
 function recalcSummary(){
   renderSumWorkFilter();
-  const taxRate=(settings.taxRate??10)/100;
+  const taxRateOf=id=>workTaxRate(works.find(x=>x.id===id))/100;   // income tax rate is set per work
   const TAX_THRESHOLD=70000;
   const s=sym();
   const sl=getSumShifts();
@@ -4182,12 +4274,15 @@ function recalcSummary(){
     gross+=monthGross;
     let tax=0;
     if(g.wages>=TAX_THRESHOLD){
-      tax=monthGross*taxRate;
+      const gr=taxRateOf(g.workId);
+      tax=monthGross*gr;
       totalTax+=tax;
-      taxedGroups.push({...g,monthGross,tax});
+      taxedGroups.push({...g,monthGross,tax,rate:gr});
     }
   }
 
+  const _rates=[...new Set(taxedGroups.map(x=>+(x.rate*100).toFixed(1)))];
+  const rateTxt=_rates.length===1?_rates[0]+'%':(_rates.length>1?(lang==='ja'?'仕事ごと':'per work'):workTaxRate(null)+'%');
   const afterTax=gross-totalTax;
   const billsAmt=getSumBills();
   const finalNet=afterTax-billsAmt;
@@ -4205,7 +4300,7 @@ function recalcSummary(){
   if(wf){
     const steps=[
       {label:lang==='ja'?'総収入':'Gross Income',val:gross,color:'var(--green)',sign:''},
-      {label:lang==='ja'?`所得税 (${(taxRate*100).toFixed(1)}%, 7万超の月)`:`Tax (${(taxRate*100).toFixed(1)}%, months over 70k)`,val:-totalTax,color:'var(--red)',sign:'−'},
+      {label:lang==='ja'?`所得税 (${rateTxt}, 7万超の月)`:`Tax (${rateTxt}, months over 70k)`,val:-totalTax,color:'var(--red)',sign:'−'},
       {label:lang==='ja'?'請求書合計':'Total Bills',val:-billsAmt,color:'var(--yellow)',sign:'−'},
       {label:lang==='ja'?'手取り':'Take-Home',val:finalNet,color:finalNet>=0?'var(--green)':'var(--red)',sign:'=',bold:true},
     ].filter(x=>x.sign===''||Math.abs(x.val)>0.001||x.bold);
@@ -4719,7 +4814,7 @@ async function applyRemote(remote,opts){
       await dbPut('settings',remote.settings);
     }else if(opts&&opts.resetSettings){
       await dbClear('settings');
-      settings={currency:'$',lang:settings.lang||'en'};
+      settings={currency:'円',lang:settings.lang||'en'};
     }
   }finally{cloudSuppress=false;}
   await loadSettings();await loadWorks();await loadShifts();await loadBills();await loadExpenses();
@@ -4813,7 +4908,7 @@ async function importBackup(input){
       shifts=data.shifts.sort((a,b)=>b.clockIn-a.clockIn);
       bills=(data.bills||[]).sort((a,b)=>a.createdAt-b.createdAt);
       expenses=(data.expenses||[]).sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt);
-      if(data.settings){settings={...settings,...data.settings};document.getElementById('currency-sym').value=settings.currency||'$';if(data.settings.lang){lang=data.settings.lang;applyLang(true);}}
+      if(data.settings){settings={...settings,...data.settings};document.getElementById('currency-sym').value=settings.currency||'円';renderCurrencyChips();refreshLangSummary();if(data.settings.lang){lang=data.settings.lang;applyLang(true);}}
       renderWorks();renderWorkPicker();renderFilterRow();
       updateStats();renderShifts();renderBills();renderExpenses();updateBadges();updateDataStats();
       loading(false);
