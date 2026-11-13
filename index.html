@@ -1981,6 +1981,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
     <div class="panel">
       <div class="panel-label" id="lbl-sum-breakdown">Breakdown</div>
       <div id="sum-waterfall"></div>
+      <div id="sum-pay-basis" style="margin-top:12px"></div>
     </div>
 
     <!-- Bills detail in this period -->
@@ -4107,20 +4108,27 @@ function renderSumWorkFilter(){
     +works.map(w=>`<div class="fw-btn ${sumFilterId===w.id?'sel':''}" onclick="setSumFilter('${w.id}')"><span style="width:8px;height:8px;border-radius:50%;background:${w.color};display:inline-block;margin-right:4px"></span>${esc(w.name)}</div>`).join('');
 }
 
+// The date a shift counts for in the Summary = the day its wages are paid (work's payday setting).
+// Works with no payday set are counted on the day worked.
+function sumDateOf(sh){
+  const w=works.find(x=>x.id===sh.workId);
+  const pd=w?payDateFor(w,new Date(sh.clockIn)):null;
+  return pd||new Date(sh.clockIn);
+}
 function getSumShifts(){
   const now=new Date();
   let sl=shifts;
   if(sumPeriod==='month'){
-    sl=sl.filter(s=>{const d=new Date(s.clockIn);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
+    sl=sl.filter(s=>{const d=sumDateOf(s);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
   } else if(sumPeriod==='last-month'){
     const lm=new Date(now.getFullYear(),now.getMonth()-1,1);
-    sl=sl.filter(s=>{const d=new Date(s.clockIn);return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear();});
+    sl=sl.filter(s=>{const d=sumDateOf(s);return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear();});
   } else if(sumPeriod==='year'){
-    sl=sl.filter(s=>new Date(s.clockIn).getFullYear()===now.getFullYear());
+    sl=sl.filter(s=>sumDateOf(s).getFullYear()===now.getFullYear());
   } else if(sumPeriod==='custom-month'){
     const cm=parseInt(document.getElementById('sump-cm-month')?.value??now.getMonth());
     const cy=parseInt(document.getElementById('sump-cm-year')?.value??now.getFullYear());
-    sl=sl.filter(s=>{const d=new Date(s.clockIn);return d.getMonth()===cm&&d.getFullYear()===cy;});
+    sl=sl.filter(s=>{const d=sumDateOf(s);return d.getMonth()===cm&&d.getFullYear()===cy;});
   }
   if(sumFilterId) sl=sl.filter(s=>s.workId===sumFilterId);
   return sl;
@@ -4161,10 +4169,12 @@ function recalcSummary(){
   // Group shifts by work × month, compute gross per group, apply tax if over threshold
   // key: "workId|YYYY-MM"
   const groups={};
+  const mkey=x=>`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}`;
   for(const sh of sl){
-    const d=new Date(sh.clockIn);
-    const key=`${sh.workId}|${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-    if(!groups[key]) groups[key]={workId:sh.workId,workName:sh.workName,workColor:sh.workColor||'#888',monthKey:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,wages:0,transport:0};
+    const worked=mkey(new Date(sh.clockIn)),paid=mkey(sumDateOf(sh));   // month worked vs month paid
+    const key=`${sh.workId}|${paid}`;
+    if(!groups[key]) groups[key]={workId:sh.workId,workName:sh.workName,workColor:sh.workColor||'#888',monthKey:paid,from:new Set(),wages:0,transport:0};
+    groups[key].from.add(worked);
     groups[key].wages+=(sh.wages||0);
     groups[key].transport+=(sh.transport||0);
   }
@@ -4226,6 +4236,25 @@ function recalcSummary(){
           </div>`).join('')}
       </div>`;
     }
+  }
+
+  // Payday basis: show which worked months are being paid in the selected period
+  const basis=el('sum-pay-basis');
+  if(basis){
+    const mLbl=k=>{const [y,m]=k.split('-').map(Number);return lang==='ja'?`${y}年${m}月`:`${MONTHS[m-1].slice(0,3)} ${y}`;};
+    const moved=Object.values(groups).filter(g=>[...g.from].some(f=>f!==g.monthKey)).sort((a,b)=>a.monthKey<b.monthKey?-1:1);
+    let h=`<div class="pay-note">${lang==='ja'
+      ?'収入は給料が支払われる月で集計します（各仕事の給料日設定に基づく）。給料日が未設定の仕事は勤務した月で集計します。'
+      :'Income is counted in the month it is paid (from each work\'s payday setting). Works with no payday set are counted in the month worked.'}</div>`;
+    if(moved.length){
+      h+=moved.map(g=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid var(--border)">
+        <span style="width:8px;height:8px;border-radius:50%;background:${g.workColor};display:inline-block;flex-shrink:0"></span>
+        <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
+        <span style="color:var(--muted);font-size:11px">${[...g.from].sort().map(mLbl).join(', ')} → ${mLbl(g.monthKey)}</span>
+        <span style="font-family:'JetBrains Mono',monospace">${fmtMoney(g.wages+g.transport)}</span>
+      </div>`).join('');
+    }
+    basis.innerHTML=h;
   }
 
   // Bills detail
