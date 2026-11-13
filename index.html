@@ -61,7 +61,7 @@
     }
 }
 </script>
-<script src="config.js"></script>
+<script src="config.js?v=1"></script><!-- bump ?v=2, ?v=3… after editing config.js so phones/browsers fetch the new file -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
@@ -3596,7 +3596,7 @@ const AT={
     cloud:'Cloud data',lastSync:'Last synced',onDevice:'On this device',syncNow:'⟳ Sync now',
     security:'Security',newPass:'New password',update:'Update',logout:'Log out',
     works:'works',shifts:'shifts',bills:'bills',expenses:'expenses',never:'Never',
-    notConfigured:'Cloud login is not set up yet — add your Supabase URL and anon key in config.js.',
+    configMissing:'config.js could not be loaded. Upload it next to index.html, then refresh (or clear the browser cache).',notConfigured:'Cloud login is not set up yet — add your Supabase URL and anon key in config.js.',
     offline:'Cloud service unavailable (are you offline?)',fillAll:'Please fill in email and password.',
     passShort:'Password must be at least 6 characters.',passMismatch:'Passwords do not match.',
     checkEmail:'Account created! Check your email to confirm, then log in.',alreadyReg:'This email is already registered — try logging in.',
@@ -3610,7 +3610,7 @@ const AT={
     cloud:'クラウドデータ',lastSync:'最終同期',onDevice:'この端末のデータ',syncNow:'⟳ 今すぐ同期',
     security:'セキュリティ',newPass:'新しいパスワード',update:'更新',logout:'ログアウト',
     works:'勤務先',shifts:'シフト',bills:'請求',expenses:'支出',never:'なし',
-    notConfigured:'クラウドログインが未設定です。config.js にSupabaseのURLとanonキーを入力してください。',
+    configMissing:'config.js を読み込めませんでした。index.html と同じ場所にアップロードして再読み込みしてください。',notConfigured:'クラウドログインが未設定です。config.js にSupabaseのURLとanonキーを入力してください。',
     offline:'クラウドに接続できません（オフラインですか？）',fillAll:'メールアドレスとパスワードを入力してください。',
     passShort:'パスワードは6文字以上にしてください。',passMismatch:'パスワードが一致しません。',
     checkEmail:'アカウントを作成しました。メールを確認してからログインしてください。',alreadyReg:'このメールは登録済みです。ログインしてください。',
@@ -3719,7 +3719,7 @@ function accMsg(id,text,kind){
   el.textContent=text||'';el.className='acc-msg'+(kind?' '+kind:'');
 }
 function accReady(msgId){
-  if(!cloudConfigured()){accMsg(msgId,at('notConfigured'),'err');return false;}
+  if(!cloudConfigured()){accMsg(msgId,at(window.SHIFTLOG_CONFIG?'notConfigured':'configMissing'),'err');return false;}
   if(!sb){accMsg(msgId,at('offline'),'err');return false;}
   return true;
 }
