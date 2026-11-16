@@ -923,40 +923,11 @@ canvas{width:100%!important;display:block;}
 /* ---- Kusama-style dots & bubbles ---- */
 /* Dotted top edge on panels (polka-dot line instead of a gradient) */
 .panel::before{height:6px;background:radial-gradient(circle,var(--accent) 1.7px,transparent 2.2px) 0 50%/12px 6px repeat-x}
-/* Jelly-bubble hover on cards */
-@media (hover:hover){
-  .stat-card,.work-card,.month-fold-head{transition:transform 500ms var(--spring),border-color .2s,background .2s}
-  .stat-card:hover{transform:scale(1.05)}
-  .work-card:hover{transform:translateY(-3px) scale(1.02)}
-  .month-fold-head:hover{transform:scale(1.015)}
-}
-/* Badges float like bubbles */
-@keyframes bbBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-.tab-badge,.bn-badge{animation:bbBob 3s ease-in-out infinite}
-/* New shift rows spring in */
-.shift-item{animation:popIn 420ms var(--spring) backwards}
-
-/* ---- Bubble buttons & touchable icons ---- */
-.btn{position:relative;overflow:hidden}
-/* glossy bubble highlight on every button */
-.btn::before{content:'';position:absolute;top:2px;left:9%;width:38%;height:36%;border-radius:50%;pointer-events:none;
-  background:linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));opacity:.55;transition:opacity .2s,transform 500ms var(--spring)}
-.btn-ghost::before,.btn-del::before{opacity:.14}
-@media (hover:hover){
-  .btn:hover:not(:disabled)::before{opacity:.85;transform:translate(6px,1px) scale(1.15)}
-  .btn-ghost:hover:not(:disabled)::before,.btn-del:hover:not(:disabled)::before{opacity:.3}
-  .btn:hover:not(:disabled){transform:translateY(-2px) scale(1.04)}
-  .fw-btn:hover,.wp-btn:hover,.brk-chip:hover,.date-chip:hover,.lang-btn:hover,.month-nav-btn:hover{transform:translateY(-2px) scale(1.06)}
-  .icon-btn:hover{transform:rotate(60deg) scale(1.14)}
-  .del-btn:hover{transform:scale(1.3) rotate(90deg);background:color-mix(in srgb,var(--red) 16%,transparent)!important}
-  .modal-close:hover{transform:rotate(90deg) scale(1.15)}
-  .cal-day.has-shift:hover{transform:scale(1.18)}
-}
-/* squish when pressed (must come after the hover rules above) */
-.btn:active:not(:disabled),.fw-btn:active,.wp-btn:active,.brk-chip:active,.date-chip:active,.lang-btn:active,.month-nav-btn:active,.mode-btn:active{transform:scale(.92,.88);transition-duration:80ms}
+/* ---- Bubble effects: kept only for the settings icon (.icon-btn) ---- */
+.icon-btn{border-radius:50%;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.28) 0 9%,transparent 10%),var(--surface2)}
+@media (hover:hover){.icon-btn:hover{transform:rotate(60deg) scale(1.14)}}
 .icon-btn:active{transform:scale(.85);transition-duration:80ms}
-.del-btn:active{transform:scale(.8)}
-/* jelly wobble after a tap (class added by script) */
 @keyframes squish{
   0%{transform:scale(1)}
   22%{transform:scale(1.16,.84)}
@@ -965,19 +936,8 @@ canvas{width:100%!important;display:block;}
   100%{transform:scale(1)}
 }
 .squish{animation:squish 560ms var(--out)!important}
-/* round, bubble-shaped icon controls */
-.icon-btn{border-radius:50%;position:relative;overflow:hidden;
-  background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.28) 0 9%,transparent 10%),var(--surface2)}
-.del-btn{border-radius:50%;width:28px;height:28px;transition:transform 400ms var(--spring),background .2s,color .2s}
-.month-nav-btn{border-radius:999px;transition:transform 400ms var(--spring),border-color .2s}
-.cal-day.has-shift{border-radius:50%;transition:transform 400ms var(--spring),background .2s}
-.cal-day.has-shift::after{animation:bbBob 2.6s ease-in-out infinite}
-.brk-chip,.fw-btn,.wp-btn,.date-chip{border-radius:999px}
-.lang-btn.icon-only{border-radius:50%}
-/* soft expanding ring around primary buttons and the settings icon */
 @keyframes bbGlow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 40%,transparent)}55%{box-shadow:0 0 0 9px color-mix(in srgb,var(--accent) 0%,transparent)}}
-.btn-primary,.icon-btn{animation:bbGlow 3.2s ease-out infinite}
-.icon-btn{animation-delay:-1.2s}
+.icon-btn{animation:bbGlow 3.2s ease-out infinite;animation-delay:-1.2s}
 
 /* ---- Drag the nav + swipe pages ---- */
 .bottom-nav,.tab-nav{-webkit-user-select:none;user-select:none}
@@ -1004,10 +964,8 @@ canvas{width:100%!important;display:block;}
 .bottom-nav.bn-dragging .bn-pill::after{transform:translateY(-4px) scale(1.06)}
 @media (prefers-reduced-motion:reduce){.bn-bump,.bn-pill::after{transition:none}}
 
-/* Press feedback that works for touch and mouse alike (class set by script) */
-.btn.pressed:not(:disabled),.fw-btn.pressed,.wp-btn.pressed,.brk-chip.pressed,.date-chip.pressed,.lang-btn.pressed,.month-nav-btn.pressed,.mode-btn.pressed,.tab-btn.pressed{transform:scale(.92,.88)!important;transition-duration:80ms}
+/* Press feedback for the settings icon (touch and mouse) */
 .icon-btn.pressed{transform:scale(.85)!important;transition-duration:80ms}
-.del-btn.pressed{transform:scale(.8)!important}
 .btn,.icon-btn,.del-btn,.lang-btn,.mode-btn,.fw-btn,.wp-btn,.brk-chip,.month-nav-btn,.tab-btn{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
 /* ---- Desktop: same floating bubble nav bar as mobile ---- */
@@ -1023,11 +981,8 @@ canvas{width:100%!important;display:block;}
 .has-thumb>button{position:relative;z-index:1}
 .seg-thumb{position:absolute;z-index:0;left:0;top:0;width:0;height:0;opacity:0;pointer-events:none;
   border:1px solid var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent);
-  box-shadow:0 0 14px color-mix(in srgb,var(--accent) 28%,transparent),inset 0 1px 0 rgba(255,255,255,.2);
-  transition:left 480ms var(--spring),top 480ms var(--spring),width 480ms var(--spring),height 480ms var(--spring),opacity .2s}
+  transition:left 300ms var(--out),top 300ms var(--out),width 300ms var(--out),height 300ms var(--out),opacity .2s}
 .seg-thumb.no-anim{transition:none}
-.seg-thumb::after{content:'';position:absolute;top:2px;left:12%;width:34%;height:34%;border-radius:50%;
-  background:linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0));opacity:.5}
 .lang-toggle.has-thumb .seg-thumb{background:var(--accent)}
 .lang-toggle.has-thumb .lang-btn.active{background:transparent;color:#000}
 .mode-toggle.has-thumb .mode-btn{border:1px solid transparent}
@@ -1035,7 +990,6 @@ canvas{width:100%!important;display:block;}
 .graph-toggle.has-thumb .gtog{border-color:transparent;background:transparent}
 .graph-toggle.has-thumb .gtog.active{background:transparent;border-color:transparent;color:var(--accent)}
 .graph-toggle.has-thumb{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:3px;gap:3px;width:max-content}
-.has-thumb>button:active{transform:scale(.94)}
 /* content under an inner tab bar eases in when you switch */
 @keyframes segIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 .seg-in{animation:segIn 400ms var(--out)}
@@ -1048,32 +1002,19 @@ canvas{width:100%!important;display:block;}
   background:linear-gradient(var(--surface2),var(--surface2)) padding-box,
              linear-gradient(135deg,var(--accent),var(--purple) 55%,var(--red)) border-box;
   box-shadow:0 4px 16px color-mix(in srgb,var(--accent) 16%,transparent),inset 0 1px 0 rgba(255,255,255,.08);
-  transition:transform 450ms var(--spring),box-shadow .25s;
+  transition:box-shadow .25s;
   -webkit-tap-highlight-color:transparent;
 }
-#acc-avatar-wrap::before{content:'';position:absolute;top:2px;left:14%;width:36%;height:34%;border-radius:50%;pointer-events:none;
-  background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,0));opacity:.45}
-#acc-avatar-wrap::after{content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:34%;pointer-events:none;
-  background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);
-  transform:translateX(-160%) skewX(-18deg);animation:accShine 5.5s ease-in-out 1.2s infinite}
-@keyframes accShine{0%,62%{transform:translateX(-160%) skewX(-18deg)}100%{transform:translateX(420%) skewX(-18deg)}}
-#acc-avatar-wrap.signed::after{animation:none;opacity:0}
 .acc-avatar-placeholder{
   background:#fff!important;box-shadow:0 1px 4px rgba(0,0,0,.28);
-  transition:transform 450ms var(--spring);position:relative;z-index:1}
+  position:relative;z-index:1}
 .acc-avatar-placeholder svg{display:block}
 #acc-signin-label{color:var(--text)!important;font-weight:700!important;font-size:12.5px!important;letter-spacing:.3px;position:relative;z-index:1}
 #acc-user-short,.acc-avatar-photo{position:relative;z-index:1}
 .acc-avatar-photo[style*="display: none"]+.acc-online,.acc-avatar-photo:not([src]) + .acc-online,.acc-avatar-photo[src=""]+.acc-online{display:none}
 .acc-online{position:absolute;left:23px;bottom:5px;width:9px;height:9px;border-radius:50%;z-index:2;
   background:var(--green);border:2px solid var(--surface2);box-shadow:0 0 8px var(--green)}
-@media (hover:hover){
-  #acc-profile:hover #acc-avatar-wrap{transform:translateY(-2px) scale(1.05);border-color:transparent;
-    box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 34%,transparent),inset 0 1px 0 rgba(255,255,255,.12)}
-  #acc-profile:hover .acc-avatar-placeholder{transform:rotate(-14deg) scale(1.12)}
-}
-#acc-profile:active #acc-avatar-wrap{transform:scale(.93,.9);transition-duration:80ms}
-@media (prefers-reduced-motion:reduce){#acc-avatar-wrap::after{display:none}}
+
 
 /* Collapsible settings sections */
 .setting-collapse{margin:8px 0}
@@ -5403,9 +5344,9 @@ function closeBreakDial(apply){
 (function(){
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches;
   if(reduce)return;
-  var SQ='.btn,.icon-btn,.del-btn,.modal-close,.lang-btn,.mode-btn,.fw-btn,.wp-btn,.brk-chip,.month-nav-btn,.date-chip,.cal-day.has-shift';
+  var SQ='.icon-btn';
   // Pressed state on pointer down (touch and mouse), cleared on release/leave
-  var PRESS_SEL='.btn,.icon-btn,.del-btn,.lang-btn,.mode-btn,.fw-btn,.wp-btn,.brk-chip,.month-nav-btn,.date-chip,.tab-btn';
+  var PRESS_SEL='.icon-btn';
   var pressedEl=null;
   function clearPress(){if(pressedEl){pressedEl.classList.remove('pressed');pressedEl=null;}}
   document.addEventListener('pointerdown',function(e){
@@ -5627,9 +5568,6 @@ function closeBreakDial(apply){
       th.style.borderRadius=getComputedStyle(a).borderRadius;
       th.style.opacity=1;
       if(fresh){void th.offsetWidth;th.classList.remove('no-anim');}
-      else if(a!==last&&!reduce&&th.animate){
-        th.animate([{transform:'scale(1,1)'},{transform:'scale(1.16,.86)',offset:.35},{transform:'scale(.97,1.07)',offset:.7},{transform:'scale(1,1)'}],{duration:520,easing:'ease-out'});
-      }
       last=a;
     }
     new MutationObserver(place).observe(c,{subtree:true,attributes:true,attributeFilter:['class']});
