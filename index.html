@@ -5172,7 +5172,7 @@ function syncBreakChips(){
     var sel=document.getElementById(b.dataset.select);if(!sel)return;
     var v=parseInt(sel.value)||0;
     b.classList.toggle('sel',v>0);
-    b.querySelector('.brk-val').textContent=v>0?(v>=60?(v/60)+'h':v):'';
+    b.querySelector('.brk-val').textContent=v>0?(v>=60?(Math.floor(v/60)+':'+String(v%60).padStart(2,'0')):v):'';
     b.setAttribute('aria-label','Break time: '+(v>0?v+' min':'none'));
   });
 }
