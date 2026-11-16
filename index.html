@@ -1472,6 +1472,19 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .pd-pop button.mc-day.sel-eom{outline:1px dashed var(--accent)}
 @media (prefers-reduced-motion:reduce){.pd-track{transition:none}}
 .pay-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+/* ---- Add Shift (Single Date): use the full PC width like Multiple Dates ---- */
+@media(min-width:641px){
+  #page-shifts>.panel:first-child{max-width:none}
+}
+@media(min-width:901px){
+  #page-shifts>.panel:not(.is-multi){grid-template-columns:auto minmax(0,1fr) auto;column-gap:28px;justify-content:stretch}
+  #page-shifts>.panel:not(.is-multi)>#single-date-row{grid-column:1;order:1;margin-bottom:12px}
+  #page-shifts>.panel:not(.is-multi)>#single-time-line{grid-column:2;order:1}
+  #page-shifts>.panel:not(.is-multi)>#single-time-line .time-line{max-width:none}
+  #page-shifts>.panel:not(.is-multi)>.add-shift-btn-row{grid-column:3;order:1}
+  #page-shifts>.panel:not(.is-multi)>.add-shift-btn-row .btn{min-width:170px}
+}
 </style>
 </head>
 <body>
