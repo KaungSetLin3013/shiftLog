@@ -1458,6 +1458,46 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
   .logo{font-size:16px}
   .clock-disp .big{font-size:12px}
 }
+
+/* ---- Account form: password eye, live checks ---- */
+#account-modal .acc-field input{min-height:48px}
+.pw-wrap,.in-wrap{position:relative;display:block;width:100%}
+.pw-wrap input{padding-right:50px}
+.in-wrap input{padding-right:44px}
+.acc-inline .pw-wrap{flex:1;min-width:0}
+.pw-eye{position:absolute;top:0;right:0;bottom:0;width:48px;display:grid;place-items:center;background:none;border:0;border-radius:0 8px 8px 0;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .15s}
+.pw-eye:hover,.pw-eye[aria-pressed="true"]{color:var(--accent)}
+.pw-eye:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;border-radius:8px}
+.pw-eye svg{grid-area:1/1;width:20px;height:20px;transition:opacity .15s ease-out,transform .2s ease-out}
+.pw-eye .i-off{opacity:0;transform:scale(.7)}
+.pw-eye[aria-pressed="true"] .i-on{opacity:0;transform:scale(.7)}
+.pw-eye[aria-pressed="true"] .i-off{opacity:1;transform:none}
+.in-ok{position:absolute;right:14px;top:50%;width:20px;height:20px;margin-top:-10px;color:var(--green);opacity:0;transform:scale(.6);transition:opacity .15s ease-out,transform .2s ease-out;pointer-events:none}
+.in-ok.show{opacity:1;transform:none}
+.acc-field input[aria-invalid="true"]{border-color:var(--red)}
+.acc-fx{display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transition:grid-template-rows .2s ease-out,opacity .2s ease-out,visibility 0s .2s}
+.acc-fx.open{grid-template-rows:1fr;opacity:1;visibility:visible;transition-delay:0s}
+.acc-fx>div{overflow:hidden;min-height:0}
+.acc-fb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;line-height:1.5;color:var(--muted)}
+.acc-fb.err{color:var(--red)}.acc-fb.ok{color:var(--green)}.acc-fb.warn{color:var(--yellow)}
+.acc-fb svg{width:14px;height:14px;flex:none}
+.acc-fb button{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--accent);text-decoration:underline;cursor:pointer;text-align:left}
+.acc-strength{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;min-height:18px}
+.acc-rule{display:inline-flex;align-items:center;gap:6px;color:var(--muted);transition:color .2s}
+.acc-rule::before{content:"";width:14px;height:14px;flex:none;box-sizing:border-box;border-radius:50%;border:1.5px solid currentColor;transition:background-color .2s,border-color .2s}
+.acc-rule.met{color:var(--green)}
+.acc-rule.met::before{background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/10px no-repeat;border-color:var(--green)}
+.acc-slabel{font-weight:700;color:var(--muted)}
+.acc-slabel[data-l="1"]{color:var(--red)}.acc-slabel[data-l="2"]{color:var(--yellow)}.acc-slabel[data-l="3"]{color:var(--accent)}.acc-slabel[data-l="4"]{color:var(--green)}
+.acc-meter{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.acc-meter i{height:4px;border-radius:2px;background:var(--border);transition:background-color .2s ease-out}
+.acc-meter[data-l="1"] i:nth-child(-n+1){background:var(--red)}
+.acc-meter[data-l="2"] i:nth-child(-n+2){background:var(--yellow)}
+.acc-meter[data-l="3"] i:nth-child(-n+3){background:var(--accent)}
+.acc-meter[data-l="4"] i{background:var(--green)}
+@keyframes accShake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.acc-shake{animation:accShake .3s ease-out}
+@media (prefers-reduced-motion:reduce){.acc-fx,.acc-meter i,.pw-eye svg,.in-ok,.acc-rule{transition:none}.acc-shake{animation:none}}
 </style>
 </head>
 <body>
@@ -2089,13 +2129,17 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 
       <form id="acc-form-register" onsubmit="accRegister(event)" style="display:none" novalidate>
         <div class="acc-field"><label for="acc-r-name" data-ai="displayName">Display name</label>
-          <input id="acc-r-name" type="text" autocomplete="name" maxlength="60"></div>
+          <input id="acc-r-name" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="next" maxlength="60"></div>
         <div class="acc-field"><label for="acc-r-email" data-ai="email">Email</label>
-          <input id="acc-r-email" type="email" autocomplete="email" inputmode="email" required></div>
+          <input id="acc-r-email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-describedby="acc-r-email-fb" required>
+          <div class="acc-fx" id="acc-r-email-fx"><div><div class="acc-fb" id="acc-r-email-fb" aria-live="polite"></div></div></div></div>
         <div class="acc-field"><label for="acc-r-pass" data-ai="password">Password</label>
-          <input id="acc-r-pass" type="password" autocomplete="new-password" minlength="6" required></div>
+          <input id="acc-r-pass" type="password" autocomplete="new-password" enterkeyhint="next" minlength="8" aria-describedby="acc-r-rule" required>
+          <div class="acc-strength"><span class="acc-rule" id="acc-r-rule" data-ai="pwRule">At least 8 characters</span><span class="acc-slabel" id="acc-r-slabel" data-l="0" aria-live="polite"></span></div>
+          <div class="acc-meter" id="acc-r-meter" data-l="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
         <div class="acc-field"><label for="acc-r-pass2" data-ai="confirm">Confirm password</label>
-          <input id="acc-r-pass2" type="password" autocomplete="new-password" required></div>
+          <input id="acc-r-pass2" type="password" autocomplete="new-password" enterkeyhint="go" aria-describedby="acc-r-match-fb" required>
+          <div class="acc-fx" id="acc-r-match-fx"><div><div class="acc-fb" id="acc-r-match-fb" aria-live="polite"></div></div></div></div>
         <div class="acc-msg" id="acc-msg-register" role="status"></div>
         <button type="submit" class="btn btn-primary" id="acc-btn-register" style="width:100%;padding:12px" data-ai="createAcc">Create account</button>
       </form>
@@ -4686,7 +4730,7 @@ function syncKey(){return 'sl-cloud-sync-'+(acctUser?acctUser.id:'');}
 
 // ── small i18n table for the account UI (EN / JA) ──
 const AT={
-  en:{account:'Account',login:'Login',register:'Register',email:'Email',password:'Password',confirm:'Confirm password',
+  en:{pwShow:'Show password',pwHide:'Hide password',pwWeak:'Weak',pwFair:'Fair',pwGood:'Good',pwStrong:'Strong',pwRule:'At least 8 characters',pwMatch:'Passwords match',emailInvalid:'Enter a valid email address.',didYou:'Did you mean {e}?',caps:'Caps Lock is on',account:'Account',login:'Login',register:'Register',email:'Email',password:'Password',confirm:'Confirm password',
     displayName:'Display name',forgot:'Forgot password?',createAcc:'Create account',
     loginNote:'Your data stays on this device. Log in to back it up and use it on any device.',
     details:'Account details',save:'Save',since:'Member since',lastLogin:'Last login',uid:'User ID',
@@ -4700,7 +4744,7 @@ const AT={
     resetSent:'Password reset email sent. Check your inbox.',enterEmail:'Enter your email above first.',
     nameSaved:'Name updated ✓',passSaved:'Password updated ✓',setNewPass:'Enter a new password below.',
     confirmDel:'Delete your cloud backup? Data on this device is kept.',cloudDeleted:'Cloud data deleted',loggedOut:'Logged out'},
-  ja:{account:'アカウント',login:'ログイン',register:'新規登録',email:'メールアドレス',password:'パスワード',confirm:'パスワード（確認）',
+  ja:{pwShow:'パスワードを表示',pwHide:'パスワードを隠す',pwWeak:'弱い',pwFair:'普通',pwGood:'良い',pwStrong:'強い',pwRule:'8文字以上',pwMatch:'パスワードが一致しています',emailInvalid:'有効なメールアドレスを入力してください。',didYou:'もしかして {e} ですか？',caps:'Caps Lock がオンです',account:'アカウント',login:'ログイン',register:'新規登録',email:'メールアドレス',password:'パスワード',confirm:'パスワード（確認）',
     displayName:'表示名',forgot:'パスワードを忘れた場合',createAcc:'アカウント作成',
     loginNote:'データはこの端末に保存されます。ログインするとバックアップされ、他の端末でも使えます。',
     details:'アカウント情報',save:'保存',since:'登録日',lastLogin:'最終ログイン',uid:'ユーザーID',
@@ -4714,12 +4758,13 @@ const AT={
     resetSent:'パスワード再設定メールを送信しました。',enterEmail:'先にメールアドレスを入力してください。',
     nameSaved:'名前を更新しました ✓',passSaved:'パスワードを更新しました ✓',setNewPass:'新しいパスワードを入力してください。',
     confirmDel:'クラウドのバックアップを削除しますか？この端末のデータは残ります。',cloudDeleted:'クラウドデータを削除しました',loggedOut:'ログアウトしました'},
-  mm:{account:'အကောင့်',login:'ဝင်ရောက်မည်',register:'စာရင်းသွင်းမည်',email:'အီးမေးလ်',password:'စကားဝှက်',confirm:'စကားဝှက် အတည်ပြုပါ',displayName:'ပြသမည့်အမည်',forgot:'စကားဝှက် မေ့နေပါသလား?',createAcc:'အကောင့်ဖန်တီးမည်',loginNote:'သင့်ဒေတာသည် ဤစက်ထဲတွင်သာ ရှိပါသည်။ ဝင်ရောက်ပါက အရန်သိမ်းပြီး မည်သည့်စက်တွင်မဆို အသုံးပြုနိုင်ပါသည်။',details:'အကောင့်အချက်အလက်',save:'သိမ်းမည်',since:'အဖွဲ့ဝင်ဖြစ်သည့်ရက်',lastLogin:'နောက်ဆုံးဝင်ရောက်ချိန်',uid:'အသုံးပြုသူ ID',cloud:'ကလောက်ဒေတာ',lastSync:'နောက်ဆုံး ထပ်တူကျချိန်',onDevice:'ဤစက်ပေါ်ရှိ ဒေတာ',syncNow:'⟳ ယခု ထပ်တူကျစေမည်',security:'လုံခြုံရေး',newPass:'စကားဝှက်အသစ်',update:'ပြင်မည်',logout:'ထွက်မည်',works:'အလုပ်',shifts:'ဆိုင်း',bills:'ဘီလ်',expenses:'အသုံးစရိတ်',never:'မရှိသေးပါ',configMissing:'config.js ကို ဖွင့်၍မရပါ။ index.html နှင့် တူညီသောနေရာတွင် တင်ပြီး ပြန်လည်ဖွင့်ပါ (သို့မဟုတ် ဘရောက်ဇာ cache ကို ရှင်းပါ)။',notConfigured:'ကလောက်ဝင်ရောက်မှုကို မသတ်မှတ်ရသေးပါ — config.js တွင် Supabase URL နှင့် anon key ကို ထည့်ပါ။',offline:'ကလောက်ဝန်ဆောင်မှုကို မရနိုင်ပါ (အင်တာနက်ပြတ်နေပါသလား?)',fillAll:'အီးမေးလ်နှင့် စကားဝှက် ဖြည့်ပါ။',passShort:'စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။',passMismatch:'စကားဝှက်များ မတူညီပါ။',checkEmail:'အကောင့်ဖန်တီးပြီးပါပြီ! အီးမေးလ်ကို စစ်ပြီး အတည်ပြုကာ ဝင်ရောက်ပါ။',alreadyReg:'ဤအီးမေးလ်ကို စာရင်းသွင်းပြီးသားဖြစ်သည် — ဝင်ရောက်ကြည့်ပါ။',resetSent:'စကားဝှက်ပြန်လည်သတ်မှတ်ရန် အီးမေးလ် ပို့ပြီးပါပြီ။ ဝင်စာဘူးကို စစ်ပါ။',enterEmail:'အပေါ်တွင် အီးမေးလ်ကို အရင်ထည့်ပါ။',nameSaved:'အမည် ပြင်ပြီးပါပြီ ✓',passSaved:'စကားဝှက် ပြင်ပြီးပါပြီ ✓',setNewPass:'အောက်တွင် စကားဝှက်အသစ် ထည့်ပါ။',confirmDel:'သင့်ကလောက်အရန်ဖိုင်ကို ဖျက်မလား? ဤစက်ပေါ်ရှိ ဒေတာကို ဆက်ထားပါမည်။',cloudDeleted:'ကလောက်ဒေတာ ဖျက်ပြီးပါပြီ',loggedOut:'ထွက်ပြီးပါပြီ'}
+  mm:{pwShow:'စကားဝှက်ကို ပြမည်',pwHide:'စကားဝှက်ကို ဖျောက်မည်',pwWeak:'အားနည်း',pwFair:'ပျမ်းမျှ',pwGood:'ကောင်း',pwStrong:'ခိုင်မာ',pwRule:'အနည်းဆုံး ၈ လုံး',pwMatch:'စကားဝှက်များ ကိုက်ညီပါသည်',emailInvalid:'မှန်ကန်သော အီးမေးလ်လိပ်စာ ထည့်ပါ။',didYou:'{e} ကို ဆိုလိုပါသလား?',caps:'Caps Lock ဖွင့်ထားသည်',account:'အကောင့်',login:'ဝင်ရောက်မည်',register:'စာရင်းသွင်းမည်',email:'အီးမေးလ်',password:'စကားဝှက်',confirm:'စကားဝှက် အတည်ပြုပါ',displayName:'ပြသမည့်အမည်',forgot:'စကားဝှက် မေ့နေပါသလား?',createAcc:'အကောင့်ဖန်တီးမည်',loginNote:'သင့်ဒေတာသည် ဤစက်ထဲတွင်သာ ရှိပါသည်။ ဝင်ရောက်ပါက အရန်သိမ်းပြီး မည်သည့်စက်တွင်မဆို အသုံးပြုနိုင်ပါသည်။',details:'အကောင့်အချက်အလက်',save:'သိမ်းမည်',since:'အဖွဲ့ဝင်ဖြစ်သည့်ရက်',lastLogin:'နောက်ဆုံးဝင်ရောက်ချိန်',uid:'အသုံးပြုသူ ID',cloud:'ကလောက်ဒေတာ',lastSync:'နောက်ဆုံး ထပ်တူကျချိန်',onDevice:'ဤစက်ပေါ်ရှိ ဒေတာ',syncNow:'⟳ ယခု ထပ်တူကျစေမည်',security:'လုံခြုံရေး',newPass:'စကားဝှက်အသစ်',update:'ပြင်မည်',logout:'ထွက်မည်',works:'အလုပ်',shifts:'ဆိုင်း',bills:'ဘီလ်',expenses:'အသုံးစရိတ်',never:'မရှိသေးပါ',configMissing:'config.js ကို ဖွင့်၍မရပါ။ index.html နှင့် တူညီသောနေရာတွင် တင်ပြီး ပြန်လည်ဖွင့်ပါ (သို့မဟုတ် ဘရောက်ဇာ cache ကို ရှင်းပါ)။',notConfigured:'ကလောက်ဝင်ရောက်မှုကို မသတ်မှတ်ရသေးပါ — config.js တွင် Supabase URL နှင့် anon key ကို ထည့်ပါ။',offline:'ကလောက်ဝန်ဆောင်မှုကို မရနိုင်ပါ (အင်တာနက်ပြတ်နေပါသလား?)',fillAll:'အီးမေးလ်နှင့် စကားဝှက် ဖြည့်ပါ။',passShort:'စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။',passMismatch:'စကားဝှက်များ မတူညီပါ။',checkEmail:'အကောင့်ဖန်တီးပြီးပါပြီ! အီးမေးလ်ကို စစ်ပြီး အတည်ပြုကာ ဝင်ရောက်ပါ။',alreadyReg:'ဤအီးမေးလ်ကို စာရင်းသွင်းပြီးသားဖြစ်သည် — ဝင်ရောက်ကြည့်ပါ။',resetSent:'စကားဝှက်ပြန်လည်သတ်မှတ်ရန် အီးမေးလ် ပို့ပြီးပါပြီ။ ဝင်စာဘူးကို စစ်ပါ။',enterEmail:'အပေါ်တွင် အီးမေးလ်ကို အရင်ထည့်ပါ။',nameSaved:'အမည် ပြင်ပြီးပါပြီ ✓',passSaved:'စကားဝှက် ပြင်ပြီးပါပြီ ✓',setNewPass:'အောက်တွင် စကားဝှက်အသစ် ထည့်ပါ။',confirmDel:'သင့်ကလောက်အရန်ဖိုင်ကို ဖျက်မလား? ဤစက်ပေါ်ရှိ ဒေတာကို ဆက်ထားပါမည်။',cloudDeleted:'ကလောက်ဒေတာ ဖျက်ပြီးပါပြီ',loggedOut:'ထွက်ပြီးပါပြီ'}
 };
 function at(k){return ((AT[lang]||AT.en)[k])||AT.en[k]||k;}
 function applyAccountLang(){
   document.querySelectorAll('#account-modal [data-ai]').forEach(el=>{el.textContent=at(el.dataset.ai);});
   updateAccountUI();
+  if(window.regUiRefresh)regUiRefresh();
 }
 
 async function initAuth(){
@@ -4827,7 +4872,7 @@ function openAccount(){
   document.getElementById('account-modal').classList.add('open');
   if(!acctUser)setTimeout(()=>{const el=document.getElementById('acc-l-email');if(el&&document.getElementById('acc-form-login').style.display!=='none')el.focus();},60);
 }
-function closeAccount(){document.getElementById('account-modal').classList.remove('open');}
+function closeAccount(){document.getElementById('account-modal').classList.remove('open');if(window.regUiReset)regUiReset();}
 function accTab(which){
   const login=which==='login';
   document.getElementById('acc-form-login').style.display=login?'block':'none';
@@ -4835,6 +4880,7 @@ function accTab(which){
   document.getElementById('acc-tab-login').classList.toggle('active',login);
   document.getElementById('acc-tab-register').classList.toggle('active',!login);
   ['acc-msg-login','acc-msg-register'].forEach(id=>accMsg(id,''));
+  if(window.regUiReset)regUiReset();
 }
 function accMsg(id,text,kind){
   const el=document.getElementById(id);if(!el)return;
@@ -4880,7 +4926,7 @@ async function accRegister(ev){
   if(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0){
     accMsg('acc-msg-register',at('alreadyReg'),'err');return;
   }
-  document.getElementById('acc-r-pass').value='';document.getElementById('acc-r-pass2').value='';
+  document.getElementById('acc-r-pass').value='';document.getElementById('acc-r-pass2').value='';if(window.regUiRefresh)regUiRefresh();
   if(!data.session){accMsg('acc-msg-register',at('checkEmail'),'ok');}   // email confirmation is on
 }
 
@@ -5992,6 +6038,157 @@ function closeBreakDial(apply){
     return r;
   };
   swap();
+})();
+</script>
+
+<script>
+/* Account form interactions: show/hide password, live email + password checks */
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  var ICO_EYE='<svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'+
+    '<svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  var ICO_OK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  var FB_ICO={ok:'M20 6 9 17l-5-5',err:'M18 6 6 18M6 6l12 12',warn:'M12 8v5M12 17h.01'};
+  function $(id){return document.getElementById(id);}
+  var T={email:false,pass:false,pass2:false}, submitted=false;
+  var COMMON=['password','12345678','123456789','1234567890','qwertyuiop','11111111','iloveyou','password1','abc12345','00000000','qwerty123','admin123','letmein1','password123','12341234','asdfghjkl'];
+  var DOM_FIX={'gmial.com':'gmail.com','gmai.com':'gmail.com','gmail.con':'gmail.com','gmail.co':'gmail.com','gmil.com':'gmail.com','gamil.com':'gmail.com','gmail.cm':'gmail.com','gmaill.com':'gmail.com',
+    'yaho.com':'yahoo.com','yahoo.con':'yahoo.com','yahho.com':'yahoo.com','hotmial.com':'hotmail.com','hotmail.con':'hotmail.com','hotmal.com':'hotmail.com',
+    'outlok.com':'outlook.com','outlook.con':'outlook.com','iclould.com':'icloud.com','icloud.con':'icloud.com','icoud.com':'icloud.com'};
+
+  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);}
+  function suggest(v){var i=v.lastIndexOf('@');if(i<1)return null;var d=v.slice(i+1).toLowerCase();return DOM_FIX[d]?v.slice(0,i+1)+DOM_FIX[d]:null;}
+  function strength(p){
+    if(!p)return 0;
+    var kinds=(/[a-z]/.test(p)?1:0)+(/[A-Z]/.test(p)?1:0)+(/\d/.test(p)?1:0)+(/[^A-Za-z0-9]/.test(p)?1:0);
+    var pts=(p.length>=8?1:0)+(p.length>=12?1:0)+(kinds>=2?1:0)+(kinds>=3?1:0);
+    if(p.length<8||COMMON.indexOf(p.toLowerCase())>-1||/^(.)\1+$/.test(p))return 1;
+    return Math.max(1,pts);
+  }
+
+  /* feedback line that slides open/closed under a field */
+  function fb(id,kind,text,btnText,onBtn){
+    var box=$(id),fx=$(id.replace(/-fb$/,'-fx'));if(!box||!fx)return;
+    if(!kind){fx.classList.remove('open');return;}
+    box.className='acc-fb '+kind;box.textContent='';
+    var svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');
+    svg.setAttribute('stroke-width','2.5');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');svg.setAttribute('aria-hidden','true');
+    var path=document.createElementNS(NS,'path');path.setAttribute('d',FB_ICO[kind]);svg.appendChild(path);box.appendChild(svg);
+    if(btnText){
+      var b=document.createElement('button');b.type='button';b.textContent=text;b.addEventListener('click',onBtn);box.appendChild(b);
+    }else{var sp=document.createElement('span');sp.textContent=text;box.appendChild(sp);}
+    fx.classList.add('open');
+  }
+  function setInvalid(el,bad){if(bad)el.setAttribute('aria-invalid','true');else el.removeAttribute('aria-invalid');}
+
+  /* ---------- show / hide password + caps lock ---------- */
+  function initPw(inp){
+    if(!inp||(inp.parentNode.classList&&inp.parentNode.classList.contains('pw-wrap')))return;
+    var w=document.createElement('div');w.className='pw-wrap';
+    inp.parentNode.insertBefore(w,inp);w.appendChild(inp);
+    var b=document.createElement('button');b.type='button';b.className='pw-eye';b.innerHTML=ICO_EYE;b.setAttribute('aria-pressed','false');w.appendChild(b);
+    b.addEventListener('mousedown',function(e){e.preventDefault();});          // keep the keyboard open on phones
+    b.addEventListener('click',function(){
+      var show=inp.type==='password',s=inp.selectionStart,e=inp.selectionEnd;
+      inp.type=show?'text':'password';b.setAttribute('aria-pressed',show?'true':'false');labelEye(b,show);
+      try{inp.setSelectionRange(s,e);}catch(_){}
+    });
+    labelEye(b,false);
+    var host=inp.closest('.acc-inline')||w;
+    var fx=document.createElement('div');fx.className='acc-fx';fx.id='caps-'+inp.id+'-fx';
+    fx.innerHTML='<div><div class="acc-fb warn" id="caps-'+inp.id+'-fb" aria-live="polite"></div></div>';
+    host.parentNode.insertBefore(fx,host.nextSibling);
+    function caps(e){
+      if(!e.getModifierState)return;
+      var on=e.getModifierState('CapsLock');
+      fb('caps-'+inp.id+'-fb',on?'warn':null,at('caps'));
+    }
+    inp.addEventListener('keydown',caps);inp.addEventListener('keyup',caps);
+    inp.addEventListener('blur',function(){fb('caps-'+inp.id+'-fb',null);});
+  }
+  function labelEye(b,shown){var t=at(shown?'pwHide':'pwShow');b.setAttribute('aria-label',t);b.title=t;}
+
+  /* ---------- register: email ---------- */
+  function checkEmail(){
+    var el=$('acc-r-email'),v=el.value.trim(),ok=validEmail(v),ico=$('acc-r-email-ok');
+    if(ico)ico.classList.toggle('show',ok);
+    var show=T.email||submitted;
+    if(!show){fb('acc-r-email-fb',null);setInvalid(el,false);return ok;}
+    if(ok){
+      setInvalid(el,false);
+      var sug=suggest(v);
+      if(sug)fb('acc-r-email-fb','warn',at('didYou').replace('{e}',sug),true,function(){el.value=sug;checkEmail();el.focus();});
+      else fb('acc-r-email-fb',null);
+    }else{setInvalid(el,true);fb('acc-r-email-fb','err',at('emailInvalid'));}
+    return ok;
+  }
+
+  /* ---------- register: password strength + match ---------- */
+  function checkPass(){
+    var el=$('acc-r-pass'),v=el.value,l=strength(v);
+    $('acc-r-meter').setAttribute('data-l',l);
+    var lab=$('acc-r-slabel');lab.setAttribute('data-l',l);
+    lab.textContent=l?at(['','pwWeak','pwFair','pwGood','pwStrong'][l]):'';
+    $('acc-r-rule').classList.toggle('met',v.length>=8);
+    if(v.length>=8)setInvalid(el,false);
+    else if(submitted||(T.pass&&v))setInvalid(el,true);
+    checkMatch();
+    return v.length>=8;
+  }
+  function checkMatch(){
+    var a=$('acc-r-pass').value,el=$('acc-r-pass2'),b=el.value;
+    if(!b&&!submitted){fb('acc-r-match-fb',null);setInvalid(el,false);return false;}
+    if(b&&a===b){setInvalid(el,false);fb('acc-r-match-fb','ok',at('pwMatch'));return true;}
+    if(submitted||T.pass2||b.length>=a.length){setInvalid(el,true);fb('acc-r-match-fb','err',at('passMismatch'));}
+    else{setInvalid(el,false);fb('acc-r-match-fb',null);}
+    return false;
+  }
+
+  function shake(el){el.classList.remove('acc-shake');void el.offsetWidth;el.classList.add('acc-shake');}
+  function validateAll(){
+    submitted=true;
+    var okE=checkEmail(),okP=checkPass(),okM=checkMatch();
+    var first=!okE?$('acc-r-email'):(!okP?$('acc-r-pass'):(!okM?$('acc-r-pass2'):null));
+    if(first){first.focus();shake(first);}
+    return !!first;
+  }
+
+  /* ---------- reset / refresh (called from tab switch, close, language change, success) ---------- */
+  window.regUiReset=function(){
+    document.querySelectorAll('#account-modal .pw-eye').forEach(function(b){
+      var inp=b.parentNode.querySelector('input');
+      if(inp&&inp.type!=='password'){inp.type='password';}
+      b.setAttribute('aria-pressed','false');labelEye(b,false);
+    });
+  };
+  window.regUiRefresh=function(){
+    if(!$('acc-r-pass'))return;
+    var ok=$('acc-r-pass').value===''&&$('acc-r-pass2').value==='';
+    if(ok){T.pass=false;T.pass2=false;submitted=false;}
+    checkEmail();checkPass();
+    document.querySelectorAll('#account-modal .pw-eye').forEach(function(b){labelEye(b,b.getAttribute('aria-pressed')==='true');});
+  };
+
+  function init(){
+    if(!$('acc-r-pass'))return;
+    ['acc-l-pass','acc-r-pass','acc-r-pass2','acc-newpass'].forEach(function(id){initPw($(id));});
+    var em=$('acc-r-email');
+    var w=document.createElement('div');w.className='in-wrap';em.parentNode.insertBefore(w,em);w.appendChild(em);
+    var ok=document.createElement('span');ok.className='in-ok';ok.id='acc-r-email-ok';ok.innerHTML=ICO_OK;w.appendChild(ok);
+    em.addEventListener('input',function(){checkEmail();});
+    em.addEventListener('blur',function(){var t=em.value.trim();if(em.value!==t)em.value=t;if(t)T.email=true;checkEmail();});
+    $('acc-r-pass').addEventListener('input',checkPass);
+    $('acc-r-pass').addEventListener('blur',function(){if($('acc-r-pass').value)T.pass=true;checkPass();});
+    $('acc-r-pass2').addEventListener('input',checkMatch);
+    $('acc-r-pass2').addEventListener('blur',function(){if($('acc-r-pass2').value)T.pass2=true;checkMatch();});
+    /* stop an invalid form from reaching the sign-up code; show the problem next to the field instead */
+    $('acc-out').addEventListener('submit',function(ev){
+      if(ev.target.id!=='acc-form-register')return;
+      if(validateAll()){ev.preventDefault();ev.stopPropagation();}
+    },true);
+    regUiRefresh();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 </body>
