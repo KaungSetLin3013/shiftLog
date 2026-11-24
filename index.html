@@ -1434,6 +1434,25 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
   #page-shifts>.panel:not(.is-multi)>.add-shift-btn-row{grid-column:3;order:1}
   #page-shifts>.panel:not(.is-multi)>.add-shift-btn-row .btn{min-width:170px}
 }
+
+/* ---- Mobile: keep the Settings gear always visible ---- */
+@media(max-width:640px){
+  header{min-width:0;gap:6px}
+  #acc-profile{flex-shrink:1;min-width:0}
+  #acc-avatar-wrap{min-width:0;padding-right:9px}
+  #acc-user-short{max-width:64px!important}
+  .logo{min-width:0;flex-shrink:1;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .header-right{flex:0 0 auto;min-width:0;gap:6px;margin-left:auto}
+  .user-count{display:none!important}
+  .clock-disp{min-width:0;white-space:nowrap}
+  .clock-disp .small{display:none}
+  .header-right .icon-btn{width:44px;height:44px;min-width:44px;flex:0 0 44px;font-size:20px;color:var(--text)}
+}
+@media(max-width:380px){
+  #acc-signin-label{display:none}
+  #acc-avatar-wrap{padding:5px}
+  .clock-disp{display:none}
+}
 </style>
 </head>
 <body>
