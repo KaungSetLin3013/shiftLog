@@ -4958,6 +4958,7 @@ function toRow(store,o,uid){
     known.add(k);let v=o[k];
     if(v===undefined||v===null||(typeof v==='number'&&Number.isNaN(v)))v=null;
     else if(ty==='ts'){const d=new Date(v);v=isNaN(d.getTime())?null:d.toISOString();}
+    if(c==='lang'&&v==='mm')v='my';   // database stores the ISO code 'my' for Myanmar
     r[c]=v;
   }
   const extra={};
@@ -4970,6 +4971,7 @@ function fromRow(store,r){
   for(const [k,c,ty] of COLS[store]){
     let v=r[c];if(v===null||v===undefined)continue;
     if(ty==='ts')v=Date.parse(v);
+    if(c==='lang'&&v==='my')v='mm';   // app uses 'mm' internally
     o[k]=v;
   }
   Object.assign(o,cleanExtra(r.extra||{},null));
