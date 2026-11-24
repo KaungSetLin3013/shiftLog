@@ -165,6 +165,11 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .clock-disp{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;text-align:right;}
 .clock-disp .big{font-size:17px;color:var(--text);display:block;}
 .clock-disp .small{font-size:11px;color:var(--muted);}
+.user-count{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface2);font-size:12px;color:var(--muted);white-space:nowrap;}
+.user-count[hidden]{display:none;}
+.user-count svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+.user-count b{color:var(--text);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-weight:500;}
+@media(max-width:640px){.user-count{padding:4px 8px;font-size:11px;}.user-count #user-count-lbl{display:none;}}
 .icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--muted);font-size:17px;}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
 
@@ -1451,6 +1456,10 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     </div>
     <div class="logo">Shift<span>Log</span></div>
     <div class="header-right">
+      <div class="user-count" id="user-count" hidden title="Registered users" aria-live="polite">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <b id="user-count-num">0</b><span id="user-count-lbl">Users</span>
+      </div>
       <div class="clock-disp">
         <span class="small" id="date-str"></span>
         <span class="big"   id="time-str"></span>
@@ -2442,7 +2451,7 @@ function genId(){return Date.now().toString(36)+Math.random().toString(36).slice
 const T={
   en:{
     'splash':'Loading local database…',
-    'offline-badge':'Saved Locally',
+    'offline-badge':'Saved Locally','user-count-lbl':'Users',
     'lbl-create-work':'Create New Work','lbl-work-name':'Work Name','lbl-hourly-rate':'Hourly Rate','lbl-pay-timing':'Payday','lbl-pay-day':'Pay day','lbl-edit-pay-timing':'Payday','lbl-edit-pay-day':'Pay day','lbl-payday-title':'Payday',
     'lbl-transport':'Transport / Day','lbl-color':'Color',
     'lbl-your-works':'Your Works','lbl-add-shift':'+ Add Shift',
@@ -2496,7 +2505,7 @@ const T={
   },
   ja:{
     'splash':'ローカルデータベースを読み込み中…',
-    'offline-badge':'ローカル保存',
+    'offline-badge':'ローカル保存','user-count-lbl':'ユーザー',
     'lbl-create-work':'新しい仕事を作成','lbl-work-name':'仕事名','lbl-hourly-rate':'時給','lbl-pay-timing':'給料日','lbl-pay-day':'支払日','lbl-edit-pay-timing':'給料日','lbl-edit-pay-day':'支払日','lbl-payday-title':'給料日',
     'lbl-transport':'交通費（1日）','lbl-color':'カラー',
     'lbl-your-works':'登録された仕事','lbl-add-shift':'+ シフトを追加',
@@ -2550,7 +2559,7 @@ const T={
   },
   mm:{
     'splash':'ဒေတာဘေ့စ်ကို ဖွင့်နေသည်…',
-    'offline-badge':'စက်ထဲတွင် သိမ်းထားသည်',
+    'offline-badge':'စက်ထဲတွင် သိမ်းထားသည်','user-count-lbl':'အသုံးပြုသူ',
     'lbl-create-work':'အလုပ်အသစ် ဖန်တီးမည်',
     'lbl-work-name':'အလုပ်အမည်',
     'lbl-hourly-rate':'တစ်နာရီလုပ်ခ',
@@ -2739,7 +2748,7 @@ function applyLang(rerender){
     const tag=el.tagName.toLowerCase();
     if(tag==='button'||tag==='label'||(tag==='div'&&!el.querySelector('input,select')))
       el.textContent=t(key);
-    else if(tag==='span') el.textContent=t(key);
+    else if(tag==='span'||tag==='th'||tag==='a') el.textContent=t(key);
   });
   // Special elements
   const offlineBadge=document.getElementById('offline-badge');
@@ -4697,6 +4706,29 @@ async function initAuth(){
   });
   // Defer: calling Supabase from inside this callback can deadlock
   sb.auth.onAuthStateChange((event,session)=>{setTimeout(()=>handleAuthChange(event,session),0);});
+  loadUserCount();
+}
+
+// ── Registered-user counter (needs the get_user_count() SQL function, see user_count.sql) ──
+let userCount=null;
+function renderUserCount(){
+  const box=document.getElementById('user-count'),num=document.getElementById('user-count-num');
+  if(!box||!num)return;
+  if(userCount===null){box.hidden=true;return;}
+  num.textContent=userCount.toLocaleString(lang==='ja'?'ja-JP':'en-US');
+  box.title=L3('登録ユーザー数','Registered users','မှတ်ပုံတင်ထားသော အသုံးပြုသူများ');
+  box.hidden=false;
+}
+async function loadUserCount(){
+  if(!sb)return;
+  try{
+    const {data,error}=await sb.rpc('get_user_count');
+    if(error)throw error;
+    const n=Number(data);
+    if(!Number.isFinite(n)||n<0)throw new Error('bad count');
+    userCount=Math.floor(n);
+  }catch(e){userCount=null;}   // function missing / offline: the badge just stays hidden
+  renderUserCount();
 }
 
 async function handleAuthChange(event,session){
@@ -4716,6 +4748,7 @@ async function handleAuthChange(event,session){
   if(lastAuthUid===acctUser.id)return;   // token refresh / tab refocus — already reconciled
   lastAuthUid=acctUser.id;
   await reconcileCloud();
+  loadUserCount();
 }
 
 // ── UI ──
@@ -5888,6 +5921,51 @@ function closeBreakDial(apply){
     }
   };
   if(_setMQ.addEventListener)_setMQ.addEventListener('change',onChange);else _setMQ.addListener(onChange);
+})();
+</script>
+<script>
+/* Static page text without translation keys (JA / MM). English stays the source text; JA or MM is swapped in/out. */
+(function(){
+  var TX={"Add": {"mm": "ထည့်မည်", "ja": "追加"}, "+ Add": {"mm": "+ ထည့်မည်", "ja": "+ 追加"}, "Add Shift": {"mm": "ဆိုင်းထည့်မည်", "ja": "シフトを追加"}, "No break": {"mm": "နားချိန်မရှိ", "ja": "休憩なし"}, "15 min": {"mm": "15 မိနစ်", "ja": "15分"}, "30 min": {"mm": "30 မိနစ်", "ja": "30分"}, "45 min": {"mm": "45 မိနစ်", "ja": "45分"}, "1 hour": {"mm": "1 နာရီ", "ja": "1時間"}, "1.5 hours": {"mm": "1.5 နာရီ", "ja": "1.5時間"}, "2 hours": {"mm": "2 နာရီ", "ja": "2時間"}, "Tax Calculator": {"mm": "အခွန်တွက်ချက်ကိရိယာ", "ja": "税金計算"}, "Income Tax Rate": {"mm": "ဝင်ငွေခွန်နှုန်း", "ja": "所得税率"}, "Social Insurance": {"mm": "လူမှုဖူလုံရေးအာမခံ", "ja": "社会保険"}, "Deductions": {"mm": "နုတ်ယူငွေများ", "ja": "控除"}, "Calculate For": {"mm": "တွက်ချက်မည့်ကာလ", "ja": "計算期間"}, "All Time": {"mm": "စုစုပေါင်း", "ja": "累計"}, "This Month": {"mm": "ဤလ", "ja": "今月"}, "This Year": {"mm": "ဤနှစ်", "ja": "今年"}, "Custom": {"mm": "စိတ်ကြိုက်", "ja": "カスタム"}, "From": {"mm": "မှ", "ja": "開始"}, "To": {"mm": "အထိ", "ja": "終了"}, "Tax Summary": {"mm": "အခွန်အနှစ်ချုပ်", "ja": "税金サマリー"}, "Gross Income": {"mm": "စုစုပေါင်းဝင်ငွေ", "ja": "総収入"}, "Total Tax": {"mm": "အခွန်စုစုပေါင်း", "ja": "税金合計"}, "Net (Take-Home)": {"mm": "အသားတင် (လက်ထဲရောက်ငွေ)", "ja": "手取り"}, "Tax by Work": {"mm": "အလုပ်အလိုက် အခွန်", "ja": "仕事別の税金"}, "Gross": {"mm": "စုစုပေါင်း (အခွန်မနုတ်မီ)", "ja": "総額"}, "Tax": {"mm": "အခွန်", "ja": "税金"}, "Net": {"mm": "အသားတင်", "ja": "手取り"}, "Total Income Summary": {"mm": "ဝင်ငွေစုစုပေါင်း အနှစ်ချုပ်", "ja": "収入サマリー"}, "Period": {"mm": "ကာလ", "ja": "期間"}, "Last Month": {"mm": "ပြီးခဲ့သောလ", "ja": "先月"}, "Custom Month": {"mm": "လရွေးမည်", "ja": "月を指定"}, "Month": {"mm": "လ", "ja": "月"}, "Year": {"mm": "နှစ်", "ja": "年"}, "Filter by Work": {"mm": "အလုပ်အလိုက် စစ်ထုတ်ရန်", "ja": "仕事で絞り込み"}, "Tax rate is set in Settings (⚙). Applied per work when monthly wages exceed 70,000.": {"mm": "အခွန်နှုန်းကို ဆက်တင် (⚙) တွင် သတ်မှတ်ပါသည်။ လစဉ်လုပ်ခ 70,000 ကျော်လျှင် အလုပ်တစ်ခုချင်းစီအလိုက် ကောက်ခံပါသည်။", "ja": "所得税率は設定（⚙）で指定します。月給が70,000を超えた場合に、仕事ごとに適用されます。"}, "Bills (period)": {"mm": "ဘီလ် (ကာလအတွင်း)", "ja": "請求書（期間）"}, "Expenses (period)": {"mm": "အသုံးစရိတ် (ကာလအတွင်း)", "ja": "支出（期間）"}, "Final Take-Home": {"mm": "နောက်ဆုံး လက်ထဲရောက်ငွေ", "ja": "最終手取り"}, "after tax & bills": {"mm": "အခွန်နှင့် ဘီလ် နုတ်ပြီး", "ja": "税金・請求書控除後"}, "Breakdown": {"mm": "အသေးစိတ်ခွဲခြမ်းချက်", "ja": "内訳"}, "Bills Applied": {"mm": "ထည့်သွင်းထားသော ဘီလ်များ", "ja": "適用された請求書"}, "Expenses": {"mm": "အသုံးစရိတ်", "ja": "支出"}, "Monthly Bills": {"mm": "လစဉ်ဘီလ်များ", "ja": "月々の請求書"}, "Bill Name": {"mm": "ဘီလ်အမည်", "ja": "請求書名"}, "Amount / Month": {"mm": "ပမာဏ / လ", "ja": "金額／月"}, "Category": {"mm": "အမျိုးအစား", "ja": "カテゴリ"}, "Total / Month": {"mm": "စုစုပေါင်း / လ", "ja": "月合計"}, "Total / Year": {"mm": "စုစုပေါင်း / နှစ်", "ja": "年合計"}, "Choose a setting on the left to see its options.": {"mm": "ရွေးချယ်စရာများကို ကြည့်ရန် ဘယ်ဘက်မှ ဆက်တင်တစ်ခုကို ရွေးပါ။", "ja": "左から設定を選ぶと、オプションが表示されます。"}, "Break time": {"mm": "နားချိန်", "ja": "休憩時間"}, "Full circle = 1 hr · locks every 5 min": {"mm": "တစ်ပတ်ပြည့် = ၁ နာရီ · ၅ မိနစ်စီ လော့ခ်ကျသည်", "ja": "1周＝1時間・5分ごとにロック"}, "Set": {"mm": "သတ်မှတ်မည်", "ja": "決定"}, "Work": {"mm": "အလုပ်", "ja": "仕事"}, "Shifts": {"mm": "ဆိုင်းများ", "ja": "シフト"}, "Hours": {"mm": "နာရီ", "ja": "時間"}, "Wages": {"mm": "လုပ်ခ", "ja": "給与"}, "Transport": {"mm": "ခရီးစရိတ်", "ja": "交通費"}, "Total": {"mm": "စုစုပေါင်း", "ja": "合計"}, "🏠 Housing": {"mm": "🏠 အိမ်လခ", "ja": "🏠 家賃"}, "⚡ Electric": {"mm": "⚡ မီးဖိုး", "ja": "⚡ 電気代"}, "🔥 Gas": {"mm": "🔥 ဂတ်စ်ခ", "ja": "🔥 ガス代"}, "💧 Water": {"mm": "💧 ရေခ", "ja": "💧 水道代"}, "🌐 Internet": {"mm": "🌐 အင်တာနက်", "ja": "🌐 インターネット"}, "📱 Phone": {"mm": "📱 ဖုန်းဘီလ်", "ja": "📱 携帯電話"}, "🛡 Insurance": {"mm": "🛡 အာမခံ", "ja": "🛡 保険"}, "📦 Other": {"mm": "📦 အခြား", "ja": "📦 その他"}, "January": {"mm": "ဇန်နဝါရီ", "ja": "1月"}, "February": {"mm": "ဖေဖော်ဝါရီ", "ja": "2月"}, "March": {"mm": "မတ်", "ja": "3月"}, "April": {"mm": "ဧပြီ", "ja": "4月"}, "May": {"mm": "မေ", "ja": "5月"}, "June": {"mm": "ဇွန်", "ja": "6月"}, "July": {"mm": "ဇူလိုင်", "ja": "7月"}, "August": {"mm": "ဩဂုတ်", "ja": "8月"}, "September": {"mm": "စက်တင်ဘာ", "ja": "9月"}, "October": {"mm": "အောက်တိုဘာ", "ja": "10月"}, "November": {"mm": "နိုဝင်ဘာ", "ja": "11月"}, "December": {"mm": "ဒီဇင်ဘာ", "ja": "12月"}}, AT_={"Login / Account": {"mm": "ဝင်ရောက်ရန် / အကောင့်", "ja": "ログイン／アカウント"}, "Login or account": {"mm": "ဝင်ရောက်ရန် သို့မဟုတ် အကောင့်", "ja": "ログインまたはアカウント"}, "Settings": {"mm": "ဆက်တင်များ", "ja": "設定"}, "e.g. Barista…": {"mm": "ဥပမာ - ဘားရစ်စတာ…", "ja": "例：カフェ店員…"}, "Previous month": {"mm": "ယခင်လ", "ja": "前の月"}, "Next month": {"mm": "နောက်လ", "ja": "次の月"}, "Period": {"mm": "ကာလ", "ja": "期間"}, "Close": {"mm": "ပိတ်မည်", "ja": "閉じる"}, "Monthly Bills": {"mm": "လစဉ်ဘီလ်များ", "ja": "月々の請求書"}, "Dark": {"mm": "အမှောင်", "ja": "ダーク"}, "Light": {"mm": "အလင်း", "ja": "ライト"}, "e.g. Rent, Electric…": {"mm": "ဥပမာ - အိမ်လခ၊ မီးဖိုး…", "ja": "例：家賃、電気代…"}, "Export backup": {"mm": "အရန်ဖိုင် ထုတ်မည်", "ja": "バックアップを出力"}, "Import backup": {"mm": "အရန်ဖိုင် ပြန်သွင်းမည်", "ja": "バックアップを読込"}, "Export CSV": {"mm": "CSV ထုတ်မည်", "ja": "CSV 出力"}, "Delete all data": {"mm": "ဒေတာအားလုံး ဖျက်မည်", "ja": "全データ削除"}, "Break minutes": {"mm": "နားမိနစ်", "ja": "休憩（分）"}}, items=[];
+  var has=function(o,k){return Object.prototype.hasOwnProperty.call(o,k);};
+  var skip={SCRIPT:1,STYLE:1,NOSCRIPT:1};
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n;
+  while((n=w.nextNode())){
+    var p=n.parentElement;if(!p||skip[p.tagName]||p.closest('#sd-credits'))continue;
+    var raw=n.textContent,tr=raw.replace(/\s+/g,' ').trim();
+    if(has(TX,tr))items.push({node:n,en:raw,ja:raw.replace(tr,TX[tr].ja),mm:raw.replace(tr,TX[tr].mm)});
+  }
+  document.querySelectorAll('[title],[aria-label],[placeholder]').forEach(function(el){
+    ['title','aria-label','placeholder'].forEach(function(a){
+      var v=el.getAttribute(a);
+      if(v&&has(AT_,v))items.push({el:el,attr:a,en:v,ja:AT_[v].ja,mm:AT_[v].mm});
+    });
+  });
+  function swap(){
+    items.forEach(function(i){
+      var target=lang==='mm'?i.mm:(lang==='ja'?i.ja:i.en),cur;
+      if(i.node){
+        if(!i.node.isConnected)return;
+        cur=i.node.textContent;
+        if(cur!==target&&(cur===i.en||cur===i.ja||cur===i.mm))i.node.textContent=target;
+      }else{
+        cur=i.el.getAttribute(i.attr);
+        if(cur!==target&&(cur===i.en||cur===i.ja||cur===i.mm))i.el.setAttribute(i.attr,target);
+      }
+    });
+  }
+  var orig=applyLang;
+  window.applyLang=applyLang=function(rerender){
+    var r=orig.apply(this,arguments);
+    swap();
+    if(rerender){
+      ['renderMiniCal','renderBills','renderExpCats','renderExpenses','recalcSummary','recalcTax','tick','renderUserCount'].forEach(function(f){
+        try{if(typeof window[f]==='function')window[f]();}catch(e){}
+      });
+    }
+    return r;
+  };
+  swap();
 })();
 </script>
 </body>
