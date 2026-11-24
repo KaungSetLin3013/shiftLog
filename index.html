@@ -17,7 +17,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --- Fonts (SIL Open Font License 1.1, via Google Fonts) ---
-Syne by Bonjour Monde; JetBrains Mono by JetBrains.
+Syne by Bonjour Monde; JetBrains Mono by JetBrains; Noto Sans Myanmar by Google.
 --- Libraries loaded from CDN ---
 supabase-js (MIT, Supabase).
 -->
@@ -28,7 +28,7 @@ supabase-js (MIT, Supabase).
 <script>if(window.top!==window.self){document.documentElement.style.display='none';try{window.top.location=window.location;}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker</title>
-<meta name="description" content="Track shift work hours across multiple jobs, auto-calculate wages with night-shift bonuses, log recurring bills, estimate take-home pay after tax. Free, bilingual (EN/JA), works fully offline.">
+<meta name="description" content="Track shift work hours across multiple jobs, auto-calculate wages with night-shift bonuses, log recurring bills, estimate take-home pay after tax. Free, available in English, Japanese and Burmese (EN/JA/MM), works fully offline.">
 <meta name="keywords" content="shift tracker, timesheet app, hourly wage calculator, part-time job tracker, night shift bonus calculator, tax calculator, work hours tracker, ShiftLog">
 <meta name="author" content="Kaung Set Lin">
 <meta name="robots" content="index, follow">
@@ -46,6 +46,7 @@ supabase-js (MIT, Supabase).
 <meta property="og:image:alt" content="ShiftLog app showing the Works tab with the Create New Work form">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="my_MM">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
@@ -62,7 +63,7 @@ supabase-js (MIT, Supabase).
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -70,7 +71,7 @@ supabase-js (MIT, Supabase).
     "@type": "WebApplication",
     "name": "ShiftLog",
     "url": "https://kaungsetlinn.com/shiftLog/",
-    "description": "A bilingual (English/Japanese) shift-work tracker for logging hours across multiple jobs, calculating wages with night-shift bonuses, tracking recurring bills, estimating take-home pay after tax.",
+    "description": "A multilingual (English/Japanese/Burmese) shift-work tracker for logging hours across multiple jobs, calculating wages with night-shift bonuses, tracking recurring bills, estimating take-home pay after tax.",
     "image": "https://kaungsetlinn.com/shiftLog/icon-512.png",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
@@ -110,7 +111,9 @@ body.light-theme .mc-day.selected{color:#fff!important;}
 body.light-theme .cal-day.selected{color:#fff!important;}
 body.light-theme .cal-day.has-shift{background:color-mix(in srgb,var(--accent) 14%,transparent);}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;transition:background .25s,color .25s;}
+html[lang="my"] body{line-height:1.7;}
+html[lang="my"] .btn,html[lang="my"] .tab-btn,html[lang="my"] .lang-btn,html[lang="my"] .mode-btn,html[lang="my"] .fw-btn{line-height:1.6;}
+body{background:var(--bg);color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;min-height:100vh;transition:background .25s,color .25s;}
 body::before{content:'';position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 4%,transparent) 0%,transparent 70%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,color-mix(in srgb,var(--purple) 4%,transparent) 0%,transparent 70%);pointer-events:none;z-index:0;}
 .container{max-width:100%;margin:0 auto;padding:24px 32px;position:relative;z-index:1;}
@@ -149,7 +152,7 @@ body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;heig
 #splash.hide{opacity:0;pointer-events:none;}
 .splash-logo{font-size:38px;font-weight:800;}
 .splash-logo span{color:var(--accent);}
-.splash-sub{color:var(--muted);font-size:13px;font-family:'JetBrains Mono',monospace;}
+.splash-sub{color:var(--muted);font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
 
 /* Header */
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;border-bottom:1px solid var(--border);padding-bottom:20px;flex-wrap:wrap;gap:12px;}
@@ -159,7 +162,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .offline-badge{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--muted);}
 .offline-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.clock-disp{font-family:'JetBrains Mono',monospace;text-align:right;}
+.clock-disp{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;text-align:right;}
 .clock-disp .big{font-size:17px;color:var(--text);display:block;}
 .clock-disp .small{font-size:11px;color:var(--muted);}
 .icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--muted);font-size:17px;}
@@ -167,7 +170,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 
 /* Tabs */
 .tab-nav{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;width:fit-content;}
-.tab-btn{padding:8px 18px;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);letter-spacing:.3px;}
+.tab-btn{padding:8px 18px;border:none;border-radius:8px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);letter-spacing:.3px;}
 .tab-btn.active{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
 .tab-btn:hover:not(.active){color:var(--text);}
 .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:#000;border-radius:10px;font-size:10px;font-weight:800;padding:1px 6px;margin-left:4px;}
@@ -183,14 +186,14 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end;}
 .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:100px;}
 label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-input,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
+input,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
 input:focus,select:focus{border-color:var(--accent);}
-input[type="time"],input[type="number"]{font-family:'JetBrains Mono',monospace;}
+input[type="time"],input[type="number"]{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
 input[type="color"]{padding:5px 7px;height:40px;cursor:pointer;}
 select option{background:var(--surface2);}
 
 /* Buttons */
-.btn{padding:10px 20px;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.4px;transition:all .2s;white-space:nowrap;}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.4px;transition:all .2s;white-space:nowrap;}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
 .btn-primary{background:var(--accent);color:#000;}
 .btn-primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 85%,#fff);transform:translateY(-1px);}
@@ -211,7 +214,7 @@ select option{background:var(--surface2);}
 .wc-divider{height:1px;background:var(--border);}
 .wc-row{display:flex;justify-content:space-between;align-items:center;}
 .wc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-.wc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;}
+.wc-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;font-weight:500;}
 .wc-actions{display:flex;gap:7px;}
 .empty-card{text-align:center;padding:44px;color:var(--muted);grid-column:1/-1;}
 .empty-icon{font-size:32px;margin-bottom:10px;}
@@ -235,32 +238,32 @@ select option{background:var(--surface2);}
 .setting-label{font-size:14px;font-weight:600;}
 .setting-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 .lang-toggle{display:flex;gap:4px;background:var(--surface2);border-radius:8px;padding:3px;}
-.lang-btn{padding:5px 12px;border:none;border-radius:6px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
+.lang-btn{padding:5px 12px;border:none;border-radius:6px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
 .lang-btn.active{background:var(--accent);color:#000;}
 
 /* Shift form */
-.dur-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--accent);text-align:center;}
+.dur-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px;color:var(--accent);text-align:center;}
 .earn-preview{background:color-mix(in srgb,var(--accent) 4%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 20%,transparent);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
 .ep{display:flex;flex-direction:column;gap:2px;}
 .ep-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
-.ep-val{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);}
+.ep-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;color:var(--text);}
 .ep-total .ep-val{color:var(--green);font-size:19px;}
 .ep-div{color:var(--border);font-size:16px;}
-.night-note{font-size:11px;color:var(--purple);font-family:'JetBrains Mono',monospace;}
+.night-note{font-size:11px;color:var(--purple);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
 
 /* Multi-date picker */
 .multi-date-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
-.date-chip{display:flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:6px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);}
+.date-chip{display:flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:6px;padding:4px 10px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--accent);}
 .date-chip-del{background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;line-height:1;padding:0 0 0 2px;}
 .date-chip-del:hover{color:var(--red);}
 .mode-toggle{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;margin-bottom:14px;}
-.mode-btn{flex:1;padding:7px;border:none;border-radius:6px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);text-align:center;}
+.mode-btn{flex:1;padding:7px;border:none;border-radius:6px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);text-align:center;}
 .mode-btn.active{background:var(--surface);color:var(--text);border:1px solid var(--border);}
 
 /* Stats */
 .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-.stat-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.stat-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:18px;font-weight:500;color:var(--text);margin-bottom:3px;}
 .stat-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 .stat-card.accent .stat-val{color:var(--accent);}
 .stat-card.money .stat-val{color:var(--green);}
@@ -273,12 +276,12 @@ select option{background:var(--surface2);}
 .wp-btn:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);}
 .wp-btn.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);}
 .wp-name{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;}
-.wp-rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+.wp-rate{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted);}
 
 /* Filter */
 .filter-bar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
 .filter-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-.fw-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.fw-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
 .fw-btn:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent);color:var(--text);}
 .fw-btn.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);}
 
@@ -290,13 +293,13 @@ select option{background:var(--surface2);}
 .shift-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:88px 108px 1fr 72px 90px 90px 32px;align-items:center;gap:10px;transition:background .2s;animation:slideIn .22s ease;}
 @keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .shift-item:hover{background:var(--surface2);}
-.si-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
-.si-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);line-height:1.6;}
+.si-date{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted);}
+.si-time{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--text);line-height:1.6;}
 .si-work{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;}
 .si-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.si-hrs{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);text-align:right;}
-.si-wages{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green);text-align:right;}
-.si-transport{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--yellow);text-align:right;}
+.si-hrs{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--accent);text-align:right;}
+.si-wages{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--green);text-align:right;}
+.si-transport{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--yellow);text-align:right;}
 .del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:3px;border-radius:4px;transition:color .2s;display:flex;align-items:center;justify-content:center;}
 .del-btn:hover{color:var(--red);}
 .empty-state{text-align:center;padding:40px;color:var(--muted);font-size:14px;}
@@ -322,7 +325,7 @@ select option{background:var(--surface2);}
 .cal-month-lbl{font-size:14px;font-weight:700;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 .cal-day-name{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0 8px;}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;font-family:'JetBrains Mono',monospace;cursor:default;position:relative;transition:all .2s;}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;cursor:default;position:relative;transition:all .2s;}
 .cal-day.empty{background:transparent;}
 .cal-day.normal{color:var(--muted);}
 .cal-day.has-shift{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:700;cursor:pointer;}
@@ -344,7 +347,7 @@ select option{background:var(--surface2);}
 .day-shift-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
 .day-shift-row:last-child{border-bottom:none;}
 .day-shift-work{display:flex;align-items:center;gap:5px;font-weight:600;}
-.day-shift-earn{font-family:'JetBrains Mono',monospace;color:var(--green);}
+.day-shift-earn{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--green);}
 
 /* ---- Monthly: calendar first, full width, with shift details in each day ---- */
 .monthly-layout{grid-template-columns:minmax(0,1fr)!important}
@@ -352,7 +355,7 @@ select option{background:var(--surface2);}
 .calendar-wrap{position:static}
 .cal-grid{gap:5px}
 .cal-day.cd{aspect-ratio:auto;min-height:112px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;
-  padding:6px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Syne',sans-serif;font-weight:500;text-align:left;overflow:hidden;min-width:0}
+  padding:6px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-weight:500;text-align:left;overflow:hidden;min-width:0}
 .cal-day.cd.empty{border-color:transparent;pointer-events:none;min-height:0}
 .cal-day.cd.normal{color:var(--muted)}
 .cal-day.cd::after,.cal-day.cd.has-shift::after{display:none}
@@ -360,25 +363,25 @@ select option{background:var(--surface2);}
 .cal-day.cd.has-shift:hover{transform:none;background:color-mix(in srgb,var(--accent) 14%,transparent)}
 .cal-day.cd.today{border-color:var(--accent)}
 .cal-day.cd.selected,body.light-theme .cal-day.cd.selected{background:color-mix(in srgb,var(--accent) 20%,var(--surface2))!important;color:var(--text)!important;box-shadow:0 0 0 2px var(--accent);font-weight:500}
-.cd-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--muted)}
+.cd-num{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;font-weight:700;color:var(--muted)}
 .cal-day.cd.today .cd-num,.cal-day.cd.has-shift .cd-num{color:var(--accent)}
 .cd-shifts{display:flex;flex-direction:column;gap:3px;min-width:0}
 .cd-shift{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:6px;padding:3px 5px;border-left:3px solid var(--c);border-radius:5px;background:color-mix(in srgb,var(--c) 14%,transparent);min-width:0}
 .cd-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.cd-amt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);text-align:right}
-.cd-time{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.cd-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--green);text-align:right}
+.cd-time{grid-column:1/-1;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--muted)}
 .cd-more{font-size:10px;color:var(--muted);padding-left:4px}
-.cd-total{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:4px}
+.cd-total{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:4px}
 .cd-total b{font-size:12px;color:var(--green);font-weight:700}
 .cd-dots,.cd-short{display:none}
 .dd-shift{padding:8px 0 8px 10px;border-left:3px solid var(--c);margin:6px 0;background:color-mix(in srgb,var(--c) 8%,transparent);border-radius:0 8px 8px 0;padding-right:10px}
 .dd-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .dd-name{font-size:13px;font-weight:700}
-.dd-time{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
-.dd-money{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--green)}
-.dd-meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+.dd-time{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--muted)}
+.dd-money{margin-left:auto;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:700;color:var(--green)}
+.dd-meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted)}
 .dd-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;font-weight:700}
-.dd-total b{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--green)}
+.dd-total b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px;color:var(--green)}
 @media(max-width:640px){
   .cal-grid{gap:2px}
   .cal-day.cd{min-height:56px;padding:3px 2px;border-radius:7px;align-items:center;gap:2px}
@@ -387,21 +390,21 @@ select option{background:var(--surface2);}
   .cd-shifts,.cd-total{display:none}
   .cd-dots{display:flex;gap:2px;justify-content:center;flex-wrap:wrap}
   .cd-dots i{width:6px;height:6px;border-radius:50%;display:inline-block}
-  .cd-short{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--green);line-height:1}
+  .cd-short{display:block;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;color:var(--green);line-height:1}
 }
 
 /* Graph */
 .graph-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:20px;}
 .graph-title{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
 .graph-toggle{display:flex;gap:7px;margin-bottom:14px;}
-.gtog{padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.gtog{padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
 .gtog.active{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);}
 canvas{width:100%!important;display:block;}
 .monthly-table{width:100%;border-collapse:collapse;}
 .monthly-table th{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}
 .monthly-table th.r{text-align:right;}
 .monthly-table td{padding:10px;border-bottom:1px solid rgba(42,42,58,.6);font-size:12px;}
-.monthly-table td.r{text-align:right;font-family:'JetBrains Mono',monospace;}
+.monthly-table td.r{text-align:right;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
 .monthly-table tr:last-child td{border-bottom:none;}
 .monthly-table tr:hover td{background:var(--surface2);}
 .td-work{display:flex;align-items:center;gap:7px;font-weight:600;}
@@ -455,7 +458,7 @@ canvas{width:100%!important;display:block;}
 .bn-item{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:6px 4px;cursor:pointer;transition:color .2s;color:var(--muted);
-  font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;
+  font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;
   position:relative;border:none;background:none;
 }
 .bn-item.active{color:var(--accent);}
@@ -647,7 +650,7 @@ canvas{width:100%!important;display:block;}
 }
 .mc-day{
   aspect-ratio:1;display:flex;align-items:center;justify-content:center;
-  border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;
+  border-radius:8px;font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;
   cursor:pointer;transition:all .15s;border:1px solid transparent;
   position:relative;font-weight:500;
 }
@@ -801,7 +804,7 @@ canvas{width:100%!important;display:block;}
 .brk-ico{font-size:15px;line-height:14px;height:14px}
 .brk-chips{display:flex;gap:4px}
 .brk-chip{width:38px;min-height:48px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
-  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;cursor:pointer;padding:0;position:relative;overflow:hidden;
+  font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;font-weight:500;cursor:pointer;padding:0;position:relative;overflow:hidden;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .brk-chip:active{transform:scale(.93);transition-duration:80ms}
@@ -815,12 +818,12 @@ canvas{width:100%!important;display:block;}
   transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .brk-dial-btn:active{transform:scale(.92);transition-duration:80ms}
 .brk-dial-btn:hover{transform:translateY(-2px) scale(1.05)}
-.brk-dial-btn .brk-val{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;line-height:1;margin-top:1px;min-height:9px}
+.brk-dial-btn .brk-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;line-height:1;margin-top:1px;min-height:9px}
 .brk-dial-btn.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
 .brk-dial-btn:not(.sel) .brk-val{opacity:.0}
 .tl-break{min-width:52px}
 .bd-modal{max-width:340px;text-align:center;padding:24px 20px 20px}
-.bd-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;letter-spacing:.5px;margin-bottom:2px}
+.bd-title{font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:15px;font-weight:800;letter-spacing:.5px;margin-bottom:2px}
 .bd-hint{font-size:11px;color:var(--muted);margin-bottom:10px}
 .bd-wrap{display:flex;align-items:center;justify-content:center;gap:12px}
 .bd-stage{position:relative;flex:0 1 232px;width:232px;max-width:calc(100vw - 150px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -831,7 +834,7 @@ canvas{width:100%!important;display:block;}
 .bd-tick{stroke:var(--muted);stroke-width:1.5;stroke-linecap:round;opacity:.55;transition:stroke .12s,opacity .12s}
 .bd-tick.major{stroke-width:2.5;opacity:.9}
 .bd-tick.hit{stroke:var(--accent);opacity:1}
-.bd-num{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central}
+.bd-num{fill:var(--muted);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central}
 .bd-hand{stroke:var(--accent);stroke-width:3;stroke-linecap:round}
 .bd-hub{fill:var(--accent)}
 .bd-knob:focus{outline:none}
@@ -842,14 +845,14 @@ canvas{width:100%!important;display:block;}
 .bd-stage.pulse .bd-knob-ring{animation:bdPulse 380ms ease-out}
 @keyframes bdPulse{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(2)}}
 .bd-read{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-.bd-read b{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-1px}
+.bd-read b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-1px}
 .bd-read span{font-size:11px;color:var(--muted);margin-top:2px}
 .bd-ring1{fill:none;stroke:var(--accent);stroke-width:14;opacity:0;transition:opacity .2s}
 .bd-ring1.on{opacity:.28}
 .bd-hours{display:flex;flex-direction:column;align-items:center;gap:6px;width:40px}
-.bd-hr-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted)}
+.bd-hr-lbl{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted)}
 .bd-hcount{width:40px;height:56px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);
-  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:24px;font-weight:700;
   transition:background-color .2s,border-color .2s,color .2s}
 .bd-hcount.on{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
 .bd-hcount.bump{animation:bdBump 360ms var(--spring)}
@@ -857,7 +860,7 @@ canvas{width:100%!important;display:block;}
 @media(prefers-reduced-motion:reduce){.bd-hcount.bump{animation:none}}
 .bd-presets{display:flex;gap:6px;justify-content:center;margin:14px 0 14px;flex-wrap:wrap}
 .bd-preset{min-width:52px;height:38px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
-  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;padding:0 12px;transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+  font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;font-weight:600;cursor:pointer;padding:0 12px;transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .bd-preset:active{transform:scale(.92)}
 .bd-preset.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
 .bd-actions{display:flex;gap:8px}
@@ -877,7 +880,7 @@ canvas{width:100%!important;display:block;}
 .bills-form .field{min-width:0}
 .exp-cats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
 .exp-cat{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
-  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
   position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
   transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .exp-cat:active{transform:scale(.95);transition-duration:80ms}
@@ -894,15 +897,15 @@ canvas{width:100%!important;display:block;}
 .exp-bar-name{font-weight:600;white-space:nowrap}
 .exp-bar-track{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;display:block}
 .exp-bar-fill{display:block;height:100%;border-radius:4px;background:var(--accent);opacity:.8}
-.exp-bar-amt{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right}
+.exp-bar-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;text-align:right}
 .exp-day{margin-bottom:14px}
 .exp-day-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding:0 4px}
-.exp-day-total{font-family:'JetBrains Mono',monospace;color:var(--red);letter-spacing:0;font-size:12px}
+.exp-day-total{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--red);letter-spacing:0;font-size:12px}
 .exp-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:6px;min-height:56px;animation:rise 260ms var(--out) backwards}
 .exp-item-ico{font-size:20px;width:28px;text-align:center}
 .exp-item-main{flex:1;min-width:0}
 .exp-item-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.exp-item-amt{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--red)}
+.exp-item-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:600;color:var(--red)}
 .exp-item .del-btn{width:36px;height:36px}
 @media(max-width:380px){.exp-bar-row{grid-template-columns:90px 1fr 76px}}
 
@@ -1118,13 +1121,13 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-overlay,.modal{overscroll-behavior:contain}
 /* ---- Account modal (login / register / details) ---- */
 .acc-tabs{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:18px}
-.acc-tabs button{flex:1;padding:9px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.acc-tabs button{flex:1;padding:9px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
 .acc-tabs button.active{background:var(--surface3);color:var(--text)}
 .acc-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .acc-field label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
-.acc-msg{min-height:18px;font-size:12px;line-height:1.5;margin:2px 0 12px;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.acc-msg{min-height:18px;font-size:12px;line-height:1.5;margin:2px 0 12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--muted)}
 .acc-msg.err{color:var(--red)}.acc-msg.ok{color:var(--green)}
-.acc-link{background:none;border:none;color:var(--accent);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+.acc-link{background:none;border:none;color:var(--accent);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 .acc-link:hover{text-decoration:underline}
 .acc-hero{display:flex;align-items:center;gap:14px;padding-bottom:16px;margin-bottom:6px;border-bottom:1px solid var(--border)}
 .acc-av{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:2px solid var(--accent);object-fit:cover;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--purple));color:#000;font-size:22px;font-weight:800;overflow:hidden}
@@ -1172,7 +1175,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .credits-body h4{margin:12px 0 4px;font-size:12px;color:var(--text);font-weight:700}
 .credits-body h4:first-child{margin-top:0}
 .credits-body a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
-.credits-body .lic{margin-top:6px;max-height:140px;overflow:auto;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.5;white-space:pre-wrap}
+.credits-body .lic{margin-top:6px;max-height:140px;overflow:auto;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10.5px;line-height:1.5;white-space:pre-wrap}
 #sd-credits.open{display:block}
 
 /* ---- Settings: grouped list with round icon badges ---- */
@@ -1325,7 +1328,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 }
 
 /* Single-date picker button + popover (reuses the Multiple Dates calendar look) */
-.sd-btn{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer;text-align:left;transition:border-color .2s}
+.sd-btn{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;cursor:pointer;text-align:left;transition:border-color .2s}
 .sd-btn:hover,.sd-btn[aria-expanded="true"]{border-color:var(--accent)}
 .sd-btn .ico{width:18px;height:18px;color:var(--accent);flex:none}
 .sd-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1333,11 +1336,11 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .sd-pop[hidden]{display:none}
 @keyframes sdIn{from{opacity:0;transform:scale(.96) translateY(-4px)}}
 .sd-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.sd-month{font-family:'Syne',sans-serif;font-weight:700;font-size:14px}
+.sd-month{font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-weight:700;font-size:14px}
 .sd-head .mc-nav-btn{width:32px;height:32px}
 .sd-pop .mini-cal{padding:8px;border-radius:10px}
 .sd-pop .mini-cal-grid{gap:2px}
-.sd-pop button.mc-day{appearance:none;-webkit-appearance:none;padding:0;font-size:13px;font-family:'JetBrains Mono',monospace}
+.sd-pop button.mc-day{appearance:none;-webkit-appearance:none;padding:0;font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace}
 .sd-pop button.mc-day:not(.selected){background:transparent}
 .sd-foot{display:flex;justify-content:flex-end;margin-top:8px}
 @media (prefers-reduced-motion:reduce){.sd-pop{animation:none}}
@@ -1351,13 +1354,13 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
 /* Currency (Settings → Language): one button, table pops out */
 .cur-btn{min-height:56px}
-.cur-big{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:var(--accent);min-width:44px;text-align:center}
-.cur-btn-hint{flex:1;color:var(--muted);font-family:'Syne',sans-serif;font-size:12px}
+.cur-big{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:24px;font-weight:800;color:var(--accent);min-width:44px;text-align:center}
+.cur-btn-hint{flex:1;color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px}
 .cur-btn-chev{color:var(--muted);font-size:20px}
 .cur-pop{padding:14px}
 .cur-table{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .cur-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:border-color .2s,background .2s,transform 200ms}
-.cur-chip b{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800}
+.cur-chip b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:18px;font-weight:800}
 .cur-chip small{font-size:9px;letter-spacing:.5px;color:var(--muted);font-weight:600}
 .cur-chip:hover{border-color:var(--accent)}
 .cur-chip:active{transform:scale(.94)}
@@ -1367,10 +1370,10 @@ body.light-theme .cur-chip.sel{color:#fff}
 body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .cur-custom{display:flex;align-items:center;gap:10px;margin-top:12px}
 .cur-custom label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.cur-custom input{max-width:84px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
+.cur-custom input{max-width:84px;text-align:center;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:16px;font-weight:700}
 #w-night-row{align-items:flex-end}
 /* Expenses in Monthly + Summary */
-.cd-exp{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);border-top:1px dashed color-mix(in srgb,var(--red) 35%,transparent);padding-top:4px}
+.cd-exp{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-top:auto;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--red);border-top:1px dashed color-mix(in srgb,var(--red) 35%,transparent);padding-top:4px}
 .cd-exp b{font-size:11px;font-weight:700;white-space:nowrap}
 .cd-exp-ico{font-size:10px;letter-spacing:1px}
 .cd-total+.cd-exp{margin-top:0}
@@ -1383,10 +1386,10 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .dd-exp-ico{font-size:15px}
 .dd-exp-name{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dd-exp-name em{font-style:normal;font-weight:400;color:var(--muted)}
-.dd-exp b{font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:700}
+.dd-exp b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--red);font-weight:700}
 @media(max-width:640px){
   .cd-exp{display:none}
-  .cd-exp-short{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--red);line-height:1}
+  .cd-exp-short{display:block;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;color:var(--red);line-height:1}
   .cal-day.cd{min-height:62px}
   #sum-top-cards{grid-template-columns:1fr 1fr!important}
   .monthly-stats .stat-card:last-child:nth-child(odd){grid-column:1/-1}
@@ -1395,12 +1398,12 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .field[hidden]{display:none}
 .pay-row{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;flex-wrap:wrap}
 .pay-main{min-width:96px}
-.pay-date{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
+.pay-date{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:700}
 .pay-when{font-size:11px;color:var(--accent);margin-top:2px}
 .pay-works{flex:1;display:flex;flex-wrap:wrap;gap:6px 12px;min-width:0}
 .pay-work{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .pay-dot{width:6px;height:6px;border-radius:50%;flex:none}
-.pay-amt{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--green);margin-left:auto}
+.pay-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px;font-weight:700;color:var(--green);margin-left:auto}
 .pd-view{overflow:hidden;touch-action:pan-y}
 .pd-track{display:flex;transition:transform .32s var(--out)}
 .pd-pane{flex:0 0 100%;min-width:0}
@@ -1534,22 +1537,22 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="row" id="w-night-row">
         <div class="field" style="max-width:140px">
           <label id="lbl-w-night-from">Night from</label>
-          <input type="time" id="w-night-start" value="22:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono',monospace">
+          <input type="time" id="w-night-start" value="22:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
         </div>
         <div class="field" style="max-width:140px">
           <label id="lbl-w-night-to">Night to</label>
-          <input type="time" id="w-night-end" value="06:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono',monospace">
+          <input type="time" id="w-night-end" value="06:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
         </div>
         <div class="field" style="max-width:120px">
           <label id="lbl-w-night-pct">Night bonus %</label>
-          <input type="number" id="w-night-pct" value="25" min="0" max="200" step="1" inputmode="decimal" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono',monospace">
+          <input type="number" id="w-night-pct" value="25" min="0" max="200" step="1" inputmode="decimal" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
         </div>
         <div class="field" style="max-width:130px">
           <label id="lbl-w-tax">Income tax %</label>
-          <input type="number" id="w-tax-rate" value="10" min="0" max="100" step="0.1" inputmode="decimal" style="font-family:'JetBrains Mono',monospace">
+          <input type="number" id="w-tax-rate" value="10" min="0" max="100" step="0.1" inputmode="decimal" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
         </div>
       </div>
-      <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono',monospace;margin-top:2px" id="night-bonus-note">
+      <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;margin-top:2px" id="night-bonus-note">
         ★ Night bonus: +25% auto-applied for hours between 10 PM – 6 AM
       </div>
     </div>
@@ -1627,12 +1630,12 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
             <label id="lbl-add-dates" style="margin-bottom:0">Add Dates</label>
             <div style="display:flex;align-items:center;gap:6px">
               <button class="mc-nav-btn" onclick="miniCalPrev()" type="button">&#8249;</button>
-              <span id="mc-month-label" style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;min-width:110px;text-align:center"></span>
+              <span id="mc-month-label" style="font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;min-width:110px;text-align:center"></span>
               <button class="mc-nav-btn" onclick="miniCalNext()" type="button">&#8250;</button>
             </div>
           </div>
           <div class="mini-cal" id="mini-cal"></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace" id="multi-count-note"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace" id="multi-count-note"></div>
         </div>
           </div>
           <div class="md-right">
@@ -1795,7 +1798,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
           <label id="lbl-tax-rate-lbl">Income Tax Rate</label>
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="tax-rate" value="20" min="0" max="100" step="0.1"
-              style="font-family:'JetBrains Mono',monospace;font-size:16px;text-align:center"
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:16px;text-align:center"
               oninput="saveSettings();recalcTax()">
             <span style="color:var(--purple);font-weight:800;font-size:16px">%</span>
           </div>
@@ -1804,7 +1807,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
           <label id="lbl-tax-social-lbl">Social Insurance</label>
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="tax-social" value="0" min="0" max="100" step="0.1"
-              style="font-family:'JetBrains Mono',monospace;font-size:16px;text-align:center"
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:16px;text-align:center"
               oninput="saveSettings();recalcTax()">
             <span style="color:var(--purple);font-weight:800;font-size:16px">%</span>
           </div>
@@ -1812,7 +1815,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <div class="field" style="max-width:160px">
           <label id="lbl-tax-deduct-lbl">Deductions</label>
           <input type="number" id="tax-deduct" value="0" min="0" step="0.01" placeholder="0.00"
-            style="font-family:'JetBrains Mono',monospace;font-size:15px"
+            style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px"
             oninput="saveSettings();recalcTax()">
         </div>
       </div>
@@ -1897,7 +1900,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         </div>
         <div class="field">
           <label id="lbl-exp-amount">Amount</label>
-          <input type="number" id="exp-amount" inputmode="decimal" placeholder="0" min="0" step="any" style="font-family:'JetBrains Mono',monospace" onkeydown="if(event.key==='Enter')addExpense()">
+          <input type="number" id="exp-amount" inputmode="decimal" placeholder="0" min="0" step="any" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace" onkeydown="if(event.key==='Enter')addExpense()">
         </div>
       </div>
       <div class="exp-note-row">
@@ -1945,7 +1948,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <div class="sum-collapse" id="sump-cm-wrap"><div class="sum-collapse-in"><div id="sump-custom-month-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:6px">
           <div class="field" style="max-width:120px;margin-bottom:0">
             <label style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Month</label>
-            <select id="sump-cm-month" onchange="recalcSummary()" style="font-family:'JetBrains Mono',monospace;font-size:14px">
+            <select id="sump-cm-month" onchange="recalcSummary()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px">
               <option value="0">January</option><option value="1">February</option><option value="2">March</option>
               <option value="3">April</option><option value="4">May</option><option value="5">June</option>
               <option value="6">July</option><option value="7">August</option><option value="8">September</option>
@@ -1955,7 +1958,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
           <div class="field" style="max-width:100px;margin-bottom:0">
             <label style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Year</label>
             <input type="number" id="sump-cm-year" min="2000" max="2099" step="1"
-              style="font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center" oninput="recalcSummary()">
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;text-align:center" oninput="recalcSummary()">
           </div>
         </div>
         </div></div>
@@ -1995,7 +1998,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     <!-- Final net card -->
     <div class="panel" style="text-align:center;padding:24px;margin-bottom:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--green) 5%,transparent),color-mix(in srgb,var(--accent) 5%,transparent));">
       <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px" id="lbl-sum-final">Final Take-Home</div>
-      <div style="font-size:38px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green)" id="sum-final">$0.00</div>
+      <div style="font-size:38px;font-weight:800;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--green)" id="sum-final">$0.00</div>
       <div style="font-size:12px;color:var(--muted);margin-top:6px" id="sum-final-sub">after tax &amp; bills</div>
     </div>
 
@@ -2084,7 +2087,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="acc-row"><span data-ai="email">Email</span><span id="acc-d-email">—</span></div>
       <div class="acc-row"><span data-ai="since">Member since</span><span id="acc-d-since">—</span></div>
       <div class="acc-row"><span data-ai="lastLogin">Last login</span><span id="acc-d-last">—</span></div>
-      <div class="acc-row"><span data-ai="uid">User ID</span><span id="acc-d-id" style="font-family:'JetBrains Mono',monospace;font-size:11px">—</span></div>
+      <div class="acc-row"><span data-ai="uid">User ID</span><span id="acc-d-id" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px">—</span></div>
 
       <div class="acc-sec" data-ai="cloud">Cloud data</div>
       <div class="acc-row"><span data-ai="lastSync">Last synced</span><span id="acc-d-sync">—</span></div>
@@ -2127,10 +2130,11 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       </button>
       <div class="setting-detail" id="sd-lang" style="flex-direction:column;gap:18px">
         <div class="theme-top">
-          <span class="setting-label">Language / 言語</span>
+          <span class="setting-label">Language / 言語 / ဘာသာစကား</span>
           <div class="lang-toggle">
             <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
             <button class="lang-btn"        id="lang-ja" onclick="setLang('ja')">日本語</button>
+            <button class="lang-btn"        id="lang-mm" onclick="setLang('mm')">မြန်မာ</button>
           </div>
         </div>
         <div>
@@ -2184,7 +2188,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         </div>
         <div class="field">
           <label id="lbl-bill-amount-lbl">Amount / Month</label>
-          <input type="number" id="bill-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="font-family:'JetBrains Mono',monospace">
+          <input type="number" id="bill-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
         </div>
         <div class="field">
           <label id="lbl-bill-cat-lbl">Category</label>
@@ -2236,7 +2240,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <button onclick="nukeAll()" class="btn btn-del btn-icon icon-wide" aria-label="Delete all data" title="Delete all data">🗑</button>
       </div>
 
-      <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
+      <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
       </div>
     </div>
 
@@ -2287,8 +2291,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <div class="field"><label id="lbl-edit-rate">Hourly Rate</label><input type="number" id="edit-rate" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-transport">Transport Fee / Day</label><input type="number" id="edit-transport" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-color">Color</label><input type="color" id="edit-color"></div>
-      <div class="field"><label id="lbl-edit-night-from">Night from</label><input type="time" id="edit-night-start" style="font-family:'JetBrains Mono',monospace"></div>
-      <div class="field"><label id="lbl-edit-night-to">Night to</label><input type="time" id="edit-night-end" style="font-family:'JetBrains Mono',monospace"></div>
+      <div class="field"><label id="lbl-edit-night-from">Night from</label><input type="time" id="edit-night-start" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace"></div>
+      <div class="field"><label id="lbl-edit-night-to">Night to</label><input type="time" id="edit-night-end" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace"></div>
       <div class="field"><label id="lbl-edit-night-pct">Night bonus %</label><input type="number" id="edit-night-pct" min="0" max="200" step="1" inputmode="decimal"></div>
       <div class="field"><label id="lbl-edit-tax">Income tax %</label><input type="number" id="edit-tax-rate" min="0" max="100" step="0.1" inputmode="decimal"></div>
       <div class="field"><label id="lbl-edit-pay-timing">Payday</label><button type="button" class="sd-btn" id="pd-btn-edit" aria-haspopup="dialog" aria-expanded="false" onclick="pdToggle('edit')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span></span></button><select id="edit-pay-timing" class="sr-only" tabindex="-1" aria-hidden="true"></select></div>
@@ -2418,7 +2422,7 @@ function sanitizeSettings(o){
   const x={key:'main'};if(!o||typeof o!=='object')return x;
   const has=k=>Object.prototype.hasOwnProperty.call(o,k)&&o[k]!==null&&o[k]!==undefined;
   if(has('currency'))x.currency=_cur(o.currency)||'円';
-  if(has('lang'))x.lang=o.lang==='ja'?'ja':'en';
+  if(has('lang'))x.lang=(o.lang==='ja'||o.lang==='mm')?o.lang:'en';
   if(has('theme'))x.theme=o.theme==='light'?'light':'dark';
   if(has('palette')&&/^[a-z0-9_-]{1,30}$/.test(String(o.palette)))x.palette=String(o.palette);
   if(has('nightStart')&&/^\d{2}:\d{2}$/.test(String(o.nightStart)))x.nightStart=String(o.nightStart);
@@ -2543,9 +2547,189 @@ const T={
     'alert-no-shifts':'出力するシフトがありません。',
     'lbl-m-night-note':'★ 深夜分 × 深夜割増適用',
     'lbl-break-display':'休憩：',
+  },
+  mm:{
+    'splash':'ဒေတာဘေ့စ်ကို ဖွင့်နေသည်…',
+    'offline-badge':'စက်ထဲတွင် သိမ်းထားသည်',
+    'lbl-create-work':'အလုပ်အသစ် ဖန်တီးမည်',
+    'lbl-work-name':'အလုပ်အမည်',
+    'lbl-hourly-rate':'တစ်နာရီလုပ်ခ',
+    'lbl-pay-timing':'လစာရက်',
+    'lbl-pay-day':'လစာထုတ်ရက်',
+    'lbl-edit-pay-timing':'လစာရက်',
+    'lbl-edit-pay-day':'လစာထုတ်ရက်',
+    'lbl-payday-title':'လစာရက်',
+    'lbl-transport':'ခရီးစရိတ် (တစ်ရက်)',
+    'lbl-color':'အရောင်',
+    'lbl-your-works':'သင့်အလုပ်များ',
+    'lbl-add-shift':'+ အလုပ်ဆိုင်းထည့်မည်',
+    'mode-single':'ရက်တစ်ရက်',
+    'mode-multi':'ရက်များစွာ',
+    'warn-no-works':'အလုပ် မရှိသေးပါ။',
+    'warn-create-link':'အလုပ်တစ်ခု အရင်ဖန်တီးပါ →',
+    'lbl-select-work':'အလုပ်ရွေးပါ',
+    'lbl-date':'ရက်စွဲ',
+    'lbl-start':'စတင်ချိန်',
+    'lbl-end':'ပြီးဆုံးချိန်',
+    'lbl-break':'နားချိန်',
+    'break-no':'နားချိန်မရှိ',
+    'lbl-work-time':'အလုပ်ချိန်',
+    'lbl-start-m':'စတင်ချိန်',
+    'lbl-end-m':'ပြီးဆုံးချိန်',
+    'lbl-break-m':'နားချိန်',
+    'lbl-work-time-m':'အလုပ်ချိန်',
+    'lbl-add-dates':'ရက်စွဲများ ထည့်မည်',
+    'btn-add-date':'+ ရက်စွဲထည့်မည်',
+    'ep-lbl-hrs':'အလုပ်နာရီ',
+    'ep-lbl-rate':'နှုန်း',
+    'ep-lbl-wages':'လုပ်ခ',
+    'ep-lbl-trans':'ခရီးစရိတ်',
+    'ep-lbl-total':'စုစုပေါင်း',
+    'lbl-today':'ယနေ့',
+    'lbl-week-hrs':'ဤအပတ်နာရီ',
+    'lbl-all-hrs':'စုစုပေါင်းနာရီ',
+    'lbl-week-earn':'ဤအပတ်ဝင်ငွေ',
+    'lbl-all-earn':'စုစုပေါင်းဝင်ငွေ',
+    'lbl-filter':'စစ်ထုတ်ရန်:',
+    'lbl-col-date':'ရက်စွဲ',
+    'lbl-col-time':'အချိန်',
+    'lbl-col-work':'အလုပ်',
+    'lbl-col-hrs':'နာရီ',
+    'lbl-col-wages':'လုပ်ခ',
+    'lbl-col-trans':'ခရီးစရိတ်',
+    'btn-export-csv':'CSV ထုတ်မည်',
+    'btn-clear-shifts':'အားလုံးဖျက်မည်',
+    'lbl-daily-overview':'နေ့စဉ်အနှစ်ချုပ်',
+    'gtog-earnings':'ဝင်ငွေ',
+    'gtog-hours':'နာရီ',
+    'lbl-work-breakdown':'အလုပ်အလိုက် အသေးစိတ်',
+    'lbl-th-work':'အလုပ်',
+    'lbl-th-shifts':'ဆိုင်းအရေအတွက်',
+    'lbl-th-hrs':'နာရီ',
+    'lbl-th-wages':'လုပ်ခ',
+    'lbl-th-trans':'ခရီးစရိတ်',
+    'lbl-th-total':'စုစုပေါင်း',
+    'cal-legend-shift':'ဆိုင်းရှိသည်',
+    'cal-legend-today':'ယနေ့',
+    'cal-legend-sel':'ရွေးထားသည်',
+    'lbl-data-backup':'ဒေတာနှင့် အရန်သိမ်းဆည်းမှု',
+    'lbl-data-desc':'ဒေတာအားလုံးကို သင့်ဘရောက်ဇာ၏ IndexedDB တွင် သိမ်းဆည်းထားပါသည်။ ဤစက်ပေါ်တွင် အမြဲတမ်းရှိနေပြီး အင်တာနက်မလိုဘဲ အပြည့်အဝ အလုပ်လုပ်ပါသည်။',
+    'lbl-export-bk':'အရန်ဖိုင် ထုတ်မည်',
+    'lbl-export-bk-sub':'ဒေတာအားလုံးကို JSON အရန်ဖိုင်အဖြစ် ဒေါင်းလုဒ်လုပ်ပါ။',
+    'lbl-import-bk':'အရန်ဖိုင် ပြန်သွင်းမည်',
+    'lbl-import-bk-sub':'JSON အရန်ဖိုင်မှ ပြန်ယူပါ။ လက်ရှိဒေတာအားလုံးကို အစားထိုးပါမည်။',
+    'lbl-export-csv':'CSV ထုတ်မည်',
+    'lbl-export-csv-sub':'အလုပ်ဆိုင်းအားလုံးကို စာရင်းဇယားဖိုင်အဖြစ် ထုတ်ပါ။',
+    'lbl-delete-all':'ဒေတာအားလုံး ဖျက်မည်',
+    'lbl-delete-all-sub':'အားလုံးကို အပြီးအပိုင် ဖျက်ပါမည်။ ပြန်မရနိုင်ပါ။',
+    'btn-export-bk':'⬇ အရန်ဖိုင် ထုတ်မည်',
+    'btn-import-bk':'⬆ အရန်ဖိုင် ပြန်သွင်းမည်',
+    'btn-export-csv2':'⬇ CSV ထုတ်မည်',
+    'btn-nuke':'အားလုံး ဖျက်မည်',
+    'lbl-settings-title':'ဆက်တင်များ',
+    'lbl-lang-title':'ဘာသာစကား',
+    'lbl-lang-sub':'Display language / ဘာသာစကား',
+    'lbl-theme-title':'အသွင်အပြင်',
+    'lbl-theme-sub':'အမှောင်/အလင်းမုဒ်နှင့် အရောင်စုံ',
+    'lbl-mode-title':'မုဒ်',
+    'lbl-palette-title':'အရောင်စုံ',
+    'lbl-palette-sub':'အမှောင်နှင့် အလင်းမုဒ်အတွက် အရောင်ဒီဇိုင်းများ',
+    'lbl-credits-title':'ဂုဏ်ပြုချက်နှင့် လိုင်စင်များ',
+    'lbl-credits-sub':'အရောင်စုံ၊ ဖောင့်နှင့် စာကြည့်တိုက်များ',
+    'lbl-grp-general':'ယေဘုယျ',
+    'lbl-grp-money':'လစာနှင့် ငွေကြေး',
+    'lbl-grp-data':'ဒေတာ',
+    'lbl-grp-about':'အကြောင်း',
+    'lbl-data-title':'ဒေတာနှင့် အရန်သိမ်းဆည်းမှု',
+    'lbl-data-sub':'ထုတ်ယူ၊ ပြန်သွင်း၊ ပြန်လည်စတင်',
+    'lbl-currency-title':'ငွေကြေးသင်္ကေတ',
+    'lbl-currency-custom':'စိတ်ကြိုက်',
+    'lbl-w-night-from':'ညဆိုင်း စချိန်',
+    'lbl-w-night-to':'ညဆိုင်း ပြီးချိန်',
+    'lbl-w-night-pct':'ညဆိုင်းဘောနပ်စ် %',
+    'lbl-w-tax':'ဝင်ငွေခွန် %',
+    'lbl-edit-night-from':'ညဆိုင်း စချိန်',
+    'lbl-edit-night-to':'ညဆိုင်း ပြီးချိန်',
+    'lbl-edit-night-pct':'ညဆိုင်းဘောနပ်စ် %',
+    'lbl-edit-tax':'ဝင်ငွေခွန် %',
+    'lbl-currency-sub':'ဝင်ငွေပြသမှုအားလုံးတွင် အသုံးပြုသည်',
+    'lbl-night-title':'ညဆိုင်းဘောနပ်စ်',
+    'lbl-night-sub':'ညချိန်အတွက် အချိန်ကာလနှင့် ဘောနပ်စ် % သတ်မှတ်ပါ',
+    'lbl-night-from':'မှ',
+    'lbl-night-to':'အထိ',
+    'lbl-night-pct':'ဘောနပ်စ် %',
+    'lbl-edit-work-title':'အလုပ် ပြင်ဆင်မည်',
+    'lbl-edit-name':'အလုပ်အမည်',
+    'lbl-edit-rate':'တစ်နာရီလုပ်ခ',
+    'lbl-edit-transport':'ခရီးစရိတ် (တစ်ရက်)',
+    'lbl-edit-color':'အရောင်',
+    'btn-cancel-edit':'မလုပ်တော့ပါ',
+    'btn-save-edit':'သိမ်းမည်',
+    'lbl-m-shifts':'ဆိုင်းအရေအတွက်',
+    'lbl-m-hrs':'အလုပ်ချိန်',
+    'lbl-m-wages':'လုပ်ခ',
+    'lbl-m-total':'စုစုပေါင်း (ခရီးစရိတ်ပါ)',
+    'tab-works':'အလုပ်များ',
+    'tab-shifts':'ဆိုင်းများ',
+    'tab-monthly':'လစဉ်',
+    'tab-expenses':'အသုံးစရိတ်',
+    'lbl-exp-title':'အသုံးစရိတ် ထည့်မည်',
+    'lbl-exp-cats':'အမျိုးအစား',
+    'lbl-exp-date':'ရက်စွဲ',
+    'lbl-exp-amount':'ပမာဏ',
+    'lbl-exp-note':'မှတ်ချက် (မဖြည့်လည်းရ)',
+    'btn-add-exp':'+ အသုံးစရိတ်ထည့်မည်',
+    'lbl-exp-today':'ယနေ့',
+    'lbl-exp-month':'လစုစုပေါင်း',
+    'lbl-exp-avg':'နေ့စဉ်ပျမ်းမျှ',
+    'tab-summary':'အနှစ်ချုပ်',
+    'tab-tax':'အခွန်',
+    'tab-data':'ဒေတာ',
+    'lbl-night-min':'ညမိနစ်',
+    'toast-work-added':'အလုပ် ထည့်ပြီးပါပြီ ✓',
+    'toast-work-updated':'အလုပ် ပြင်ပြီးပါပြီ ✓',
+    'toast-work-deleted':'အလုပ် ဖျက်ပြီးပါပြီ',
+    'toast-shift-saved':'ဆိုင်း သိမ်းပြီးပါပြီ ✓',
+    'toast-shifts-saved':'ဆိုင်း သိမ်းပြီးပါပြီ ✓',
+    'toast-shift-deleted':'ဆိုင်း ဖျက်ပြီးပါပြီ',
+    'toast-shifts-cleared':'ဆိုင်းအားလုံး ဖျက်ပြီးပါပြီ',
+    'toast-backup-exported':'အရန်ဖိုင် ထုတ်ပြီးပါပြီ ✓',
+    'toast-imported':'ပြန်သွင်းပြီးပါပြီ:',
+    'toast-works':'အလုပ်',
+    'toast-shifts':'ဆိုင်း',
+    'toast-cancelled':'ပယ်ဖျက်လိုက်ပါပြီ',
+    'toast-all-deleted':'ဒေတာအားလုံး ဖျက်ပြီးပါပြီ',
+    'confirm-delete-work':'ဤအလုပ်ကို ဖျက်မလား? ဆိုင်းမှတ်တမ်းများကို ဆက်လက်သိမ်းထားပါမည်။',
+    'confirm-delete-shift':'ဤဆိုင်းကို ဖျက်မလား?',
+    'confirm-clear-all':'ဆိုင်းအားလုံးကို ဖျက်မလား? ပြန်မရနိုင်ပါ။',
+    'confirm-nuke':'⚠️ အလုပ်များနှင့် ဆိုင်းများအားလုံးကို အပြီးအပိုင် ဖျက်ပါမည်။',
+    'confirm-nuke-type':'အတည်ပြုရန် "delete" ဟု ရိုက်ထည့်ပါ:',
+    'confirm-import':'အလုပ်များနှင့် ဆိုင်းများကို ပြန်သွင်းမလား? လက်ရှိဒေတာအားလုံးကို အစားထိုးပါမည်။',
+    'alert-no-name':'အလုပ်အမည် ထည့်ပါ။',
+    'alert-fill-date':'ရက်စွဲ၊ စတင်ချိန်နှင့် ပြီးဆုံးချိန် ဖြည့်ပါ။',
+    'alert-select-work':'အလုပ်တစ်ခု ရွေးပါ။',
+    'alert-no-dates':'ရက်စွဲ အနည်းဆုံးတစ်ခု ထည့်ပါ။',
+    'alert-no-shifts':'ထုတ်ယူရန် ဆိုင်းမရှိပါ။',
+    'lbl-m-night-note':'★ ညမိနစ် × ညဆိုင်းဘောနပ်စ် ပါဝင်သည်',
+    'lbl-break-display':'နားချိန်:'
   }
 };
 let lang='en';
+// ── Burmese (MM) helpers ──
+const MM_X={"Tap to change": "ပြောင်းရန် နှိပ်ပါ", "Currency Symbol": "ငွေကြေးသင်္ကေတ", "Custom": "စိတ်ကြိုက်", "Night hours": "ညဆိုင်းအချိန်", "Income tax": "ဝင်ငွေခွန်", "Payday": "လစာရက်", "Edit": "ပြင်မည်", "Delete": "ဖျက်မည်", "Pick a date": "ရက်စွဲ ရွေးပါ", "Today": "ယနေ့", "Night bonus": "ညဆိုင်းဘောနပ်စ်", "All": "အားလုံး", "No shifts yet.": "ဆိုင်း မရှိသေးပါ။", "No shifts this month": "ဤလတွင် ဆိုင်းမရှိပါ", "No shifts this month.": "ဤလတွင် ဆိုင်းမရှိပါ။", "Date": "ရက်စွဲ", "Expenses": "အသုံးစရိတ်", "Total": "စုစုပေါင်း", "more": "ခု ပိုရှိ", "Worked": "အလုပ်လုပ်", "Break": "နားချိန်", "Night": "ညဆိုင်း", "Wages": "လုပ်ခ", "Transport": "ခရီးစရိတ်", "Day total": "ယနေ့စုစုပေါင်း", "Expenses total": "အသုံးစရိတ်စုစုပေါင်း", "Net (income − expenses)": "အသားတင် (ဝင်ငွေ − အသုံးစရိတ်)", "Income Tax": "ဝင်ငွေခွန်", "Social Insurance": "လူမှုဖူလုံရေးအာမခံ", "Take-Home": "လက်ထဲရောက်ငွေ", "No data": "ဒေတာမရှိပါ", "Enter a bill name": "ဘီလ်အမည် ထည့်ပါ", "Enter an amount": "ပမာဏ ထည့်ပါ", "Bill added ✓": "ဘီလ် ထည့်ပြီးပါပြီ ✓", "Delete this bill?": "ဤဘီလ်ကို ဖျက်မလား?", "Deleted": "ဖျက်ပြီးပါပြီ", "No bills yet. Add your monthly expenses above.": "ဘီလ် မရှိသေးပါ။ လစဉ်အသုံးစရိတ်များကို အပေါ်တွင် ထည့်ပါ။", "End of month": "လကုန်ရက်", "Not set": "မသတ်မှတ်ရသေး", "Same day": "ထိုနေ့ချင်းပေး", "Next month": "နောက်လပေး", "Same month": "ထိုလအတွင်းပေး", "No upcoming paydays yet.": "လာမည့် လစာရက် မရှိသေးပါ။", "Tomorrow": "မနက်ဖြန်", "Amounts are before tax (wages + transport).": "ပမာဏများသည် အခွန်မနုတ်မီ ပမာဏများ ဖြစ်သည် (လုပ်ခ + ခရီးစရိတ်)။", " No payday set for: ": " လစာရက် မသတ်မှတ်ရသေးသော အလုပ်: ", "Expense added ✓": "အသုံးစရိတ် ထည့်ပြီးပါပြီ ✓", "Delete this expense?": "ဤအသုံးစရိတ်ကို ဖျက်မလား?", "e.g. Lunch": "ဥပမာ - နေ့လယ်စာ", "No expenses this month yet.": "ဤလတွင် အသုံးစရိတ် မရှိသေးပါ။", "this month": "ဤလ", "last month": "ပြီးခဲ့သောလ", "this year": "ဤနှစ်", "all time": "စုစုပေါင်း", "per work": "အလုပ်တစ်ခုချင်းစီအလိုက်", "Expenses (period)": "အသုံးစရိတ် (ကာလအတွင်း)", "Gross Income": "စုစုပေါင်းဝင်ငွေ", "Total Bills": "ဘီလ်စုစုပေါင်း", "Total Expenses": "အသုံးစရိတ်စုစုပေါင်း", "Taxed months (wages ≥ 70,000)": "အခွန်ကောက်ခံသောလများ (လုပ်ခ ≥ 70,000)", "No expenses in this period. Add them in the Expenses tab.": "ဤကာလတွင် အသုံးစရိတ် မရှိပါ။ “အသုံးစရိတ်” တက်ဘ်တွင် ထည့်နိုင်ပါသည်။", "No bills registered. Add bills in Settings (⚙).": "ဘီလ် မမှတ်ပုံတင်ရသေးပါ။ ဆက်တင် (⚙) တွင် ထည့်နိုင်ပါသည်။", "Total: ": "စုစုပေါင်း: ", "h": "နာရီ", "m": "မိနစ်", "No break": "နားချိန်မရှိ", " min": " မိနစ်", "min": "မိနစ်", "Break time": "နားချိန်", "Full circle = 1 hr · locks every 5 min": "တစ်ပတ်ပြည့် = ၁ နာရီ · ၅ မိနစ်စီ လော့ခ်ကျသည်", "Set": "သတ်မှတ်မည်"};
+const MONTHS_MM=["ဇန်နဝါရီ", "ဖေဖော်ဝါရီ", "မတ်", "ဧပြီ", "မေ", "ဇွန်", "ဇူလိုင်", "ဩဂုတ်", "စက်တင်ဘာ", "အောက်တိုဘာ", "နိုဝင်ဘာ", "ဒီဇင်ဘာ"];
+const DAY_MM=["နွေ", "လာ", "ဂါ", "ဟူး", "ကြာ", "သော", "နေ"];
+const PAY_MM={"none": "မသတ်မှတ်ရသေး", "daily": "ထိုနေ့ချင်းပေး (နေ့စား)", "same": "ထိုလအတွင်းပေး", "next": "နောက်လပေး"};
+const EXP_MM={"food": "အစားအသောက်", "transport": "ခရီးစရိတ်", "shopping": "ဈေးဝယ်", "fun": "ဖျော်ဖြေရေး", "health": "ကျန်းမာရေး", "other": "အခြား"};
+const CAT_MM={"housing": "အိမ်လခ", "electric": "မီးဖိုး", "gas": "ဂတ်စ်ခ", "water": "ရေခ", "internet": "အင်တာနက်", "phone": "ဖုန်းဘီလ်", "insurance": "အာမခံ", "other": "အခြား"};
+// L(ja,en): pick the JA / EN / MM text for an inline string (MM looks the English text up in MM_X)
+function L(ja,en){return lang==='ja'?ja:(lang==='mm'?(MM_X[en]||en):en);}
+// L3(ja,en,mm): same, with an explicit Burmese string (for texts with variables)
+function L3(ja,en,mm){return lang==='ja'?ja:(lang==='mm'?mm:en);}
+// Locale for Intl date formatting (Burmese uses Latin digits to match the rest of the UI)
+function LOC(){return lang==='ja'?'ja-JP':(lang==='mm'?'my-MM-u-nu-latn':'en-US');}
+function DAYS_SHORT(){return lang==='ja'?['日','月','火','水','木','金','土']:(lang==='mm'?DAY_MM:['Su','Mo','Tu','We','Th','Fr','Sa']);}
+
 function t(key){return (T[lang]&&T[lang][key])||T['en'][key]||key;}
 function applyLang(rerender){
   // Update all static elements with IDs in the translation table
@@ -2575,8 +2759,11 @@ function applyLang(rerender){
   // Lang toggle highlight
   const el_en=document.getElementById('lang-en');
   const el_ja=document.getElementById('lang-ja');
+  const el_mm=document.getElementById('lang-mm');
   if(el_en) el_en.classList.toggle('active',lang==='en');
   if(el_ja) el_ja.classList.toggle('active',lang==='ja');
+  if(el_mm) el_mm.classList.toggle('active',lang==='mm');
+  document.documentElement.lang=lang==='ja'?'ja':(lang==='mm'?'my':'en');
   // Only re-render dynamic UI if explicitly requested (not during initial load)
   if(rerender){
     renderWorks(); renderWorkPicker(); renderFilterRow();
@@ -2641,7 +2828,7 @@ const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth
 const fmtMoney=n=>sym()+(n||0).toFixed(2);
 const fmtDur=ms=>{const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}h ${m}m`:`${m}m`;};
 const fmtTime=ts=>new Date(ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-const fmtDate=ts=>new Date(ts).toLocaleDateString(lang==='ja'?'ja-JP':'en-US',{month:'short',day:'numeric',year:'2-digit'});
+const fmtDate=ts=>new Date(ts).toLocaleDateString(LOC(),{month:'short',day:'numeric',year:'2-digit'});
 
 function loading(on){document.getElementById('loading-bar').classList.toggle('show',on);}
 function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='show '+type;clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2800);}
@@ -2740,13 +2927,13 @@ window.addEventListener('resize',curPosition);
 function renderCurrencyChips(){
   const cur=settings.currency||'円',ja=lang==='ja';
   const sb=document.getElementById('cur-btn-sym');if(sb)sb.textContent=cur;
-  const hint=document.getElementById('cur-btn-hint');if(hint)hint.textContent=ja?'タップして変更':'Tap to change';
+  const hint=document.getElementById('cur-btn-hint');if(hint)hint.textContent=L('タップして変更','Tap to change');
   const hid=document.getElementById('currency-sym');if(hid)hid.value=cur;
   if(!curPop)return;
   curPop.querySelectorAll('.cur-chip').forEach(b=>{const on=b.dataset.c===cur;b.classList.toggle('sel',on);b.setAttribute('aria-pressed',on?'true':'false');});
   const ci=document.getElementById('cur-custom-input');if(ci&&ci!==document.activeElement)ci.value=CURRENCIES.some(c=>c[0]===cur)?'':cur;
-  const tt=document.getElementById('cur-pop-title');if(tt)tt.textContent=ja?'通貨記号':'Currency Symbol';
-  const cl=document.getElementById('cur-custom-lbl');if(cl)cl.textContent=ja?'カスタム':'Custom';
+  const tt=document.getElementById('cur-pop-title');if(tt)tt.textContent=L('通貨記号','Currency Symbol');
+  const cl=document.getElementById('cur-custom-lbl');if(cl)cl.textContent=L('カスタム','Custom');
 }
 function applyCurrency(v){
   const c=_cur(v).trim()||'円';
@@ -2758,7 +2945,7 @@ function applyCurrency(v){
   try{renderExpenses();}catch(e){}
   try{recalcSummary();}catch(e){}
 }
-function refreshLangSummary(){const v=document.getElementById('st-lang-val');if(v)v.textContent=(lang==='ja'?'日本語':'EN')+' · '+(settings.currency||'円');}
+function refreshLangSummary(){const v=document.getElementById('st-lang-val');if(v)v.textContent=(lang==='ja'?'日本語':(lang==='mm'?'မြန်မာ':'EN'))+' · '+(settings.currency||'円');}
 
 // ════════════════════════════════════════════════
 // Works
@@ -2808,15 +2995,15 @@ function renderWorks(){
       <div class="wc-divider"></div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <div class="wc-row"><span class="wc-label">${t('lbl-hourly-rate')}</span><span class="wc-val" style="color:var(--green)">${sym()}${w.rate.toFixed(2)}/h</span></div>
-        <div class="wc-row"><span class="wc-label">${lang==='ja'?'深夜割増 (+'+workNight(w).pctRaw+'%)':'Night (+'+workNight(w).pctRaw+'%)'}</span><span class="wc-val" style="color:var(--purple)">${sym()}${(w.rate*(1+workNight(w).pct)).toFixed(2)}/h</span></div>
-        <div class="wc-row"><span class="wc-label">${lang==='ja'?'深夜の時間帯':'Night hours'}</span><span class="wc-val" style="color:var(--purple)">${workNight(w).ns}–${workNight(w).ne}</span></div>
+        <div class="wc-row"><span class="wc-label">${L('深夜割増','Night')} (+${workNight(w).pctRaw}%)</span><span class="wc-val" style="color:var(--purple)">${sym()}${(w.rate*(1+workNight(w).pct)).toFixed(2)}/h</span></div>
+        <div class="wc-row"><span class="wc-label">${L('深夜の時間帯','Night hours')}</span><span class="wc-val" style="color:var(--purple)">${workNight(w).ns}–${workNight(w).ne}</span></div>
         <div class="wc-row"><span class="wc-label">${t('lbl-transport')}</span><span class="wc-val" style="color:var(--yellow)">${sym()}${w.transport.toFixed(2)}</span></div>
-        <div class="wc-row"><span class="wc-label">${lang==='ja'?'所得税':'Income tax'}</span><span class="wc-val" style="color:var(--red)">${workTaxRate(w)}%</span></div>
-        <div class="wc-row"><span class="wc-label">${lang==='ja'?'給料日':'Payday'}</span><span class="wc-val" style="color:var(--accent)">${payLabel(w)}</span></div>
+        <div class="wc-row"><span class="wc-label">${L('所得税','Income tax')}</span><span class="wc-val" style="color:var(--red)">${workTaxRate(w)}%</span></div>
+        <div class="wc-row"><span class="wc-label">${L('給料日','Payday')}</span><span class="wc-val" style="color:var(--accent)">${payLabel(w)}</span></div>
       </div>
       <div class="wc-actions">
-        <button class="btn btn-ghost btn-sm" onclick="openEdit('${safeId(w.id)}')">${lang==='ja'?'編集':'Edit'}</button>
-        <button class="btn btn-del  btn-sm" onclick="deleteWork('${safeId(w.id)}')">${lang==='ja'?'削除':'Delete'}</button>
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('${safeId(w.id)}')">${L('編集','Edit')}</button>
+        <button class="btn btn-del  btn-sm" onclick="deleteWork('${safeId(w.id)}')">${L('削除','Delete')}</button>
       </div>
     </div>`).join('');
 }
@@ -2890,7 +3077,7 @@ function updateMultiCountNote(){
   const note=document.getElementById('multi-count-note');
   if(!note)return;
   note.textContent=multiDates.length>0
-    ?(lang==='ja'?`${multiDates.length}日分を選択中`:`${multiDates.length} date${multiDates.length>1?'s':''} selected`)
+    ?(lang==='ja'?`${multiDates.length}日分を選択中`:(lang==='mm'?`ရက်စွဲ ${multiDates.length} ခု ရွေးထားသည်`:`${multiDates.length} date${multiDates.length>1?'s':''} selected`))
     :'';
 }
 
@@ -2901,8 +3088,8 @@ function renderMiniCal(){
   const MONTHS_JA=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   const DAY_EN=['Su','Mo','Tu','We','Th','Fr','Sa'];
   const DAY_JA=['日','月','火','水','木','金','土'];
-  const dayNames=lang==='ja'?DAY_JA:DAY_EN;
-  const monthLabel=lang==='ja'?`${miniCalYear}年 ${MONTHS_JA[miniCalMonth]}`:`${MONTHS_EN[miniCalMonth]} ${miniCalYear}`;
+  const dayNames=lang==='ja'?DAY_JA:(lang==='mm'?DAY_MM:DAY_EN);
+  const monthLabel=lang==='ja'?`${miniCalYear}年 ${MONTHS_JA[miniCalMonth]}`:`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[miniCalMonth]} ${miniCalYear}`;
   const lbl=document.getElementById('mc-month-label');
   if(lbl)lbl.textContent=monthLabel;
 
@@ -2940,9 +3127,9 @@ const SD_CFG={shift:{inp:'shift-date',btn:'sd-btn',txt:'sd-text'},exp:{inp:'exp-
 const sdInput=()=>document.getElementById(SD_CFG[sdFor].inp);
 const sdBtn=()=>document.getElementById(SD_CFG[sdFor].btn);
 function sdFmt(v){
-  if(!v)return lang==='ja'?'日付を選択':'Pick a date';
+  if(!v)return L('日付を選択','Pick a date');
   const [y,m,d]=v.split('-').map(Number);
-  return new Date(y,m-1,d).toLocaleDateString(lang==='ja'?'ja-JP':'en-US',{year:'numeric',month:'short',day:'numeric',weekday:'short'});
+  return new Date(y,m-1,d).toLocaleDateString(LOC(),{year:'numeric',month:'short',day:'numeric',weekday:'short'});
 }
 function syncSDBtn(){Object.keys(SD_CFG).forEach(k=>{const c=SD_CFG[k],t=document.getElementById(c.txt),i=document.getElementById(c.inp);if(t&&i)t.textContent=sdFmt(i.value);});}
 (function(){
@@ -2973,9 +3160,9 @@ function sdBuild(){
 }
 function sdRender(){
   const MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const names=lang==='ja'?['日','月','火','水','木','金','土']:['Su','Mo','Tu','We','Th','Fr','Sa'];
-  document.getElementById('sd-month').textContent=lang==='ja'?`${sdYear}年 ${sdMonth+1}月`:`${MONTHS_EN[sdMonth]} ${sdYear}`;
-  document.getElementById('sd-today').textContent=lang==='ja'?'今日':'Today';
+  const names=DAYS_SHORT();
+  document.getElementById('sd-month').textContent=lang==='ja'?`${sdYear}年 ${sdMonth+1}月`:`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[sdMonth]} ${sdYear}`;
+  document.getElementById('sd-today').textContent=L('今日','Today');
   const days=new Date(sdYear,sdMonth+1,0).getDate(),first=new Date(sdYear,sdMonth,1).getDay();
   const sel=sdInput().value,todayStr=today();
   const heads=names.map(n=>`<div class="mc-day-name">${n}</div>`).join('');
@@ -3122,7 +3309,7 @@ function updateWorkNightNote(){
   const note=document.getElementById('night-bonus-note');if(!note)return;
   const v=id=>document.getElementById(id)?.value;
   const pct=v('w-night-pct')===''||v('w-night-pct')==null?NIGHT_DEF.pct:v('w-night-pct');
-  note.textContent=`★ ${lang==='ja'?'深夜ボーナス':'Night bonus'}: +${pct}% (${v('w-night-start')||NIGHT_DEF.start} – ${v('w-night-end')||NIGHT_DEF.end})`;
+  note.textContent=`★ ${L('深夜ボーナス','Night bonus')}: +${pct}% (${v('w-night-start')||NIGHT_DEF.start} – ${v('w-night-end')||NIGHT_DEF.end})`;
 }
 function updateNightPreview(){updateWorkNightNote();}
 
@@ -3226,7 +3413,7 @@ async function clearAllShifts(){
 
 function renderFilterRow(){
   const row=document.getElementById('filter-work-row');
-  row.innerHTML=`<div class="fw-btn ${filterWorkId===null?'sel':''}" onclick="setFilter(null)">${lang==='ja'?'全て':'All'}</div>`
+  row.innerHTML=`<div class="fw-btn ${filterWorkId===null?'sel':''}" onclick="setFilter(null)">${L('全て','All')}</div>`
     +works.map(w=>`<div class="fw-btn ${filterWorkId===w.id?'sel':''}" onclick="setFilter('${safeId(w.id)}')"><span style="width:8px;height:8px;border-radius:50%;background:${safeColor(w.color)};display:inline-block"></span>${esc(w.name)}</div>`).join('');
 }
 function setFilter(id){filterWorkId=id;renderFilterRow();renderShifts();}
@@ -3261,7 +3448,7 @@ function toggleMonth(key){
 function monthKeyOf(ts){const d=new Date(ts);return d.getFullYear()+'-'+d.getMonth();}
 function monthLabelOf(ts){
   const d=new Date(ts);
-  return lang==='ja'?`${d.getFullYear()}年${d.getMonth()+1}月`:d.toLocaleString('en',{month:'long',year:'numeric'});
+  return lang==='ja'?`${d.getFullYear()}年${d.getMonth()+1}月`:(lang==='mm'?`${MONTHS_MM[d.getMonth()]} ${d.getFullYear()}`:d.toLocaleString('en',{month:'long',year:'numeric'}));
 }
 
 function shiftRowHTML(s,isLast,isMobile){
@@ -3269,13 +3456,13 @@ function shiftRowHTML(s,isLast,isMobile){
     return `<div style="background:var(--surface);${!isLast?'border-bottom:1px solid var(--border)':''}animation:slideIn .22s ease">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;gap:10px">
               <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)">${fmtDate(s.clockIn)} · ${fmtTime(s.clockIn)} – ${fmtTime(s.clockOut)}</div>
+                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--muted)">${fmtDate(s.clockIn)} · ${fmtTime(s.clockIn)} – ${fmtTime(s.clockOut)}</div>
                 ${s.breakMin>0?`<div style="font-size:11px;color:var(--muted)">${t('lbl-break-display')} ${s.breakMin}m</div>`:''}
                 ${s.nightMin>0?`<div style="font-size:11px;color:var(--purple)">★ ${s.nightMin}${t('lbl-night-min')}</div>`:''}
               </div>
               <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent)">${fmtDur(s.duration)}</div>
-                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--green)">${s.wages?fmtMoney(s.wages):'—'}</div>
+                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;color:var(--accent)">${fmtDur(s.duration)}</div>
+                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--green)">${s.wages?fmtMoney(s.wages):'—'}</div>
                 ${s.transport?`<div style="font-size:11px;color:var(--yellow)">+${fmtMoney(s.transport)}</div>`:''}
               </div>
               <button class="del-btn" onclick="deleteShift('${safeId(s.id)}')" style="color:var(--muted);background:none;border:none;cursor:pointer;font-size:15px;padding:4px 2px">✕</button>
@@ -3299,7 +3486,7 @@ function shiftRowHTML(s,isLast,isMobile){
 function renderShifts(){
   const filtered=shifts.filter(s=>filterWorkId===null||s.workId===filterWorkId);
   const list=document.getElementById('shift-list');
-  if(!filtered.length){list.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🕐</div>${lang==='ja'?'シフトがありません':'No shifts yet.'}</div>`;return;}
+  if(!filtered.length){list.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🕐</div>${L('シフトがありません','No shifts yet.')}</div>`;return;}
   const isMobile=window.innerWidth<=640;
 
   // Build work-ordered groups (preserve order of works array)
@@ -3333,9 +3520,9 @@ function renderShifts(){
       " onmouseenter="this.style.borderColor='${safeColor(g.workColor)}'" onmouseleave="this.style.borderColor='var(--border)'">
         <span style="width:11px;height:11px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
         <span style="font-size:14px;font-weight:800;flex:1">${esc(g.workName)}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">${count} ${lang==='ja'?'件':'shift'+(count>1?'s':'')}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent)">${fmtDur(totalHours)}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--green);font-weight:700">${fmtMoney(totalWages+totalTransport)}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted)">${count} ${L3('件','shift'+(count>1?'s':''),'ဆိုင်း')}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--accent)">${fmtDur(totalHours)}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--green);font-weight:700">${fmtMoney(totalWages+totalTransport)}</span>
         <span style="color:var(--muted);font-size:14px;transition:transform .2s;display:inline-block;transform:rotate(${collapsed?'0':'90'}deg)">›</span>
       </div>`;
 
@@ -3353,7 +3540,7 @@ function renderShifts(){
           html+=shiftRowHTML(sh,isLast,isMobile);
         });
       } else {
-        html+=`<div style="padding:12px 14px;font-size:12px;color:var(--muted);background:var(--surface);${earlier.length?'border-bottom:1px solid var(--border)':''}">${lang==='ja'?'今月のシフトはありません':'No shifts this month'}</div>`;
+        html+=`<div style="padding:12px 14px;font-size:12px;color:var(--muted);background:var(--surface);${earlier.length?'border-bottom:1px solid var(--border)':''}">${L('今月のシフトはありません','No shifts this month')}</div>`;
       }
 
       // Earlier months — shrunk into one summary row per month (tap to expand)
@@ -3372,9 +3559,9 @@ function renderShifts(){
           const lastMonth=mi===months.length-1;
           html+=`<div class="month-fold-head" onclick="toggleMonth('${ek}')" style="display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(--surface2);border-bottom:${(lastMonth&&!open)?'none':'1px solid var(--border)'};cursor:pointer;user-select:none;opacity:${open?1:.8};">
             <span style="font-size:12px;font-weight:700;flex:1;color:var(--muted)">${m.label}</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">${m.shifts.length} ${lang==='ja'?'件':'shift'+(m.shifts.length>1?'s':'')}</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">${fmtDur(mHours)}</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)">${fmtMoney(mMoney)}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--muted)">${m.shifts.length} ${L3('件','shift'+(m.shifts.length>1?'s':''),'ဆိုင်း')}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--accent)">${fmtDur(mHours)}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--green)">${fmtMoney(mMoney)}</span>
             <span style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block;transform:rotate(${open?'90':'0'}deg)">›</span>
           </div>`;
           if(open){
@@ -3425,7 +3612,7 @@ function setGraph(mode){graphMode=mode;document.getElementById('gtog-earnings').
 function renderMonthly(){
   const MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
   const MONTHS_JA=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  const mLabel=(lang==='ja'?`${currentYear}年 ${MONTHS_JA[currentMonth]}`:`${MONTHS_EN[currentMonth]} ${currentYear}`);
+  const mLabel=(lang==='ja'?`${currentYear}年 ${MONTHS_JA[currentMonth]}`:`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[currentMonth]} ${currentYear}`);
   document.getElementById('month-title').textContent=mLabel;
   document.getElementById('cal-month-lbl').textContent=mLabel;
 
@@ -3433,7 +3620,7 @@ function renderMonthly(){
 
   // Work filter
   const mwf=document.getElementById('monthly-work-filter');
-  mwf.innerHTML=`<div class="fw-btn ${monthlyFilterId===null?'sel':''}" onclick="setMonthlyFilter(null)">${lang==='ja'?'全て':'All'}</div>`
+  mwf.innerHTML=`<div class="fw-btn ${monthlyFilterId===null?'sel':''}" onclick="setMonthlyFilter(null)">${L('全て','All')}</div>`
     +works.map(w=>`<div class="fw-btn ${monthlyFilterId===w.id?'sel':''}" onclick="setMonthlyFilter('${safeId(w.id)}')"><span style="width:8px;height:8px;border-radius:50%;background:${safeColor(w.color)};display:inline-block"></span>${esc(w.name)}</div>`).join('');
 
   // Stats
@@ -3445,7 +3632,7 @@ function renderMonthly(){
   {const mp=currentYear+'-'+String(currentMonth+1).padStart(2,'0');
    const et=expenses.filter(x=>x.date&&x.date.startsWith(mp)).reduce((a,x)=>a+(x.amount||0),0);
    const me=document.getElementById('m-exp');if(me)me.textContent=et>0?'-'+fmtMoney(et):fmtMoney(0);
-   const ml=document.getElementById('lbl-m-exp');if(ml)ml.textContent=lang==='ja'?'支出':'Expenses';}
+   const ml=document.getElementById('lbl-m-exp');if(ml)ml.textContent=L('支出','Expenses');}
 
   // Graph
   const days=new Date(currentYear,currentMonth+1,0).getDate();
@@ -3457,11 +3644,11 @@ function renderMonthly(){
   const wmap={};
   for(const s of ms){const k=s.workId||'?';if(!wmap[k])wmap[k]={name:s.workName,color:s.workColor||'#888',shifts:0,dur:0,wages:0,transport:0};wmap[k].shifts++;wmap[k].dur+=s.duration;wmap[k].wages+=(s.wages||0);wmap[k].transport+=(s.transport||0);}
   const rows=Object.values(wmap),tbody=document.getElementById('breakdown-body');
-  if(!rows.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:22px">${lang==='ja'?'今月のシフトはありません':'No shifts this month.'}</td></tr>`;}
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:22px">${L('今月のシフトはありません','No shifts this month.')}</td></tr>`;}
   else{
     let ts=0,tD=0,tW=0,tT=0;
     tbody.innerHTML=rows.map(r=>{ts+=r.shifts;tD+=r.dur;tW+=r.wages;tT+=r.transport;return`<tr><td><div class="td-work"><span style="width:9px;height:9px;border-radius:50%;background:${safeColor(r.color)};display:inline-block"></span>${esc(r.name)}</div></td><td>${r.shifts}</td><td class="r">${fmtDur(r.dur)}</td><td class="r">${fmtMoney(r.wages)}</td><td class="r">${fmtMoney(r.transport)}</td><td class="r" style="color:var(--green);font-weight:600">${fmtMoney(r.wages+r.transport)}</td></tr>`;}).join('')
-    +`<tr class="td-total-row"><td style="font-weight:700">${lang==='ja'?'合計':'Total'}</td><td>${ts}</td><td class="r">${fmtDur(tD)}</td><td class="r">${fmtMoney(tW)}</td><td class="r">${fmtMoney(tT)}</td><td class="r">${fmtMoney(tW+tT)}</td></tr>`;
+    +`<tr class="td-total-row"><td style="font-weight:700">${L('合計','Total')}</td><td>${ts}</td><td class="r">${fmtDur(tD)}</td><td class="r">${fmtMoney(tW)}</td><td class="r">${fmtMoney(tT)}</td><td class="r">${fmtMoney(tW+tT)}</td></tr>`;
   }
 
   // Calendar
@@ -3474,7 +3661,7 @@ function renderCalendar(monthShifts){
   const firstDow=new Date(currentYear,currentMonth,1).getDay(); // 0=Sun
   const todayStr=today();
   const ja=lang==='ja';
-  const dayNames=ja?['日','月','火','水','木','金','土']:['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const dayNames=DAYS_SHORT();
   const hhmm=ts=>{const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
   const shortMoney=n=>{n=Math.round(n||0);return n>=10000?sym()+(n/1000).toFixed(n>=100000?0:1).replace(/\.0$/,'')+'k':sym()+n;};
   const shiftTotal=s=>(s.wages||0)+(s.transport||0);
@@ -3523,7 +3710,7 @@ function renderCalendar(monthShifts){
       const shown=list.slice(0,3),more=list.length-shown.length;
       inner+=`<div class="cd-shifts">`
         +shown.map(s=>`<div class="cd-shift" style="--c:${safeColor(s.workColor||'#888')}"><span class="cd-name">${esc(s.workName)}</span>${list.length>1?`<span class="cd-amt">${fmtMoney(shiftTotal(s))}</span>`:''}<span class="cd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span></div>`).join('')
-        +(more>0?`<div class="cd-more">+${more} ${ja?'件':'more'}</div>`:'')
+        +(more>0?`<div class="cd-more">+${more} ${L('件','more')}</div>`:'')
         +`</div>`
         +`<div class="cd-total"><span>${fmtDur(dayMs)}</span><b>${fmtMoney(tot)}</b></div>`
         +`<div class="cd-dots">${list.slice(0,4).map(s=>`<i style="background:${safeColor(s.workColor||'#888')}"></i>`).join('')}</div>`
@@ -3544,7 +3731,7 @@ function renderCalendar(monthShifts){
   const exs=calSelectedDay&&expDays[calSelectedDay]?expDays[calSelectedDay]:null;
   if(list.length||exs){
     detail.style.display='block';
-    const dateLabel=new Date(currentYear,currentMonth,calSelectedDay).toLocaleDateString(ja?'ja-JP':'en-US',{weekday:'long',month:'long',day:'numeric'});
+    const dateLabel=new Date(currentYear,currentMonth,calSelectedDay).toLocaleDateString(LOC(),{weekday:'long',month:'long',day:'numeric'});
     document.getElementById('day-detail-title').textContent=dateLabel;
     let tW=0,tT=0,tD=0;
     let html=list.map(s=>{
@@ -3552,20 +3739,20 @@ function renderCalendar(monthShifts){
       return `<div class="dd-shift" style="--c:${s.workColor||'#888'}">
         <div class="dd-head"><span class="dd-name">${esc(s.workName)}</span><span class="dd-time">${hhmm(s.clockIn)}–${hhmm(s.clockOut)}</span><span class="dd-money">${fmtMoney(w+tr)}</span></div>
         <div class="dd-meta">
-          <span>${ja?'勤務':'Worked'} ${fmtDur(s.duration||0)}</span>
-          ${s.breakMin>0?`<span>${ja?'休憩':'Break'} ${s.breakMin}m</span>`:''}
-          ${s.nightMin>0?`<span>${ja?'深夜':'Night'} ${fmtDur(s.nightMin*60000)}</span>`:''}
-          <span>${ja?'給与':'Wages'} ${fmtMoney(w)}</span>
-          ${tr>0?`<span>${ja?'交通費':'Transport'} ${fmtMoney(tr)}</span>`:''}
+          <span>${L('勤務','Worked')} ${fmtDur(s.duration||0)}</span>
+          ${s.breakMin>0?`<span>${L('休憩','Break')} ${s.breakMin}m</span>`:''}
+          ${s.nightMin>0?`<span>${L('深夜','Night')} ${fmtDur(s.nightMin*60000)}</span>`:''}
+          <span>${L('給与','Wages')} ${fmtMoney(w)}</span>
+          ${tr>0?`<span>${L('交通費','Transport')} ${fmtMoney(tr)}</span>`:''}
         </div>
       </div>`;
     }).join('');
-    if(list.length)html+=`<div class="dd-total"><span>${ja?'この日の合計':'Day total'} · ${fmtDur(tD)}</span><b>${fmtMoney(tW+tT)}</b></div>`;
+    if(list.length)html+=`<div class="dd-total"><span>${L('この日の合計','Day total')} · ${fmtDur(tD)}</span><b>${fmtMoney(tW+tT)}</b></div>`;
     if(exs){
-      html+=`<div class="dd-exp-head">${ja?'支出':'Expenses'}</div>`
-        +exs.items.map(x=>{const c=expCatInfo(x.cat);return `<div class="dd-exp"><span class="dd-exp-ico">${c.icon}</span><span class="dd-exp-name">${esc(ja?c.ja:c.en)}${x.note?` · <em>${esc(x.note)}</em>`:''}</span><b>${minus(x.amount||0)}</b></div>`;}).join('');
-      if(exs.items.length>1)html+=`<div class="dd-total"><span>${ja?'支出合計':'Expenses total'}</span><b class="neg">${minus(exs.total)}</b></div>`;
-      if(list.length){const net=tW+tT-exs.total;html+=`<div class="dd-total"><span>${ja?'差引（収入 − 支出）':'Net (income − expenses)'}</span><b style="color:${net>=0?'var(--green)':'var(--red)'}">${net<0?'-':''}${fmtMoney(Math.abs(net))}</b></div>`;}
+      html+=`<div class="dd-exp-head">${L('支出','Expenses')}</div>`
+        +exs.items.map(x=>{const c=expCatInfo(x.cat);return `<div class="dd-exp"><span class="dd-exp-ico">${c.icon}</span><span class="dd-exp-name">${esc(c[lang]||c.en)}${x.note?` · <em>${esc(x.note)}</em>`:''}</span><b>${minus(x.amount||0)}</b></div>`;}).join('');
+      if(exs.items.length>1)html+=`<div class="dd-total"><span>${L('支出合計','Expenses total')}</span><b class="neg">${minus(exs.total)}</b></div>`;
+      if(list.length){const net=tW+tT-exs.total;html+=`<div class="dd-total"><span>${L('差引（収入 − 支出）','Net (income − expenses)')}</span><b style="color:${net>=0?'var(--green)':'var(--red)'}">${net<0?'-':''}${fmtMoney(Math.abs(net))}</b></div>`;}
     }
     document.getElementById('day-detail-body').innerHTML=html;
   } else {
@@ -3687,15 +3874,15 @@ function recalcTax(){
   const barsEl=el('tax-breakdown-bars');
   if(barsEl){
     const items=[
-      {label:lang==='ja'?'所得税':'Income Tax',val:incomeTax,color:'var(--red)',pct:gross>0?incomeTax/gross*100:0},
-      {label:lang==='ja'?'社会保険':'Social Insurance',val:socialTax,color:'var(--yellow)',pct:gross>0?socialTax/gross*100:0},
-      {label:lang==='ja'?'手取り':'Take-Home',val:net,color:'var(--green)',pct:gross>0?net/gross*100:0},
+      {label:L('所得税','Income Tax'),val:incomeTax,color:'var(--red)',pct:gross>0?incomeTax/gross*100:0},
+      {label:L('社会保険','Social Insurance'),val:socialTax,color:'var(--yellow)',pct:gross>0?socialTax/gross*100:0},
+      {label:L('手取り','Take-Home'),val:net,color:'var(--green)',pct:gross>0?net/gross*100:0},
     ];
     barsEl.innerHTML=items.map(item=>`
       <div>
         <div style="display:flex;justify-content:space-between;margin-bottom:5px">
           <span style="font-size:12px;font-weight:600">${item.label}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:${safeColor(item.color)}">${fmtMoney(item.val)} <span style="font-size:10px;color:var(--muted)">(${item.pct.toFixed(1)}%)</span></span>
+          <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:${safeColor(item.color)}">${fmtMoney(item.val)} <span style="font-size:10px;color:var(--muted)">(${item.pct.toFixed(1)}%)</span></span>
         </div>
         <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden">
           <div style="height:100%;width:${Math.min(100,item.pct)}%;background:${safeColor(item.color)};border-radius:4px;transition:width .4s ease"></div>
@@ -3714,7 +3901,7 @@ function recalcTax(){
   if(tbody){
     const rows=Object.values(wmap);
     if(!rows.length){
-      tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">${lang==='ja'?'データなし':'No data'}</td></tr>`;
+      tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">${L('データなし','No data')}</td></tr>`;
     } else {
       tbody.innerHTML=rows.map(r=>{
         const tGross=Math.max(0,r.gross-deductions*(r.gross/Math.max(gross,0.01)));
@@ -3747,8 +3934,8 @@ async function addBill(){
   const name=document.getElementById('bill-name').value.trim();
   const amount=parseFloat(document.getElementById('bill-amount').value)||0;
   const cat=document.getElementById('bill-cat').value;
-  if(!name){toast(lang==='ja'?'名前を入力してください':'Enter a bill name','err');return;}
-  if(amount<=0){toast(lang==='ja'?'金額を入力してください':'Enter an amount','err');return;}
+  if(!name){toast(L('名前を入力してください','Enter a bill name'),'err');return;}
+  if(amount<=0){toast(L('金額を入力してください','Enter an amount'),'err');return;}
   const bill={id:genId(),name,amount,cat,createdAt:Date.now()};
   await dbPut('bills',bill);
   bills.push(bill);
@@ -3756,16 +3943,16 @@ async function addBill(){
   document.getElementById('bill-amount').value='';
   renderBills();
   recalcSummary();
-  toast(lang==='ja'?'請求書を追加しました ✓':'Bill added ✓');
+  toast(L('請求書を追加しました ✓','Bill added ✓'));
 }
 
 async function deleteBill(id){
-  if(!confirm(lang==='ja'?'この請求書を削除しますか？':'Delete this bill?'))return;
+  if(!confirm(L('この請求書を削除しますか？','Delete this bill?')))return;
   await dbDelete('bills',id);
   bills=bills.filter(b=>b.id!==id);
   renderBills();
   recalcSummary();
-  toast(lang==='ja'?'削除しました':'Deleted');
+  toast(L('削除しました','Deleted'));
 }
 
 async function updateBillAmount(id,val){
@@ -3781,7 +3968,7 @@ function renderBills(){
   const el=document.getElementById('bills-list');
   if(!el)return;
   if(!bills.length){
-    el.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏠</div>${lang==='ja'?'請求書がありません':'No bills yet. Add your monthly expenses above.'}</div>`;
+    el.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">🏠</div>${L('請求書がありません','No bills yet. Add your monthly expenses above.')}</div>`;
     renderBillsTotals();
     return;
   }
@@ -3797,7 +3984,7 @@ function renderBills(){
     <div style="margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">
         <span>${catIcon(cat)}</span>
-        <span>${lang==='ja'?catNameJa(cat):catName(cat)}</span>
+        <span>${(lang==='ja'?catNameJa(cat):(lang==='mm'?(CAT_MM[cat]||cat):catName(cat)))}</span>
       </div>
       ${items.map(b=>`
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px">
@@ -3805,7 +3992,7 @@ function renderBills(){
           <div style="display:flex;align-items:center;gap:4px">
             <span style="color:var(--muted);font-size:13px">${sym()}</span>
             <input type="number" value="${b.amount.toFixed(2)}" min="0" step="0.01"
-              style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--red);width:90px;text-align:right;background:transparent;border:none;outline:none;border-bottom:1px solid var(--border);padding:2px 4px"
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:600;color:var(--red);width:90px;text-align:right;background:transparent;border:none;outline:none;border-bottom:1px solid var(--border);padding:2px 4px"
               onchange="updateBillAmount('${safeId(b.id)}',this.value)">
             <span style="color:var(--muted);font-size:11px">/mo</span>
           </div>
@@ -3832,18 +4019,18 @@ function renderBillsTotals(){
 // Payday per work
 // ════════════════════════════════════════════════
 const PAY_TIMINGS=[
-  {k:'none', en:'Not set',               ja:'未設定'},
-  {k:'daily',en:'Same day (daily pay)',  ja:'当日払い'},
-  {k:'same', en:'Same month',            ja:'当月払い'},
-  {k:'next', en:'Next month',            ja:'翌月払い'}
+  {k:'none', en:'Not set',               ja:'未設定',mm:'မသတ်မှတ်ရသေး'},
+  {k:'daily',en:'Same day (daily pay)',  ja:'当日払い',mm:'ထိုနေ့ချင်းပေး (နေ့စား)'},
+  {k:'same', en:'Same month',            ja:'当月払い',mm:'ထိုလအတွင်းပေး'},
+  {k:'next', en:'Next month',            ja:'翌月払い',mm:'နောက်လပေး'}
 ];
 const ordEn=n=>{const v=n%100;if(v>=11&&v<=13)return n+'th';return n+({1:'st',2:'nd',3:'rd'}[n%10]||'th');};
-const payDayText=n=>n===0?(lang==='ja'?'月末':'End of month'):(lang==='ja'?n+'日':ordEn(n));
+const payDayText=n=>n===0?L('月末','End of month'):(lang==='ja'?n+'日':(lang==='mm'?n+' ရက်':ordEn(n)));
 function fillPaySelects(){
   [['w-pay-timing','w-pay-day'],['edit-pay-timing','edit-pay-day']].forEach(([tid,did])=>{
     const ts=document.getElementById(tid),ds=document.getElementById(did);if(!ts||!ds)return;
     const tv=ts.value||'none',dv=ds.value||'25';
-    ts.innerHTML=PAY_TIMINGS.map(o=>`<option value="${o.k}">${lang==='ja'?o.ja:o.en}</option>`).join('');
+    ts.innerHTML=PAY_TIMINGS.map(o=>`<option value="${o.k}">${(o[lang]||o.en)}</option>`).join('');
     ds.innerHTML=[...Array.from({length:31},(_,i)=>i+1),0].map(n=>`<option value="${n}">${payDayText(n)}</option>`).join('');
     ts.value=tv;ds.value=dv;
   });
@@ -3907,7 +4094,7 @@ function pdMonthInfo(off){
 function pdRender(){
   const cur=pdCur(pdFor);
   const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const names=lang==='ja'?['日','月','火','水','木','金','土']:['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const names=DAYS_SHORT();
   const now=new Date(),todayStr=dkey(now);
   pdTrack.innerHTML=[0,1].map(off=>{
     const mi=pdMonthInfo(off),t=off?'next':'same';
@@ -3923,8 +4110,8 @@ function pdRender(){
   }).join('');
   const f=document.getElementById('pd-foot');
   const on=k=>cur.payTiming===k?'btn-primary':'btn-ghost';
-  f.innerHTML=`<button type="button" class="btn btn-sm ${on('none')}" data-timing="none">${lang==='ja'?'未設定':'Not set'}</button>`
-    +`<button type="button" class="btn btn-sm ${on('daily')}" data-timing="daily">${lang==='ja'?'当日払い':'Same day'}</button>`
+  f.innerHTML=`<button type="button" class="btn btn-sm ${on('none')}" data-timing="none">${L('未設定','Not set')}</button>`
+    +`<button type="button" class="btn btn-sm ${on('daily')}" data-timing="daily">${L('当日払い','Same day')}</button>`
     +`<button type="button" class="btn btn-sm ${(cur.payTiming==='same'||cur.payTiming==='next')&&cur.payDay===0?'btn-primary':'btn-ghost'}" data-day="0" data-t="${pdPage?'next':'same'}" id="pd-eom">${payDayText(0)}</button>`;
   pdGo(pdPage,true);
 }
@@ -3936,8 +4123,8 @@ function pdGo(page,instant){
   }
   const mi=pdMonthInfo(page);
   const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('pd-title').textContent=lang==='ja'?`${mi.y}年 ${mi.m+1}月`:`${MON[mi.m]} ${mi.y}`;
-  document.getElementById('pd-cap').textContent=page?(lang==='ja'?'翌月払い':'Next month'):(lang==='ja'?'当月払い':'Same month');
+  document.getElementById('pd-title').textContent=lang==='ja'?`${mi.y}年 ${mi.m+1}月`:`${(lang==='mm'?MONTHS_MM:MON)[mi.m]} ${mi.y}`;
+  document.getElementById('pd-cap').textContent=page?(L('翌月払い','Next month')):(L('当月払い','Same month'));
   document.getElementById('pd-dot0').classList.toggle('on',page===0);
   document.getElementById('pd-dot1').classList.toggle('on',page===1);
   const eom=document.getElementById('pd-eom');if(eom)eom.dataset.t=page?'next':'same';
@@ -3986,9 +4173,9 @@ window.addEventListener('resize',pdPosition);
 function payLabel(w){
   const k=w.payTiming||'none';
   const o=PAY_TIMINGS.find(x=>x.k===k)||PAY_TIMINGS[0];
-  const base=lang==='ja'?o.ja:o.en;
+  const base=(o[lang]||o.en);
   if(k==='same'||k==='next')return base+' · '+payDayText(Number.isInteger(w.payDay)?w.payDay:25);
-  return k==='daily'?(lang==='ja'?'当日払い':'Same day'):base;
+  return k==='daily'?(L('当日払い','Same day')):base;
 }
 // Date when the wages of a shift worked on `d` are paid (null if the work has no payday)
 function payDateFor(w,d){
@@ -4004,7 +4191,7 @@ const dkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+Str
 function renderPayday(){
   const list=document.getElementById('payday-list');if(!list)return;
   const note=document.getElementById('payday-note');
-  const loc=lang==='ja'?'ja-JP':'en-US',s=sym();
+  const loc=LOC(),s=sym();
   const ev={};
   shifts.forEach(sh=>{
     const w=works.find(x=>x.id===sh.workId);if(!w)return;
@@ -4018,11 +4205,11 @@ function renderPayday(){
   const now=new Date(),t0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const upcoming=Object.values(ev).filter(e=>e.date>=t0).sort((a,b)=>a.date-b.date).slice(0,6);
   if(!upcoming.length){
-    list.innerHTML=`<div class="empty-state">${lang==='ja'?'予定されている給料日はありません':'No upcoming paydays yet.'}</div>`;
+    list.innerHTML=`<div class="empty-state">${L('予定されている給料日はありません','No upcoming paydays yet.')}</div>`;
   }else{
     list.innerHTML=upcoming.map(e=>{
       const days=Math.round((e.date-t0)/86400000);
-      const when=days===0?(lang==='ja'?'今日':'Today'):days===1?(lang==='ja'?'明日':'Tomorrow'):(lang==='ja'?`${days}日後`:`in ${days} days`);
+      const when=days===0?(L('今日','Today')):days===1?(L('明日','Tomorrow')):(lang==='ja'?`${days}日後`:(lang==='mm'?`${days} ရက်အတွင်း`:`in ${days} days`));
       const label=e.date.toLocaleDateString(loc,{month:'short',day:'numeric',weekday:'short'});
       const dots=Object.values(e.parts).map(p=>`<span class="pay-work"><span class="pay-dot" style="background:${safeColor(p.color)}"></span>${esc(p.name)}</span>`).join('');
       return `<div class="pay-row"><div class="pay-main"><div class="pay-date">${label}</div><div class="pay-when">${when}</div></div><div class="pay-works">${dots}</div><div class="pay-amt">${s}${e.total.toFixed(2)}</div></div>`;
@@ -4030,8 +4217,8 @@ function renderPayday(){
   }
   const unset=works.filter(w=>!w.payTiming||w.payTiming==='none');
   if(note){
-    note.textContent=(lang==='ja'?'金額は税引き前（賃金＋交通費）です。':'Amounts are before tax (wages + transport).')
-      +(unset.length&&works.length?(lang==='ja'?' 給料日が未設定の仕事：':' No payday set for: ')+unset.map(w=>w.name).join(', ')+'.':'');
+    note.textContent=(L('金額は税引き前（賃金＋交通費）です。','Amounts are before tax (wages + transport).'))
+      +(unset.length&&works.length?(L(' 給料日が未設定の仕事：',' No payday set for: '))+unset.map(w=>w.name).join(', ')+'.':'');
   }
 }
 
@@ -4042,12 +4229,12 @@ let expenses=[];
 let expCat='food';
 let expMonth=(()=>{const n=new Date();return{y:n.getFullYear(),m:n.getMonth()};})();
 const EXP_CATS=[
-  {k:'food',icon:'🍚',en:'Food',ja:'食費'},
-  {k:'transport',icon:'🚃',en:'Transport',ja:'交通費'},
-  {k:'shopping',icon:'🛒',en:'Shopping',ja:'買い物'},
-  {k:'fun',icon:'🎮',en:'Fun',ja:'娯楽'},
-  {k:'health',icon:'🏥',en:'Health',ja:'医療'},
-  {k:'other',icon:'📦',en:'Other',ja:'その他'}
+  {k:'food',icon:'🍚',en:'Food',ja:'食費',mm:'အစားအသောက်'},
+  {k:'transport',icon:'🚃',en:'Transport',ja:'交通費',mm:'ခရီးစရိတ်'},
+  {k:'shopping',icon:'🛒',en:'Shopping',ja:'買い物',mm:'ဈေးဝယ်'},
+  {k:'fun',icon:'🎮',en:'Fun',ja:'娯楽',mm:'ဖျော်ဖြေရေး'},
+  {k:'health',icon:'🏥',en:'Health',ja:'医療',mm:'ကျန်းမာရေး'},
+  {k:'other',icon:'📦',en:'Other',ja:'その他',mm:'အခြား'}
 ];
 const expCatInfo=k=>EXP_CATS.find(c=>c.k===k)||EXP_CATS[EXP_CATS.length-1];
 const localToday=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
@@ -4063,7 +4250,7 @@ function renderExpCats(){
   const el=document.getElementById('exp-cats');if(!el)return;
   if(el.children.length!==EXP_CATS.length||el.dataset.lang!==lang){
     el.dataset.lang=lang;
-    el.innerHTML=EXP_CATS.map(c=>{const n=lang==='ja'?c.ja:c.en;return `<button type="button" class="exp-cat" data-k="${c.k}" aria-label="${n}" title="${n}" onclick="setExpCat('${c.k}')"><span class="exp-cat-ico" aria-hidden="true">${c.icon}</span><span class="exp-cat-lbl">${n}</span></button>`;}).join('');
+    el.innerHTML=EXP_CATS.map(c=>{const n=(c[lang]||c.en);return `<button type="button" class="exp-cat" data-k="${c.k}" aria-label="${n}" title="${n}" onclick="setExpCat('${c.k}')"><span class="exp-cat-ico" aria-hidden="true">${c.icon}</span><span class="exp-cat-lbl">${n}</span></button>`;}).join('');
   }
   el.querySelectorAll('.exp-cat').forEach(b=>{const on=b.dataset.k===expCat;b.classList.toggle('sel',on);b.setAttribute('aria-pressed',on?'true':'false');});
 }
@@ -4072,8 +4259,8 @@ async function addExpense(){
   const date=document.getElementById('exp-date').value;
   const amount=parseFloat(document.getElementById('exp-amount').value)||0;
   const note=document.getElementById('exp-note').value.trim();
-  if(!date){toast(lang==='ja'?'日付を選択してください':'Pick a date','err');return;}
-  if(amount<=0){toast(lang==='ja'?'金額を入力してください':'Enter an amount','err');return;}
+  if(!date){toast(L('日付を選択してください','Pick a date'),'err');return;}
+  if(amount<=0){toast(L('金額を入力してください','Enter an amount'),'err');return;}
   const ex={id:genId(),date,amount,cat:expCat,note,createdAt:Date.now()};
   await dbPut('expenses',ex);
   expenses.push(ex);
@@ -4083,16 +4270,16 @@ async function addExpense(){
   const [y,m]=date.split('-').map(Number);
   expMonth={y,m:m-1};
   renderExpenses();
-  toast(lang==='ja'?'支出を追加しました ✓':'Expense added ✓');
+  toast(L('支出を追加しました ✓','Expense added ✓'));
   document.getElementById('exp-amount').focus();
 }
 
 async function deleteExpense(id){
-  if(!confirm(lang==='ja'?'この支出を削除しますか？':'Delete this expense?'))return;
+  if(!confirm(L('この支出を削除しますか？','Delete this expense?')))return;
   await dbDelete('expenses',id);
   expenses=expenses.filter(x=>x.id!==id);
   renderExpenses();
-  toast(lang==='ja'?'削除しました':'Deleted');
+  toast(L('削除しました','Deleted'));
 }
 
 function expShiftMonth(d){
@@ -4109,11 +4296,11 @@ function renderExpenses(){
   const di=document.getElementById('exp-date');
   if(di&&!di.value)di.value=localToday();
   const ni=document.getElementById('exp-note');
-  if(ni)ni.placeholder=lang==='ja'?'例：ランチ':'e.g. Lunch';
+  if(ni)ni.placeholder=L('例：ランチ','e.g. Lunch');
 
   const {y,m}=expMonth;
   const prefix=y+'-'+String(m+1).padStart(2,'0');
-  const loc=lang==='ja'?'ja-JP':'en-US';
+  const loc=LOC();
   const lbl=document.getElementById('exp-month-label');
   if(lbl)lbl.textContent=new Date(y,m,1).toLocaleDateString(loc,{year:'numeric',month:'long'});
 
@@ -4138,14 +4325,14 @@ function renderExpenses(){
       const rows=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
       bd.innerHTML=`<div class="panel exp-break">${rows.map(([k,v])=>{
         const c=expCatInfo(k),pct=Math.round(v/monthTotal*100);
-        return `<div class="exp-bar-row"><span class="exp-bar-name"><span aria-hidden="true">${c.icon}</span> ${lang==='ja'?c.ja:c.en}</span><span class="exp-bar-track"><span class="exp-bar-fill" style="width:${pct}%"></span></span><span class="exp-bar-amt">${fmtMoney(v)}</span></div>`;
+        return `<div class="exp-bar-row"><span class="exp-bar-name"><span aria-hidden="true">${c.icon}</span> ${(c[lang]||c.en)}</span><span class="exp-bar-track"><span class="exp-bar-fill" style="width:${pct}%"></span></span><span class="exp-bar-amt">${fmtMoney(v)}</span></div>`;
       }).join('')}</div>`;
     }
   }
 
   // Day-grouped list
   if(!monthItems.length){
-    list.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">💸</div>${lang==='ja'?'この月の支出はまだありません':'No expenses this month yet.'}</div>`;
+    list.innerHTML=`<div class="empty-state"><div style="font-size:28px;margin-bottom:8px">💸</div>${L('この月の支出はまだありません','No expenses this month yet.')}</div>`;
     return;
   }
   const byDay={};
@@ -4160,9 +4347,9 @@ function renderExpenses(){
         const c=expCatInfo(x.cat);
         return `<div class="exp-item">
           <span class="exp-item-ico" aria-hidden="true">${c.icon}</span>
-          <div class="exp-item-main"><div class="exp-item-name">${x.note?escHtml(x.note):(lang==='ja'?c.ja:c.en)}</div>${x.note?`<div class="si-meta">${lang==='ja'?c.ja:c.en}</div>`:''}</div>
+          <div class="exp-item-main"><div class="exp-item-name">${x.note?escHtml(x.note):((c[lang]||c.en))}</div>${x.note?`<div class="si-meta">${(c[lang]||c.en)}</div>`:''}</div>
           <div class="exp-item-amt">${fmtMoney(x.amount)}</div>
-          <button type="button" class="del-btn" onclick="deleteExpense('${safeId(x.id)}')" aria-label="${lang==='ja'?'削除':'Delete'}">✕</button>
+          <button type="button" class="del-btn" onclick="deleteExpense('${safeId(x.id)}')" aria-label="${L('削除','Delete')}">✕</button>
         </div>`;}).join('')}
     </div>`;
   }).join('');
@@ -4207,7 +4394,7 @@ function renderSumWorkFilter(){
   const _sig=JSON.stringify([sumFilterId,lang,works.map(w=>[w.id,w.name,w.color])]);
   if(el._sig===_sig)return;
   el._sig=_sig;
-  el.innerHTML=`<div class="fw-btn ${sumFilterId===null?'sel':''}" onclick="setSumFilter(null)">${lang==='ja'?'全て':'All'}</div>`
+  el.innerHTML=`<div class="fw-btn ${sumFilterId===null?'sel':''}" onclick="setSumFilter(null)">${L('全て','All')}</div>`
     +works.map(w=>`<div class="fw-btn ${sumFilterId===w.id?'sel':''}" onclick="setSumFilter('${safeId(w.id)}')"><span style="width:8px;height:8px;border-radius:50%;background:${safeColor(w.color)};display:inline-block;margin-right:4px"></span>${esc(w.name)}</div>`).join('');
 }
 
@@ -4274,14 +4461,14 @@ function recalcSummary(){
   const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
   const MONTHS_JA=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   let periodLabel;
-  if(sumPeriod==='month') periodLabel=lang==='ja'?'今月':'this month';
-  else if(sumPeriod==='last-month') periodLabel=lang==='ja'?'先月':'last month';
-  else if(sumPeriod==='year') periodLabel=lang==='ja'?'今年':'this year';
+  if(sumPeriod==='month') periodLabel=L('今月','this month');
+  else if(sumPeriod==='last-month') periodLabel=L('先月','last month');
+  else if(sumPeriod==='year') periodLabel=L('今年','this year');
   else if(sumPeriod==='custom-month'){
     const cm=parseInt(document.getElementById('sump-cm-month')?.value??new Date().getMonth());
     const cy=document.getElementById('sump-cm-year')?.value??new Date().getFullYear();
-    periodLabel=lang==='ja'?`${cy}年${MONTHS_JA[cm]}`:`${MONTHS[cm]} ${cy}`;
-  } else periodLabel=lang==='ja'?'累計':'all time';
+    periodLabel=lang==='ja'?`${cy}年${MONTHS_JA[cm]}`:`${(lang==='mm'?MONTHS_MM:MONTHS)[cm]} ${cy}`;
+  } else periodLabel=L('累計','all time');
 
   // Group shifts by work × month, compute gross per group, apply tax if over threshold
   // key: "workId|YYYY-MM"
@@ -4311,7 +4498,7 @@ function recalcSummary(){
   }
 
   const _rates=[...new Set(taxedGroups.map(x=>+(x.rate*100).toFixed(1)))];
-  const rateTxt=_rates.length===1?_rates[0]+'%':(_rates.length>1?(lang==='ja'?'仕事ごと':'per work'):workTaxRate(null)+'%');
+  const rateTxt=_rates.length===1?_rates[0]+'%':(_rates.length>1?(L('仕事ごと','per work')):workTaxRate(null)+'%');
   const afterTax=gross-totalTax;
   const billsAmt=getSumBills();
   const expList=getSumExpenses(),expAmt=expList.reduce((a,x)=>a+(x.amount||0),0);
@@ -4322,21 +4509,21 @@ function recalcSummary(){
   if(el('sum-tax-out'))  el('sum-tax-out').textContent=fmtMoney(totalTax);
   if(el('sum-bills-out'))el('sum-bills-out').textContent=fmtMoney(billsAmt);
   if(el('sum-exp-out'))  el('sum-exp-out').textContent=fmtMoney(expAmt);
-  if(el('lbl-sum-exp-out'))el('lbl-sum-exp-out').textContent=lang==='ja'?'支出（期間）':'Expenses (period)';
-  if(el('lbl-sum-exp-detail'))el('lbl-sum-exp-detail').textContent=lang==='ja'?'支出':'Expenses';
+  if(el('lbl-sum-exp-out'))el('lbl-sum-exp-out').textContent=L('支出（期間）','Expenses (period)');
+  if(el('lbl-sum-exp-detail'))el('lbl-sum-exp-detail').textContent=L('支出','Expenses');
   if(el('sum-final'))    el('sum-final').textContent=fmtMoney(finalNet);
   if(el('sum-final'))    el('sum-final').style.color=finalNet>=0?'var(--green)':'var(--red)';
-  if(el('sum-final-sub')) el('sum-final-sub').textContent=lang==='ja'?`税金・請求書・支出控除後 (${periodLabel})`:`after tax, bills & expenses (${periodLabel})`;
+  if(el('sum-final-sub')) el('sum-final-sub').textContent=lang==='ja'?`税金・請求書・支出控除後 (${periodLabel})`:(lang==='mm'?`အခွန်၊ ဘီလ်နှင့် အသုံးစရိတ် နုတ်ပြီး (${periodLabel})`:`after tax, bills & expenses (${periodLabel})`);
 
   // Waterfall breakdown
   const wf=el('sum-waterfall');
   if(wf){
     const steps=[
-      {label:lang==='ja'?'総収入':'Gross Income',val:gross,color:'var(--green)',sign:''},
-      {label:lang==='ja'?`所得税 (${rateTxt}, 7万超の月)`:`Tax (${rateTxt}, months over 70k)`,val:-totalTax,color:'var(--red)',sign:'−'},
-      {label:lang==='ja'?'請求書合計':'Total Bills',val:-billsAmt,color:'var(--yellow)',sign:'−'},
-      {label:lang==='ja'?'支出合計':'Total Expenses',val:-expAmt,color:'var(--red)',sign:'−'},
-      {label:lang==='ja'?'手取り':'Take-Home',val:finalNet,color:finalNet>=0?'var(--green)':'var(--red)',sign:'=',bold:true},
+      {label:L('総収入','Gross Income'),val:gross,color:'var(--green)',sign:''},
+      {label:lang==='ja'?`所得税 (${rateTxt}, 7万超の月)`:(lang==='mm'?`အခွန် (${rateTxt}, ၇ သောင်းကျော်သောလများ)`:`Tax (${rateTxt}, months over 70k)`),val:-totalTax,color:'var(--red)',sign:'−'},
+      {label:L('請求書合計','Total Bills'),val:-billsAmt,color:'var(--yellow)',sign:'−'},
+      {label:L('支出合計','Total Expenses'),val:-expAmt,color:'var(--red)',sign:'−'},
+      {label:L('手取り','Take-Home'),val:finalNet,color:finalNet>=0?'var(--green)':'var(--red)',sign:'=',bold:true},
     ].filter(x=>x.sign===''||Math.abs(x.val)>0.001||x.bold);
     const maxAbs=Math.max(...steps.map(x=>Math.abs(x.val)),0.01);
     wf.innerHTML=steps.map((step,i)=>`
@@ -4344,20 +4531,20 @@ function recalcSummary(){
         <div style="width:22px;text-align:center;font-size:14px;color:var(--muted);font-weight:800;flex-shrink:0">${step.sign}</div>
         <div style="flex:1;font-size:${step.bold?'14px':'13px'};font-weight:${step.bold?'800':'600'}">${step.label}</div>
         <div style="height:6px;flex:0 0 ${Math.round(Math.abs(step.val)/maxAbs*100)}px;max-width:100px;background:${safeColor(step.color)};border-radius:3px;opacity:.7"></div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:${step.bold?'15px':'13px'};color:${safeColor(step.color)};font-weight:${step.bold?'800':'600'};min-width:80px;text-align:right">${fmtMoney(Math.abs(step.val))}</div>
+        <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:${step.bold?'15px':'13px'};color:${safeColor(step.color)};font-weight:${step.bold?'800':'600'};min-width:80px;text-align:right">${fmtMoney(Math.abs(step.val))}</div>
       </div>`).join('');
 
     // Tax detail: show which work×months were taxed
     if(taxedGroups.length){
       wf.innerHTML+=`<div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${lang==='ja'?'課税対象（7万円超）':'Taxed months (wages ≥ 70,000)'}</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">${L('課税対象（7万円超）','Taxed months (wages ≥ 70,000)')}</div>
         ${taxedGroups.map(g=>`
           <div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(42,42,58,.3)">
             <span style="width:8px;height:8px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
             <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
             <span style="color:var(--muted);font-size:11px">${g.monthKey}</span>
-            <span style="font-family:'JetBrains Mono',monospace;color:var(--text)">${fmtMoney(g.wages)}</span>
-            <span style="color:var(--red);font-family:'JetBrains Mono',monospace">−${fmtMoney(g.tax)}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--text)">${fmtMoney(g.wages)}</span>
+            <span style="color:var(--red);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">−${fmtMoney(g.tax)}</span>
           </div>`).join('')}
       </div>`;
     }
@@ -4366,17 +4553,18 @@ function recalcSummary(){
   // Payday basis: show which worked months are being paid in the selected period
   const basis=el('sum-pay-basis');
   if(basis){
-    const mLbl=k=>{const [y,m]=k.split('-').map(Number);return lang==='ja'?`${y}年${m}月`:`${MONTHS[m-1].slice(0,3)} ${y}`;};
+    const mLbl=k=>{const [y,m]=k.split('-').map(Number);return lang==='ja'?`${y}年${m}月`:(lang==='mm'?`${MONTHS_MM[m-1]} ${y}`:`${MONTHS[m-1].slice(0,3)} ${y}`);};
     const moved=Object.values(groups).filter(g=>[...g.from].some(f=>f!==g.monthKey)).sort((a,b)=>a.monthKey<b.monthKey?-1:1);
     let h=`<div class="pay-note">${lang==='ja'
       ?'収入は給料が支払われる月で集計します（各仕事の給料日設定に基づく）。給料日が未設定の仕事は勤務した月で集計します。'
-      :'Income is counted in the month it is paid (from each work\'s payday setting). Works with no payday set are counted in the month worked.'}</div>`;
+      :(lang==='mm'?'ဝင်ငွေကို လစာရရှိသောလအလိုက် ရေတွက်ပါသည် (အလုပ်တစ်ခုစီ၏ လစာရက်ဆက်တင်အရ)။ လစာရက် မသတ်မှတ်ထားသော အလုပ်များကို အလုပ်လုပ်သည့်လအလိုက် ရေတွက်ပါသည်။'
+      :'Income is counted in the month it is paid (from each work\'s payday setting). Works with no payday set are counted in the month worked.')}</div>`;
     if(moved.length){
       h+=moved.map(g=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid var(--border)">
         <span style="width:8px;height:8px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
         <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
         <span style="color:var(--muted);font-size:11px">${[...g.from].sort().map(mLbl).join(', ')} → ${mLbl(g.monthKey)}</span>
-        <span style="font-family:'JetBrains Mono',monospace">${fmtMoney(g.wages+g.transport)}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">${fmtMoney(g.wages+g.transport)}</span>
       </div>`).join('');
     }
     basis.innerHTML=h;
@@ -4386,7 +4574,7 @@ function recalcSummary(){
   const ed=el('sum-exp-detail');
   if(ed){
     if(!expList.length){
-      ed.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${lang==='ja'?'この期間の支出はありません。「支出」タブから追加できます':'No expenses in this period. Add them in the Expenses tab.'}</div>`;
+      ed.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${L('この期間の支出はありません。「支出」タブから追加できます','No expenses in this period. Add them in the Expenses tab.')}</div>`;
     } else {
       const byCat={};
       expList.forEach(x=>{const k=x.cat||'other';(byCat[k]=byCat[k]||{sum:0,n:0});byCat[k].sum+=x.amount||0;byCat[k].n++;});
@@ -4394,10 +4582,10 @@ function recalcSummary(){
         const c=expCatInfo(k);
         return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:16px">${c.icon}</span>
-          <span style="flex:1;font-size:13px;font-weight:600">${esc(lang==='ja'?c.ja:c.en)} <span style="color:var(--muted);font-weight:400;font-size:11px">× ${v.n}</span></span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red)">-${fmtMoney(v.sum)}</span>
+          <span style="flex:1;font-size:13px;font-weight:600">${esc((c[lang]||c.en))} <span style="color:var(--muted);font-weight:400;font-size:11px">× ${v.n}</span></span>
+          <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--red)">-${fmtMoney(v.sum)}</span>
         </div>`;}).join('')
-        +`<div style="display:flex;justify-content:space-between;padding:10px 0 2px;font-size:13px;font-weight:800"><span>${lang==='ja'?'合計':'Total'}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--red)">-${fmtMoney(expAmt)}</span></div>`;
+        +`<div style="display:flex;justify-content:space-between;padding:10px 0 2px;font-size:13px;font-weight:800"><span>${L('合計','Total')}</span><span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--red)">-${fmtMoney(expAmt)}</span></div>`;
     }
   }
 
@@ -4405,16 +4593,16 @@ function recalcSummary(){
   const bd=el('sum-bills-detail');
   if(bd){
     if(!bills.length){
-      bd.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${lang==='ja'?'請求書が登録されていません。設定（⚙）から追加できます':'No bills registered. Add bills in Settings (⚙).'}</div>`;
+      bd.innerHTML=`<div style="color:var(--muted);font-size:13px;padding:12px 0">${L('請求書が登録されていません。設定（⚙）から追加できます','No bills registered. Add bills in Settings (⚙).')}</div>`;
     } else {
       const multiplier=sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:(bills.length?Math.max(1,(Date.now()-Math.min(...shifts.map(s=>s.clockIn)||[Date.now()]))/(1000*60*60*24*30.44)):1);
       bd.innerHTML=bills.map(b=>`
         <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:16px">${catIcon(b.cat)}</span>
           <div style="flex:1;font-size:13px;font-weight:600">${esc(b.name)}</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
+          <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
         </div>`).join('')+
-        `<div style="display:flex;justify-content:flex-end;padding-top:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--yellow)">${lang==='ja'?'合計：':'Total: '}${fmtMoney(billsAmt)}</div>`;
+        `<div style="display:flex;justify-content:flex-end;padding-top:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;font-weight:700;color:var(--yellow)">${L('合計：','Total: ')}${fmtMoney(billsAmt)}</div>`;
     }
   }
 }
@@ -4427,6 +4615,8 @@ function updateDataStats(){
   const th=shifts.reduce((a,s)=>a+s.duration,0);
   const statsHtml=lang==='ja'
     ?`仕事：${works.length}件 · シフト：${shifts.length}件 · 請求書：${bills.length}件 · 支出：${expenses.length}件<br>累計時間：${fmtDur(th)} · 累計収入：${fmtMoney(te)}`
+    :lang==='mm'
+    ?`အလုပ်: ${works.length} · ဆိုင်း: ${shifts.length} · ဘီလ်: ${bills.length} · အသုံးစရိတ်: ${expenses.length}<br>နာရီ: ${fmtDur(th)} · ဝင်ငွေ: ${fmtMoney(te)}`
     :`Works: ${works.length} · Shifts: ${shifts.length} · Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th)} · Earnings: ${fmtMoney(te)}`;
   const el=document.getElementById('data-stats');
   if(el) el.innerHTML=statsHtml;
@@ -4490,7 +4680,8 @@ const AT={
     checkEmail:'アカウントを作成しました。メールを確認してからログインしてください。',alreadyReg:'このメールは登録済みです。ログインしてください。',
     resetSent:'パスワード再設定メールを送信しました。',enterEmail:'先にメールアドレスを入力してください。',
     nameSaved:'名前を更新しました ✓',passSaved:'パスワードを更新しました ✓',setNewPass:'新しいパスワードを入力してください。',
-    confirmDel:'クラウドのバックアップを削除しますか？この端末のデータは残ります。',cloudDeleted:'クラウドデータを削除しました',loggedOut:'ログアウトしました'}
+    confirmDel:'クラウドのバックアップを削除しますか？この端末のデータは残ります。',cloudDeleted:'クラウドデータを削除しました',loggedOut:'ログアウトしました'},
+  mm:{account:'အကောင့်',login:'ဝင်ရောက်မည်',register:'စာရင်းသွင်းမည်',email:'အီးမေးလ်',password:'စကားဝှက်',confirm:'စကားဝှက် အတည်ပြုပါ',displayName:'ပြသမည့်အမည်',forgot:'စကားဝှက် မေ့နေပါသလား?',createAcc:'အကောင့်ဖန်တီးမည်',loginNote:'သင့်ဒေတာသည် ဤစက်ထဲတွင်သာ ရှိပါသည်။ ဝင်ရောက်ပါက အရန်သိမ်းပြီး မည်သည့်စက်တွင်မဆို အသုံးပြုနိုင်ပါသည်။',details:'အကောင့်အချက်အလက်',save:'သိမ်းမည်',since:'အဖွဲ့ဝင်ဖြစ်သည့်ရက်',lastLogin:'နောက်ဆုံးဝင်ရောက်ချိန်',uid:'အသုံးပြုသူ ID',cloud:'ကလောက်ဒေတာ',lastSync:'နောက်ဆုံး ထပ်တူကျချိန်',onDevice:'ဤစက်ပေါ်ရှိ ဒေတာ',syncNow:'⟳ ယခု ထပ်တူကျစေမည်',security:'လုံခြုံရေး',newPass:'စကားဝှက်အသစ်',update:'ပြင်မည်',logout:'ထွက်မည်',works:'အလုပ်',shifts:'ဆိုင်း',bills:'ဘီလ်',expenses:'အသုံးစရိတ်',never:'မရှိသေးပါ',configMissing:'config.js ကို ဖွင့်၍မရပါ။ index.html နှင့် တူညီသောနေရာတွင် တင်ပြီး ပြန်လည်ဖွင့်ပါ (သို့မဟုတ် ဘရောက်ဇာ cache ကို ရှင်းပါ)။',notConfigured:'ကလောက်ဝင်ရောက်မှုကို မသတ်မှတ်ရသေးပါ — config.js တွင် Supabase URL နှင့် anon key ကို ထည့်ပါ။',offline:'ကလောက်ဝန်ဆောင်မှုကို မရနိုင်ပါ (အင်တာနက်ပြတ်နေပါသလား?)',fillAll:'အီးမေးလ်နှင့် စကားဝှက် ဖြည့်ပါ။',passShort:'စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။',passMismatch:'စကားဝှက်များ မတူညီပါ။',checkEmail:'အကောင့်ဖန်တီးပြီးပါပြီ! အီးမေးလ်ကို စစ်ပြီး အတည်ပြုကာ ဝင်ရောက်ပါ။',alreadyReg:'ဤအီးမေးလ်ကို စာရင်းသွင်းပြီးသားဖြစ်သည် — ဝင်ရောက်ကြည့်ပါ။',resetSent:'စကားဝှက်ပြန်လည်သတ်မှတ်ရန် အီးမေးလ် ပို့ပြီးပါပြီ။ ဝင်စာဘူးကို စစ်ပါ။',enterEmail:'အပေါ်တွင် အီးမေးလ်ကို အရင်ထည့်ပါ။',nameSaved:'အမည် ပြင်ပြီးပါပြီ ✓',passSaved:'စကားဝှက် ပြင်ပြီးပါပြီ ✓',setNewPass:'အောက်တွင် စကားဝှက်အသစ် ထည့်ပါ။',confirmDel:'သင့်ကလောက်အရန်ဖိုင်ကို ဖျက်မလား? ဤစက်ပေါ်ရှိ ဒေတာကို ဆက်ထားပါမည်။',cloudDeleted:'ကလောက်ဒေတာ ဖျက်ပြီးပါပြီ',loggedOut:'ထွက်ပြီးပါပြီ'}
 };
 function at(k){return ((AT[lang]||AT.en)[k])||AT.en[k]||k;}
 function applyAccountLang(){
@@ -4534,7 +4725,7 @@ function avatarHTML(){
 function fmtDT(iso){
   if(!iso)return '—';
   const d=new Date(iso);
-  return isNaN(d)?'—':d.toLocaleString(lang==='ja'?'ja-JP':undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  return isNaN(d)?'—':d.toLocaleString(lang==='en'?undefined:LOC(),{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
 }
 function updateAccountUI(){
   const isIn=!!acctUser;
@@ -4974,7 +5165,7 @@ async function importBackup(input){
 async function nukeAll(){
   if(!confirm(t('confirm-nuke')))return;
   const typed=prompt(t('confirm-nuke-type'));
-  const confirmWord=lang==='ja'?'削除':'delete';
+  const confirmWord=L('削除','delete');
   if(typed!==confirmWord){toast(t('toast-cancelled'));return;}
   loading(true);
   await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
@@ -5019,7 +5210,7 @@ function switchTab(tab){
 function tick(){
   const n=new Date();
   document.getElementById('time-str').textContent=n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('date-str').textContent=n.toLocaleDateString(lang==='ja'?'ja-JP':'en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('date-str').textContent=n.toLocaleDateString(LOC(),{weekday:'long',month:'short',day:'numeric'});
 }
 setInterval(tick,1000);
 
@@ -5165,9 +5356,9 @@ function _draw(minFloat){
 }
 function _readout(v){
   var big=document.getElementById('bd-num'),ja=(lang==='ja');
-  big.textContent=v===0?'0':(v>=60?(Math.floor(v/60)+(ja?'時間':'h')+(v%60?(' '+(v%60)+(ja?'分':'m')):'')):v);
+  big.textContent=v===0?'0':(v>=60?(Math.floor(v/60)+(L('時間','h'))+(v%60?(' '+(v%60)+(L('分','m'))):'')):v);
   big.style.fontSize=v>=60?'24px':'';
-  document.getElementById('bd-unit').textContent=v===0?(ja?'休憩なし':'No break'):(v>=60?(v+(ja?' 分':' min')):(ja?'分':'min'));
+  document.getElementById('bd-unit').textContent=v===0?(L('休憩なし','No break')):(v>=60?(v+(L(' 分',' min'))):(L('分','min')));
   var knob=document.getElementById('bd-knob');knob.setAttribute('aria-valuenow',v);knob.setAttribute('aria-valuetext',v+' min');
   var lapMin=v===0?-1:(((v-1)%DIAL_LAP)+1)%DIAL_LAP;
   document.querySelectorAll('.bd-tick').forEach(function(t){t.classList.toggle('hit',v>0&&+t.dataset.m===lapMin);});
@@ -5208,10 +5399,10 @@ function openBreakDial(selId){
   var sel=document.getElementById(selId);if(!sel)return;
   _buildTicks();_dial.sel=selId;_dial.last=-1;
   var v=parseInt(sel.value)||0;
-  document.getElementById('bd-title').textContent=lang==='ja'?'休憩時間':'Break time';
-  document.getElementById('bd-hint').textContent=lang==='ja'?'1周＝1時間・5分ごとにロック':'Full circle = 1 hr · locks every 5 min';
-  document.getElementById('bd-clear').textContent=lang==='ja'?'休憩なし':'No break';
-  document.getElementById('bd-done').textContent=lang==='ja'?'決定':'Set';
+  document.getElementById('bd-title').textContent=L('休憩時間','Break time');
+  document.getElementById('bd-hint').textContent=L('1周＝1時間・5分ごとにロック','Full circle = 1 hr · locks every 5 min');
+  document.getElementById('bd-clear').textContent=L('休憩なし','No break');
+  document.getElementById('bd-done').textContent=L('決定','Set');
   document.getElementById('break-dial-modal').classList.add('open');
   _dial.raw=0;_dial.val=0;_draw(0);_readout(0);setDial(v,true);
   setTimeout(function(){var k=document.getElementById('bd-knob');if(k)k.focus({preventScroll:true});},60);
