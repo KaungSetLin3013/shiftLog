@@ -17,7 +17,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --- Fonts (SIL Open Font License 1.1, via Google Fonts) ---
-Syne by Bonjour Monde; JetBrains Mono by JetBrains; Noto Sans Myanmar by Google.
+Syne by Bonjour Monde; JetBrains Mono by JetBrains; Noto Sans, Noto Sans Myanmar, Noto Sans Devanagari and Noto Sans Sinhala by Google.
 --- Libraries loaded from CDN ---
 supabase-js (MIT, Supabase).
 -->
@@ -28,7 +28,7 @@ supabase-js (MIT, Supabase).
 <script>if(window.top!==window.self){document.documentElement.style.display='none';try{window.top.location=window.location;}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ShiftLog — Shift Work Hours, Wages &amp; Tax Tracker</title>
-<meta name="description" content="Track shift work hours across multiple jobs, auto-calculate wages with night-shift bonuses, log recurring bills, estimate take-home pay after tax. Free, available in English, Japanese and Burmese (EN/JA/MM), works fully offline.">
+<meta name="description" content="Track shift work hours across multiple jobs, auto-calculate wages with night-shift bonuses, log recurring bills, estimate take-home pay after tax. Free, available in English, Japanese, Burmese, Nepali, Sinhala, Vietnamese and Chinese (EN/JA/MM/NE/SI/VI/ZH), works fully offline.">
 <meta name="keywords" content="shift tracker, timesheet app, hourly wage calculator, part-time job tracker, night shift bonus calculator, tax calculator, work hours tracker, ShiftLog">
 <meta name="author" content="Kaung Set Lin">
 <meta name="robots" content="index, follow">
@@ -47,6 +47,10 @@ supabase-js (MIT, Supabase).
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="ja_JP">
 <meta property="og:locale:alternate" content="my_MM">
+<meta property="og:locale:alternate" content="ne_NP">
+<meta property="og:locale:alternate" content="si_LK">
+<meta property="og:locale:alternate" content="vi_VN">
+<meta property="og:locale:alternate" content="zh_CN">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
@@ -64,8 +68,8 @@ supabase-js (MIT, Supabase).
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Noto+Sans:wght@400..700&family=Noto+Sans+Devanagari:wght@400..700&family=Noto+Sans+Sinhala:wght@400..700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Noto+Sans:wght@400..700&family=Noto+Sans+Devanagari:wght@400..700&family=Noto+Sans+Sinhala:wght@400..700&display=swap" rel="stylesheet"></noscript>
 
 <script type="application/ld+json">
 {
@@ -73,7 +77,8 @@ supabase-js (MIT, Supabase).
     "@type": "WebApplication",
     "name": "ShiftLog",
     "url": "https://kaungsetlinn.com/shiftLog/",
-    "description": "A multilingual (English/Japanese/Burmese) shift-work tracker for logging hours across multiple jobs, calculating wages with night-shift bonuses, tracking recurring bills, estimating take-home pay after tax.",
+    "inLanguage": ["en","ja","my","ne","si","vi","zh"],
+    "description": "A multilingual (English/Japanese/Burmese/Nepali/Sinhala/Vietnamese/Chinese) shift-work tracker for logging hours across multiple jobs, calculating wages with night-shift bonuses, tracking recurring bills, estimating take-home pay after tax.",
     "image": "https://kaungsetlinn.com/shiftLog/icon-512.png",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
@@ -115,7 +120,10 @@ body.light-theme .cal-day.has-shift{background:color-mix(in srgb,var(--accent) 1
 *{margin:0;padding:0;box-sizing:border-box;}
 html[lang="my"] body{line-height:1.7;}
 html[lang="my"] .btn,html[lang="my"] .tab-btn,html[lang="my"] .lang-btn,html[lang="my"] .mode-btn,html[lang="my"] .fw-btn{line-height:1.6;}
-body{background:var(--bg);color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;min-height:100vh;transition:background .25s,color .25s;}
+html[lang="ne"] body,html[lang="si"] body{line-height:1.7;}
+html[lang="vi"] body{line-height:1.55;}
+html[lang="ne"] .btn,html[lang="ne"] .tab-btn,html[lang="ne"] .lang-btn,html[lang="ne"] .mode-btn,html[lang="ne"] .fw-btn,html[lang="si"] .btn,html[lang="si"] .tab-btn,html[lang="si"] .lang-btn,html[lang="si"] .mode-btn,html[lang="si"] .fw-btn{line-height:1.6;}
+body{background:var(--bg);color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;min-height:100vh;transition:background .25s,color .25s;}
 body::before{content:'';position:fixed;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 4%,transparent) 0%,transparent 70%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,color-mix(in srgb,var(--purple) 4%,transparent) 0%,transparent 70%);pointer-events:none;z-index:0;}
 .container{max-width:100%;margin:0 auto;padding:24px 32px;position:relative;z-index:1;}
@@ -154,7 +162,7 @@ body::after{content:'';position:fixed;bottom:-200px;left:-100px;width:500px;heig
 #splash.hide{opacity:0;pointer-events:none;}
 .splash-logo{font-size:38px;font-weight:800;}
 .splash-logo span{color:var(--accent);}
-.splash-sub{color:var(--muted);font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
+.splash-sub{color:var(--muted);font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;}
 
 /* Header */
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;border-bottom:1px solid var(--border);padding-bottom:20px;flex-wrap:wrap;gap:12px;}
@@ -164,20 +172,20 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .offline-badge{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--muted);}
 .offline-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.clock-disp{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;text-align:right;}
+.clock-disp{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;text-align:right;}
 .clock-disp .big{font-size:17px;color:var(--text);display:block;}
 .clock-disp .small{font-size:11px;color:var(--muted);}
 .user-count{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface2);font-size:12px;color:var(--muted);white-space:nowrap;}
 .user-count[hidden]{display:none;}
 .user-count svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;}
-.user-count b{color:var(--text);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-weight:500;}
+.user-count b{color:var(--text);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-weight:500;}
 @media(max-width:640px){.user-count{padding:4px 8px;font-size:11px;}.user-count #user-count-lbl{display:none;}}
 .icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--muted);font-size:17px;}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent);}
 
 /* Tabs */
 .tab-nav{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;width:fit-content;}
-.tab-btn{padding:8px 18px;border:none;border-radius:8px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);letter-spacing:.3px;}
+.tab-btn{padding:8px 18px;border:none;border-radius:8px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);letter-spacing:.3px;}
 .tab-btn.active{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
 .tab-btn:hover:not(.active){color:var(--text);}
 .tab-badge{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:#000;border-radius:10px;font-size:10px;font-weight:800;padding:1px 6px;margin-left:4px;}
@@ -193,14 +201,14 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .row{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;align-items:flex-end;}
 .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:100px;}
 label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-input,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
+input,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
 input:focus,select:focus{border-color:var(--accent);}
-input[type="time"],input[type="number"]{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
+input[type="time"],input[type="number"]{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;}
 input[type="color"]{padding:5px 7px;height:40px;cursor:pointer;}
 select option{background:var(--surface2);}
 
 /* Buttons */
-.btn{padding:10px 20px;border:none;border-radius:8px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.4px;transition:all .2s;white-space:nowrap;}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.4px;transition:all .2s;white-space:nowrap;}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
 .btn-primary{background:var(--accent);color:#000;}
 .btn-primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 85%,#fff);transform:translateY(-1px);}
@@ -221,7 +229,7 @@ select option{background:var(--surface2);}
 .wc-divider{height:1px;background:var(--border);}
 .wc-row{display:flex;justify-content:space-between;align-items:center;}
 .wc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-.wc-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;font-weight:500;}
+.wc-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;font-weight:500;}
 .wc-actions{display:flex;gap:7px;}
 .empty-card{text-align:center;padding:44px;color:var(--muted);grid-column:1/-1;}
 .empty-icon{font-size:32px;margin-bottom:10px;}
@@ -245,32 +253,32 @@ select option{background:var(--surface2);}
 .setting-label{font-size:14px;font-weight:600;}
 .setting-sub{font-size:12px;color:var(--muted);margin-top:2px;}
 .lang-toggle{display:flex;gap:4px;background:var(--surface2);border-radius:8px;padding:3px;}
-.lang-btn{padding:5px 12px;border:none;border-radius:6px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
+.lang-btn{padding:5px 12px;border:none;border-radius:6px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);}
 .lang-btn.active{background:var(--accent);color:#000;}
 
 /* Shift form */
-.dur-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px;color:var(--accent);text-align:center;}
+.dur-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:15px;color:var(--accent);text-align:center;}
 .earn-preview{background:color-mix(in srgb,var(--accent) 4%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 20%,transparent);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
 .ep{display:flex;flex-direction:column;gap:2px;}
 .ep-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
-.ep-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;color:var(--text);}
+.ep-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;color:var(--text);}
 .ep-total .ep-val{color:var(--green);font-size:19px;}
 .ep-div{color:var(--border);font-size:16px;}
-.night-note{font-size:11px;color:var(--purple);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
+.night-note{font-size:11px;color:var(--purple);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;}
 
 /* Multi-date picker */
 .multi-date-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
-.date-chip{display:flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:6px;padding:4px 10px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--accent);}
+.date-chip{display:flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:6px;padding:4px 10px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--accent);}
 .date-chip-del{background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;line-height:1;padding:0 0 0 2px;}
 .date-chip-del:hover{color:var(--red);}
 .mode-toggle{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;margin-bottom:14px;}
-.mode-btn{flex:1;padding:7px;border:none;border-radius:6px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);text-align:center;}
+.mode-btn{flex:1;padding:7px;border:none;border-radius:6px;font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted);text-align:center;}
 .mode-btn.active{background:var(--surface);color:var(--text);border:1px solid var(--border);}
 
 /* Stats */
 .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-.stat-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:18px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.stat-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:18px;font-weight:500;color:var(--text);margin-bottom:3px;}
 .stat-lbl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 .stat-card.accent .stat-val{color:var(--accent);}
 .stat-card.money .stat-val{color:var(--green);}
@@ -283,12 +291,12 @@ select option{background:var(--surface2);}
 .wp-btn:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);}
 .wp-btn.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);}
 .wp-name{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;}
-.wp-rate{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted);}
+.wp-rate{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--muted);}
 
 /* Filter */
 .filter-bar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
 .filter-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
-.fw-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.fw-btn{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
 .fw-btn:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent);color:var(--text);}
 .fw-btn.sel{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);}
 
@@ -300,13 +308,13 @@ select option{background:var(--surface2);}
 .shift-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:88px 108px 1fr 72px 90px 90px 32px;align-items:center;gap:10px;transition:background .2s;animation:slideIn .22s ease;}
 @keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .shift-item:hover{background:var(--surface2);}
-.si-date{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted);}
-.si-time{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--text);line-height:1.6;}
+.si-date{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--muted);}
+.si-time{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--text);line-height:1.6;}
 .si-work{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;}
 .si-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.si-hrs{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--accent);text-align:right;}
-.si-wages{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--green);text-align:right;}
-.si-transport{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--yellow);text-align:right;}
+.si-hrs{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;color:var(--accent);text-align:right;}
+.si-wages{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--green);text-align:right;}
+.si-transport{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--yellow);text-align:right;}
 .del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:3px;border-radius:4px;transition:color .2s;display:flex;align-items:center;justify-content:center;}
 .del-btn:hover{color:var(--red);}
 .empty-state{text-align:center;padding:40px;color:var(--muted);font-size:14px;}
@@ -332,7 +340,7 @@ select option{background:var(--surface2);}
 .cal-month-lbl{font-size:14px;font-weight:700;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 .cal-day-name{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0 8px;}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;cursor:default;position:relative;transition:all .2s;}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;cursor:default;position:relative;transition:all .2s;}
 .cal-day.empty{background:transparent;}
 .cal-day.normal{color:var(--muted);}
 .cal-day.has-shift{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:700;cursor:pointer;}
@@ -354,7 +362,7 @@ select option{background:var(--surface2);}
 .day-shift-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
 .day-shift-row:last-child{border-bottom:none;}
 .day-shift-work{display:flex;align-items:center;gap:5px;font-weight:600;}
-.day-shift-earn{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--green);}
+.day-shift-earn{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--green);}
 
 /* ---- Monthly: calendar first, full width, with shift details in each day ---- */
 .monthly-layout{grid-template-columns:minmax(0,1fr)!important}
@@ -362,7 +370,7 @@ select option{background:var(--surface2);}
 .calendar-wrap{position:static}
 .cal-grid{gap:5px}
 .cal-day.cd{aspect-ratio:auto;min-height:112px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:4px;
-  padding:6px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-weight:500;text-align:left;overflow:hidden;min-width:0}
+  padding:6px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-weight:500;text-align:left;overflow:hidden;min-width:0}
 .cal-day.cd.empty{border-color:transparent;pointer-events:none;min-height:0}
 .cal-day.cd.normal{color:var(--muted)}
 .cal-day.cd::after,.cal-day.cd.has-shift::after{display:none}
@@ -370,25 +378,25 @@ select option{background:var(--surface2);}
 .cal-day.cd.has-shift:hover{transform:none;background:color-mix(in srgb,var(--accent) 14%,transparent)}
 .cal-day.cd.today{border-color:var(--accent)}
 .cal-day.cd.selected,body.light-theme .cal-day.cd.selected{background:color-mix(in srgb,var(--accent) 20%,var(--surface2))!important;color:var(--text)!important;box-shadow:0 0 0 2px var(--accent);font-weight:500}
-.cd-num{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;font-weight:700;color:var(--muted)}
+.cd-num{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;font-weight:700;color:var(--muted)}
 .cal-day.cd.today .cd-num,.cal-day.cd.has-shift .cd-num{color:var(--accent)}
 .cd-shifts{display:flex;flex-direction:column;gap:3px;min-width:0}
 .cd-shift{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:6px;padding:3px 5px;border-left:3px solid var(--c);border-radius:5px;background:color-mix(in srgb,var(--c) 14%,transparent);min-width:0}
 .cd-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.cd-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--green);text-align:right}
-.cd-time{grid-column:1/-1;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--muted)}
+.cd-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:10px;color:var(--green);text-align:right}
+.cd-time{grid-column:1/-1;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:10px;color:var(--muted)}
 .cd-more{font-size:10px;color:var(--muted);padding-left:4px}
-.cd-total{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:4px}
+.cd-total{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:4px}
 .cd-total b{font-size:12px;color:var(--green);font-weight:700}
 .cd-dots,.cd-short{display:none}
 .dd-shift{padding:8px 0 8px 10px;border-left:3px solid var(--c);margin:6px 0;background:color-mix(in srgb,var(--c) 8%,transparent);border-radius:0 8px 8px 0;padding-right:10px}
 .dd-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .dd-name{font-size:13px;font-weight:700}
-.dd-time{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--muted)}
-.dd-money{margin-left:auto;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:700;color:var(--green)}
-.dd-meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted)}
+.dd-time{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--muted)}
+.dd-money{margin-left:auto;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;font-weight:700;color:var(--green)}
+.dd-meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--muted)}
 .dd-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:12px;font-weight:700}
-.dd-total b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px;color:var(--green)}
+.dd-total b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:15px;color:var(--green)}
 @media(max-width:640px){
   .cal-grid{gap:2px}
   .cal-day.cd{min-height:56px;padding:3px 2px;border-radius:7px;align-items:center;gap:2px}
@@ -397,21 +405,21 @@ select option{background:var(--surface2);}
   .cd-shifts,.cd-total{display:none}
   .cd-dots{display:flex;gap:2px;justify-content:center;flex-wrap:wrap}
   .cd-dots i{width:6px;height:6px;border-radius:50%;display:inline-block}
-  .cd-short{display:block;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;color:var(--green);line-height:1}
+  .cd-short{display:block;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:9px;font-weight:700;color:var(--green);line-height:1}
 }
 
 /* Graph */
 .graph-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 28px;margin-bottom:20px;}
 .graph-title{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
 .graph-toggle{display:flex;gap:7px;margin-bottom:14px;}
-.gtog{padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.gtog{padding:5px 13px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
 .gtog.active{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,transparent);}
 canvas{width:100%!important;display:block;}
 .monthly-table{width:100%;border-collapse:collapse;}
 .monthly-table th{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);}
 .monthly-table th.r{text-align:right;}
 .monthly-table td{padding:10px;border-bottom:1px solid rgba(42,42,58,.6);font-size:12px;}
-.monthly-table td.r{text-align:right;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;}
+.monthly-table td.r{text-align:right;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;}
 .monthly-table tr:last-child td{border-bottom:none;}
 .monthly-table tr:hover td{background:var(--surface2);}
 .td-work{display:flex;align-items:center;gap:7px;font-weight:600;}
@@ -465,7 +473,7 @@ canvas{width:100%!important;display:block;}
 .bn-item{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:6px 4px;cursor:pointer;transition:color .2s;color:var(--muted);
-  font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;
+  font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;
   position:relative;border:none;background:none;
 }
 .bn-item.active{color:var(--accent);}
@@ -657,7 +665,7 @@ canvas{width:100%!important;display:block;}
 }
 .mc-day{
   aspect-ratio:1;display:flex;align-items:center;justify-content:center;
-  border-radius:8px;font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;
+  border-radius:8px;font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;
   cursor:pointer;transition:all .15s;border:1px solid transparent;
   position:relative;font-weight:500;
 }
@@ -811,7 +819,7 @@ canvas{width:100%!important;display:block;}
 .brk-ico{font-size:15px;line-height:14px;height:14px}
 .brk-chips{display:flex;gap:4px}
 .brk-chip{width:38px;min-height:48px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
-  font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;font-weight:500;cursor:pointer;padding:0;position:relative;overflow:hidden;
+  font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;font-weight:500;cursor:pointer;padding:0;position:relative;overflow:hidden;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .brk-chip:active{transform:scale(.93);transition-duration:80ms}
@@ -825,12 +833,12 @@ canvas{width:100%!important;display:block;}
   transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .brk-dial-btn:active{transform:scale(.92);transition-duration:80ms}
 .brk-dial-btn:hover{transform:translateY(-2px) scale(1.05)}
-.brk-dial-btn .brk-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;line-height:1;margin-top:1px;min-height:9px}
+.brk-dial-btn .brk-val{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:9px;font-weight:700;line-height:1;margin-top:1px;min-height:9px}
 .brk-dial-btn.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
 .brk-dial-btn:not(.sel) .brk-val{opacity:.0}
 .tl-break{min-width:52px}
 .bd-modal{max-width:340px;text-align:center;padding:24px 20px 20px}
-.bd-title{font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:15px;font-weight:800;letter-spacing:.5px;margin-bottom:2px}
+.bd-title{font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:15px;font-weight:800;letter-spacing:.5px;margin-bottom:2px}
 .bd-hint{font-size:11px;color:var(--muted);margin-bottom:10px}
 .bd-wrap{display:flex;align-items:center;justify-content:center;gap:12px}
 .bd-stage{position:relative;flex:0 1 232px;width:232px;max-width:calc(100vw - 150px);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -841,7 +849,7 @@ canvas{width:100%!important;display:block;}
 .bd-tick{stroke:var(--muted);stroke-width:1.5;stroke-linecap:round;opacity:.55;transition:stroke .12s,opacity .12s}
 .bd-tick.major{stroke-width:2.5;opacity:.9}
 .bd-tick.hit{stroke:var(--accent);opacity:1}
-.bd-num{fill:var(--muted);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central}
+.bd-num{fill:var(--muted);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central}
 .bd-hand{stroke:var(--accent);stroke-width:3;stroke-linecap:round}
 .bd-hub{fill:var(--accent)}
 .bd-knob:focus{outline:none}
@@ -852,14 +860,14 @@ canvas{width:100%!important;display:block;}
 .bd-stage.pulse .bd-knob-ring{animation:bdPulse 380ms ease-out}
 @keyframes bdPulse{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(2)}}
 .bd-read{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-.bd-read b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-1px}
+.bd-read b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:30px;font-weight:700;color:var(--text);letter-spacing:-1px}
 .bd-read span{font-size:11px;color:var(--muted);margin-top:2px}
 .bd-ring1{fill:none;stroke:var(--accent);stroke-width:14;opacity:0;transition:opacity .2s}
 .bd-ring1.on{opacity:.28}
 .bd-hours{display:flex;flex-direction:column;align-items:center;gap:6px;width:40px}
-.bd-hr-lbl{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted)}
+.bd-hr-lbl{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:var(--muted)}
 .bd-hcount{width:40px;height:56px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);
-  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:24px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:24px;font-weight:700;
   transition:background-color .2s,border-color .2s,color .2s}
 .bd-hcount.on{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
 .bd-hcount.bump{animation:bdBump 360ms var(--spring)}
@@ -867,7 +875,7 @@ canvas{width:100%!important;display:block;}
 @media(prefers-reduced-motion:reduce){.bd-hcount.bump{animation:none}}
 .bd-presets{display:flex;gap:6px;justify-content:center;margin:14px 0 14px;flex-wrap:wrap}
 .bd-preset{min-width:52px;height:38px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
-  font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;font-weight:600;cursor:pointer;padding:0 12px;transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
+  font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;font-weight:600;cursor:pointer;padding:0 12px;transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .bd-preset:active{transform:scale(.92)}
 .bd-preset.sel{background:var(--nav-tint);border-color:var(--accent);color:var(--accent)}
 .bd-actions{display:flex;gap:8px}
@@ -887,7 +895,7 @@ canvas{width:100%!important;display:block;}
 .bills-form .field{min-width:0}
 .exp-cats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
 .exp-cat{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);
-  font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+  font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
   position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
   transition:transform 400ms var(--spring),background-color 150ms,border-color 150ms,color 150ms}
 .exp-cat:active{transform:scale(.95);transition-duration:80ms}
@@ -904,15 +912,15 @@ canvas{width:100%!important;display:block;}
 .exp-bar-name{font-weight:600;white-space:nowrap}
 .exp-bar-track{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;display:block}
 .exp-bar-fill{display:block;height:100%;border-radius:4px;background:var(--accent);opacity:.8}
-.exp-bar-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;text-align:right}
+.exp-bar-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;text-align:right}
 .exp-day{margin-bottom:14px}
 .exp-day-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding:0 4px}
-.exp-day-total{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--red);letter-spacing:0;font-size:12px}
+.exp-day-total{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--red);letter-spacing:0;font-size:12px}
 .exp-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:6px;min-height:56px;animation:rise 260ms var(--out) backwards}
 .exp-item-ico{font-size:20px;width:28px;text-align:center}
 .exp-item-main{flex:1;min-width:0}
 .exp-item-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.exp-item-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:600;color:var(--red)}
+.exp-item-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;font-weight:600;color:var(--red)}
 .exp-item .del-btn{width:36px;height:36px}
 @media(max-width:380px){.exp-bar-row{grid-template-columns:90px 1fr 76px}}
 
@@ -1128,13 +1136,13 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-overlay,.modal{overscroll-behavior:contain}
 /* ---- Account modal (login / register / details) ---- */
 .acc-tabs{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:18px}
-.acc-tabs button{flex:1;padding:9px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.acc-tabs button{flex:1;padding:9px;border:none;border-radius:8px;background:transparent;color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
 .acc-tabs button.active{background:var(--surface3);color:var(--text)}
 .acc-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .acc-field label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
-.acc-msg{min-height:18px;font-size:12px;line-height:1.5;margin:2px 0 12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--muted)}
+.acc-msg{min-height:18px;font-size:12px;line-height:1.5;margin:2px 0 12px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--muted)}
 .acc-msg.err{color:var(--red)}.acc-msg.ok{color:var(--green)}
-.acc-link{background:none;border:none;color:var(--accent);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+.acc-link{background:none;border:none;color:var(--accent);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 .acc-link:hover{text-decoration:underline}
 .acc-hero{display:flex;align-items:center;gap:14px;padding-bottom:16px;margin-bottom:6px;border-bottom:1px solid var(--border)}
 .acc-av{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:2px solid var(--accent);object-fit:cover;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--purple));color:#000;font-size:22px;font-weight:800;overflow:hidden}
@@ -1182,7 +1190,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .credits-body h4{margin:12px 0 4px;font-size:12px;color:var(--text);font-weight:700}
 .credits-body h4:first-child{margin-top:0}
 .credits-body a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
-.credits-body .lic{margin-top:6px;max-height:140px;overflow:auto;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10.5px;line-height:1.5;white-space:pre-wrap}
+.credits-body .lic{margin-top:6px;max-height:140px;overflow:auto;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:10.5px;line-height:1.5;white-space:pre-wrap}
 #sd-credits.open{display:block}
 
 /* ---- Settings: grouped list with round icon badges ---- */
@@ -1213,6 +1221,10 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
 
 .theme-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+/* language picker: 7 languages wrap into a grid instead of one row */
+#sd-lang .theme-top{flex-direction:column;align-items:stretch;gap:10px}
+#sd-lang .lang-toggle{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:4px}
+#sd-lang .lang-btn{white-space:nowrap;padding:8px 10px}
 .set-subhead{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 
 /* ---- Settings: icon rail on the left, details on the right ---- */
@@ -1335,7 +1347,7 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 }
 
 /* Single-date picker button + popover (reuses the Multiple Dates calendar look) */
-.sd-btn{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;cursor:pointer;text-align:left;transition:border-color .2s}
+.sd-btn{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;cursor:pointer;text-align:left;transition:border-color .2s}
 .sd-btn:hover,.sd-btn[aria-expanded="true"]{border-color:var(--accent)}
 .sd-btn .ico{width:18px;height:18px;color:var(--accent);flex:none}
 .sd-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1343,11 +1355,11 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .sd-pop[hidden]{display:none}
 @keyframes sdIn{from{opacity:0;transform:scale(.96) translateY(-4px)}}
 .sd-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.sd-month{font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-weight:700;font-size:14px}
+.sd-month{font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-weight:700;font-size:14px}
 .sd-head .mc-nav-btn{width:32px;height:32px}
 .sd-pop .mini-cal{padding:8px;border-radius:10px}
 .sd-pop .mini-cal-grid{gap:2px}
-.sd-pop button.mc-day{appearance:none;-webkit-appearance:none;padding:0;font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace}
+.sd-pop button.mc-day{appearance:none;-webkit-appearance:none;padding:0;font-size:13px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace}
 .sd-pop button.mc-day:not(.selected){background:transparent}
 .sd-foot{display:flex;justify-content:flex-end;margin-top:8px}
 @media (prefers-reduced-motion:reduce){.sd-pop{animation:none}}
@@ -1361,13 +1373,13 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 
 /* Currency (Settings → Language): one button, table pops out */
 .cur-btn{min-height:56px}
-.cur-big{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:24px;font-weight:800;color:var(--accent);min-width:44px;text-align:center}
-.cur-btn-hint{flex:1;color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:12px}
+.cur-big{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:24px;font-weight:800;color:var(--accent);min-width:44px;text-align:center}
+.cur-btn-hint{flex:1;color:var(--muted);font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:12px}
 .cur-btn-chev{color:var(--muted);font-size:20px}
 .cur-pop{padding:14px}
 .cur-table{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .cur-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:58px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;transition:border-color .2s,background .2s,transform 200ms}
-.cur-chip b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:18px;font-weight:800}
+.cur-chip b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:18px;font-weight:800}
 .cur-chip small{font-size:9px;letter-spacing:.5px;color:var(--muted);font-weight:600}
 .cur-chip:hover{border-color:var(--accent)}
 .cur-chip:active{transform:scale(.94)}
@@ -1377,10 +1389,10 @@ body.light-theme .cur-chip.sel{color:#fff}
 body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .cur-custom{display:flex;align-items:center;gap:10px;margin-top:12px}
 .cur-custom label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.cur-custom input{max-width:84px;text-align:center;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:16px;font-weight:700}
+.cur-custom input{max-width:84px;text-align:center;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:16px;font-weight:700}
 #w-night-row{align-items:flex-end}
 /* Expenses in Monthly + Summary */
-.cd-exp{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-top:auto;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--red);border-top:1px dashed color-mix(in srgb,var(--red) 35%,transparent);padding-top:4px}
+.cd-exp{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-top:auto;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:10px;color:var(--red);border-top:1px dashed color-mix(in srgb,var(--red) 35%,transparent);padding-top:4px}
 .cd-exp b{font-size:11px;font-weight:700;white-space:nowrap}
 .cd-exp-ico{font-size:10px;letter-spacing:1px}
 .cd-total+.cd-exp{margin-top:0}
@@ -1393,10 +1405,10 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .dd-exp-ico{font-size:15px}
 .dd-exp-name{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dd-exp-name em{font-style:normal;font-weight:400;color:var(--muted)}
-.dd-exp b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--red);font-weight:700}
+.dd-exp b{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--red);font-weight:700}
 @media(max-width:640px){
   .cd-exp{display:none}
-  .cd-exp-short{display:block;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:9px;font-weight:700;color:var(--red);line-height:1}
+  .cd-exp-short{display:block;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:9px;font-weight:700;color:var(--red);line-height:1}
   .cal-day.cd{min-height:62px}
   #sum-top-cards{grid-template-columns:1fr 1fr!important}
   .monthly-stats .stat-card:last-child:nth-child(odd){grid-column:1/-1}
@@ -1405,12 +1417,12 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 .field[hidden]{display:none}
 .pay-row{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;flex-wrap:wrap}
 .pay-main{min-width:96px}
-.pay-date{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:700}
+.pay-date{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;font-weight:700}
 .pay-when{font-size:11px;color:var(--accent);margin-top:2px}
 .pay-works{flex:1;display:flex;flex-wrap:wrap;gap:6px 12px;min-width:0}
 .pay-work{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .pay-dot{width:6px;height:6px;border-radius:50%;flex:none}
-.pay-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px;font-weight:700;color:var(--green);margin-left:auto}
+.pay-amt{font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:15px;font-weight:700;color:var(--green);margin-left:auto}
 .pd-view{overflow:hidden;touch-action:pan-y}
 .pd-track{display:flex;transition:transform .32s var(--out)}
 .pd-pane{flex:0 0 100%;min-width:0}
@@ -1610,22 +1622,22 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="row" id="w-night-row">
         <div class="field" style="max-width:140px">
           <label id="lbl-w-night-from">Night from</label>
-          <input type="time" id="w-night-start" value="22:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
+          <input type="time" id="w-night-start" value="22:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">
         </div>
         <div class="field" style="max-width:140px">
           <label id="lbl-w-night-to">Night to</label>
-          <input type="time" id="w-night-end" value="06:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
+          <input type="time" id="w-night-end" value="06:00" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">
         </div>
         <div class="field" style="max-width:120px">
           <label id="lbl-w-night-pct">Night bonus %</label>
-          <input type="number" id="w-night-pct" value="25" min="0" max="200" step="1" inputmode="decimal" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
+          <input type="number" id="w-night-pct" value="25" min="0" max="200" step="1" inputmode="decimal" oninput="updateWorkNightNote()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">
         </div>
         <div class="field" style="max-width:130px">
           <label id="lbl-w-tax">Income tax %</label>
-          <input type="number" id="w-tax-rate" value="10" min="0" max="100" step="0.1" inputmode="decimal" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
+          <input type="number" id="w-tax-rate" value="10" min="0" max="100" step="0.1" inputmode="decimal" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">
         </div>
       </div>
-      <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;margin-top:2px" id="night-bonus-note">
+      <div style="font-size:12px;color:var(--purple);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;margin-top:2px" id="night-bonus-note">
         ★ Night bonus: +25% auto-applied for hours between 10 PM – 6 AM
       </div>
     </div>
@@ -1703,12 +1715,12 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
             <label id="lbl-add-dates" style="margin-bottom:0">Add Dates</label>
             <div style="display:flex;align-items:center;gap:6px">
               <button class="mc-nav-btn" onclick="miniCalPrev()" type="button">&#8249;</button>
-              <span id="mc-month-label" style="font-family:'Syne','Noto Sans Myanmar','Myanmar Text',sans-serif;font-size:13px;font-weight:700;min-width:110px;text-align:center"></span>
+              <span id="mc-month-label" style="font-family:'Syne','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',sans-serif;font-size:13px;font-weight:700;min-width:110px;text-align:center"></span>
               <button class="mc-nav-btn" onclick="miniCalNext()" type="button">&#8250;</button>
             </div>
           </div>
           <div class="mini-cal" id="mini-cal"></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace" id="multi-count-note"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace" id="multi-count-note"></div>
         </div>
           </div>
           <div class="md-right">
@@ -1871,7 +1883,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
           <label id="lbl-tax-rate-lbl">Income Tax Rate</label>
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="tax-rate" value="20" min="0" max="100" step="0.1"
-              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:16px;text-align:center"
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:16px;text-align:center"
               oninput="saveSettings();recalcTax()">
             <span style="color:var(--purple);font-weight:800;font-size:16px">%</span>
           </div>
@@ -1880,7 +1892,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
           <label id="lbl-tax-social-lbl">Social Insurance</label>
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="tax-social" value="0" min="0" max="100" step="0.1"
-              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:16px;text-align:center"
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:16px;text-align:center"
               oninput="saveSettings();recalcTax()">
             <span style="color:var(--purple);font-weight:800;font-size:16px">%</span>
           </div>
@@ -1888,7 +1900,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <div class="field" style="max-width:160px">
           <label id="lbl-tax-deduct-lbl">Deductions</label>
           <input type="number" id="tax-deduct" value="0" min="0" step="0.01" placeholder="0.00"
-            style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:15px"
+            style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:15px"
             oninput="saveSettings();recalcTax()">
         </div>
       </div>
@@ -1973,7 +1985,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         </div>
         <div class="field">
           <label id="lbl-exp-amount">Amount</label>
-          <input type="number" id="exp-amount" inputmode="decimal" placeholder="0" min="0" step="any" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace" onkeydown="if(event.key==='Enter')addExpense()">
+          <input type="number" id="exp-amount" inputmode="decimal" placeholder="0" min="0" step="any" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace" onkeydown="if(event.key==='Enter')addExpense()">
         </div>
       </div>
       <div class="exp-note-row">
@@ -2021,7 +2033,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <div class="sum-collapse" id="sump-cm-wrap"><div class="sum-collapse-in"><div id="sump-custom-month-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:6px">
           <div class="field" style="max-width:120px;margin-bottom:0">
             <label style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Month</label>
-            <select id="sump-cm-month" onchange="recalcSummary()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px">
+            <select id="sump-cm-month" onchange="recalcSummary()" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px">
               <option value="0">January</option><option value="1">February</option><option value="2">March</option>
               <option value="3">April</option><option value="4">May</option><option value="5">June</option>
               <option value="6">July</option><option value="7">August</option><option value="8">September</option>
@@ -2031,7 +2043,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
           <div class="field" style="max-width:100px;margin-bottom:0">
             <label style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Year</label>
             <input type="number" id="sump-cm-year" min="2000" max="2099" step="1"
-              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;text-align:center" oninput="recalcSummary()">
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;text-align:center" oninput="recalcSummary()">
           </div>
         </div>
         </div></div>
@@ -2071,7 +2083,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     <!-- Final net card -->
     <div class="panel" style="text-align:center;padding:24px;margin-bottom:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--green) 5%,transparent),color-mix(in srgb,var(--accent) 5%,transparent));">
       <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px" id="lbl-sum-final">Final Take-Home</div>
-      <div style="font-size:38px;font-weight:800;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--green)" id="sum-final">$0.00</div>
+      <div style="font-size:38px;font-weight:800;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--green)" id="sum-final">$0.00</div>
       <div style="font-size:12px;color:var(--muted);margin-top:6px" id="sum-final-sub">after tax &amp; bills</div>
     </div>
 
@@ -2164,7 +2176,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="acc-row"><span data-ai="email">Email</span><span id="acc-d-email">—</span></div>
       <div class="acc-row"><span data-ai="since">Member since</span><span id="acc-d-since">—</span></div>
       <div class="acc-row"><span data-ai="lastLogin">Last login</span><span id="acc-d-last">—</span></div>
-      <div class="acc-row"><span data-ai="uid">User ID</span><span id="acc-d-id" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px">—</span></div>
+      <div class="acc-row"><span data-ai="uid">User ID</span><span id="acc-d-id" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px">—</span></div>
 
       <div class="acc-sec" data-ai="cloud">Cloud data</div>
       <div class="acc-row"><span data-ai="lastSync">Last synced</span><span id="acc-d-sync">—</span></div>
@@ -2207,11 +2219,15 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       </button>
       <div class="setting-detail" id="sd-lang" style="flex-direction:column;gap:18px">
         <div class="theme-top">
-          <span class="setting-label">Language / 言語 / ဘာသာစကား</span>
+          <span class="setting-label">Language / 言語 / ဘာသာစကား / भाषा / භාෂාව / Ngôn ngữ / 语言</span>
           <div class="lang-toggle">
             <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
             <button class="lang-btn"        id="lang-ja" onclick="setLang('ja')">日本語</button>
             <button class="lang-btn"        id="lang-mm" onclick="setLang('mm')">မြန်မာ</button>
+            <button class="lang-btn"        id="lang-ne" onclick="setLang('ne')">नेपाली</button>
+            <button class="lang-btn"        id="lang-si" onclick="setLang('si')">සිංහල</button>
+            <button class="lang-btn"        id="lang-vi" onclick="setLang('vi')">Tiếng Việt</button>
+            <button class="lang-btn"        id="lang-zh" onclick="setLang('zh')">中文</button>
           </div>
         </div>
         <div>
@@ -2265,7 +2281,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         </div>
         <div class="field">
           <label id="lbl-bill-amount-lbl">Amount / Month</label>
-          <input type="number" id="bill-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">
+          <input type="number" id="bill-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">
         </div>
         <div class="field">
           <label id="lbl-bill-cat-lbl">Category</label>
@@ -2317,7 +2333,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <button onclick="nukeAll()" class="btn btn-del btn-icon icon-wide" aria-label="Delete all data" title="Delete all data">🗑</button>
       </div>
 
-      <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
+      <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--muted);line-height:1.8" id="data-stats-s">—</div>
       </div>
     </div>
 
@@ -2342,7 +2358,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</div>
           <h4>Fonts</h4>
-          <div>Syne by Bonjour Monde and JetBrains Mono by JetBrains, both under the SIL Open Font License 1.1, served by Google Fonts.</div>
+          <div>Syne by Bonjour Monde, JetBrains Mono by JetBrains, and Noto Sans, Noto Sans Myanmar, Noto Sans Devanagari and Noto Sans Sinhala by Google, all under the SIL Open Font License 1.1, served by Google Fonts.</div>
           <h4>Libraries</h4>
           <div>supabase-js (MIT, Supabase), loaded from a public CDN.</div>
         </div>
@@ -2368,8 +2384,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <div class="field"><label id="lbl-edit-rate">Hourly Rate</label><input type="number" id="edit-rate" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-transport">Transport Fee / Day</label><input type="number" id="edit-transport" step="0.01" min="0"></div>
       <div class="field"><label id="lbl-edit-color">Color</label><input type="color" id="edit-color"></div>
-      <div class="field"><label id="lbl-edit-night-from">Night from</label><input type="time" id="edit-night-start" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace"></div>
-      <div class="field"><label id="lbl-edit-night-to">Night to</label><input type="time" id="edit-night-end" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace"></div>
+      <div class="field"><label id="lbl-edit-night-from">Night from</label><input type="time" id="edit-night-start" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace"></div>
+      <div class="field"><label id="lbl-edit-night-to">Night to</label><input type="time" id="edit-night-end" style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace"></div>
       <div class="field"><label id="lbl-edit-night-pct">Night bonus %</label><input type="number" id="edit-night-pct" min="0" max="200" step="1" inputmode="decimal"></div>
       <div class="field"><label id="lbl-edit-tax">Income tax %</label><input type="number" id="edit-tax-rate" min="0" max="100" step="0.1" inputmode="decimal"></div>
       <div class="field"><label id="lbl-edit-pay-timing">Payday</label><button type="button" class="sd-btn" id="pd-btn-edit" aria-haspopup="dialog" aria-expanded="false" onclick="pdToggle('edit')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span></span></button><select id="edit-pay-timing" class="sr-only" tabindex="-1" aria-hidden="true"></select></div>
@@ -2499,7 +2515,7 @@ function sanitizeSettings(o){
   const x={key:'main'};if(!o||typeof o!=='object')return x;
   const has=k=>Object.prototype.hasOwnProperty.call(o,k)&&o[k]!==null&&o[k]!==undefined;
   if(has('currency'))x.currency=_cur(o.currency)||'円';
-  if(has('lang'))x.lang=(o.lang==='ja'||o.lang==='mm')?o.lang:'en';
+  if(has('lang'))x.lang=(o.lang==='ja'||o.lang==='mm'||o.lang==='ne'||o.lang==='si'||o.lang==='vi'||o.lang==='zh')?o.lang:'en';
   if(has('theme'))x.theme=o.theme==='light'?'light':'dark';
   if(has('palette')&&/^[a-z0-9_-]{1,30}$/.test(String(o.palette)))x.palette=String(o.palette);
   if(has('nightStart')&&/^\d{2}:\d{2}$/.test(String(o.nightStart)))x.nightStart=String(o.nightStart);
@@ -2799,13 +2815,24 @@ const DAY_MM=["နွေ", "လာ", "ဂါ", "ဟူး", "ကြာ", "သေ
 const PAY_MM={"none": "မသတ်မှတ်ရသေး", "daily": "ထိုနေ့ချင်းပေး (နေ့စား)", "same": "ထိုလအတွင်းပေး", "next": "နောက်လပေး"};
 const EXP_MM={"food": "အစားအသောက်", "transport": "ခရီးစရိတ်", "shopping": "ဈေးဝယ်", "fun": "ဖျော်ဖြေရေး", "health": "ကျန်းမာရေး", "other": "အခြား"};
 const CAT_MM={"housing": "အိမ်လခ", "electric": "မီးဖိုး", "gas": "ဂတ်စ်ခ", "water": "ရေခ", "internet": "အင်တာနက်", "phone": "ဖုန်းဘီလ်", "insurance": "အာမခံ", "other": "အခြား"};
-// L(ja,en): pick the JA / EN / MM text for an inline string (MM looks the English text up in MM_X)
-function L(ja,en){return lang==='ja'?ja:(lang==='mm'?(MM_X[en]||en):en);}
+// ── Extra languages: Nepali (ne), Sinhala (si), Vietnamese (vi), Chinese (zh) ──
+// Each entry: T (keyed UI strings), X (English→text for L()), AT (account UI), TX/ATT (static page text / attributes),
+// months, days, PAY, EXP, CAT (name tables), S (sentence templates with {placeholders}), meta.
+const XL={"ne":{"T":{"splash":"स्थानीय डेटाबेस लोड हुँदैछ…","offline-badge":"यन्त्रमै सेभ गरिएको","user-count-lbl":"प्रयोगकर्ता","lbl-create-work":"नयाँ काम सिर्जना गर्नुहोस्","lbl-work-name":"कामको नाम","lbl-hourly-rate":"प्रति घण्टा दर","lbl-pay-timing":"तलब पाउने दिन","lbl-pay-day":"भुक्तानी मिति","lbl-edit-pay-timing":"तलब पाउने दिन","lbl-edit-pay-day":"भुक्तानी मिति","lbl-payday-title":"तलब पाउने दिन","lbl-transport":"यातायात खर्च / दिन","lbl-color":"रङ","lbl-your-works":"तपाईंका कामहरू","lbl-add-shift":"+ सिफ्ट थप्नुहोस्","mode-single":"एकल मिति","mode-multi":"धेरै मिति","warn-no-works":"अहिलेसम्म कुनै काम छैन।","warn-create-link":"पहिले काम सिर्जना गर्नुहोस् →","lbl-select-work":"काम छान्नुहोस्","lbl-date":"मिति","lbl-start":"सुरु समय","lbl-end":"समाप्ति समय","lbl-break":"विश्राम","break-no":"विश्राम छैन","lbl-work-time":"कार्य समय","lbl-start-m":"सुरु समय","lbl-end-m":"समाप्ति समय","lbl-break-m":"विश्राम","lbl-work-time-m":"कार्य समय","lbl-add-dates":"मिति थप्नुहोस्","btn-add-date":"+ मिति थप्नुहोस्","ep-lbl-hrs":"कार्य घण्टा","ep-lbl-rate":"दर","ep-lbl-wages":"ज्याला","ep-lbl-trans":"यातायात","ep-lbl-total":"जम्मा","lbl-today":"आज","lbl-week-hrs":"यस हप्ताको घण्टा","lbl-all-hrs":"कुल घण्टा","lbl-week-earn":"यस हप्ताको आम्दानी","lbl-all-earn":"कुल आम्दानी","lbl-filter":"फिल्टर:","lbl-col-date":"मिति","lbl-col-time":"समय","lbl-col-work":"काम","lbl-col-hrs":"घण्टा","lbl-col-wages":"ज्याला","lbl-col-trans":"यातायात","btn-export-csv":"CSV निर्यात","btn-clear-shifts":"सबै हटाउनुहोस्","lbl-daily-overview":"दैनिक सारांश","gtog-earnings":"आम्दानी","gtog-hours":"घण्टा","lbl-work-breakdown":"कामअनुसार विवरण","lbl-th-work":"काम","lbl-th-shifts":"सिफ्ट संख्या","lbl-th-hrs":"घण्टा","lbl-th-wages":"ज्याला","lbl-th-trans":"यातायात","lbl-th-total":"जम्मा","cal-legend-shift":"सिफ्ट छ","cal-legend-today":"आज","cal-legend-sel":"चयन गरिएको","lbl-data-backup":"डेटा र ब्याकअप","lbl-data-desc":"सबै डेटा तपाईंको ब्राउजरको IndexedDB मा सुरक्षित हुन्छ — यो यन्त्रमै स्थायी रूपमा रहन्छ र पूर्ण रूपमा अफलाइन चल्छ।","lbl-export-bk":"ब्याकअप निर्यात गर्नुहोस्","lbl-export-bk-sub":"सबै डेटा JSON ब्याकअप फाइलको रूपमा डाउनलोड गर्नुहोस्।","lbl-import-bk":"ब्याकअप आयात गर्नुहोस्","lbl-import-bk-sub":"JSON ब्याकअपबाट पुनर्स्थापना गर्नुहोस्। सबै डेटा प्रतिस्थापन हुनेछ।","lbl-export-csv":"CSV निर्यात","lbl-export-csv-sub":"सबै सिफ्टहरू स्प्रेडसिट फाइलको रूपमा।","lbl-delete-all":"सबै डेटा मेटाउनुहोस्","lbl-delete-all-sub":"सबै कुरा स्थायी रूपमा मेटिन्छ। पूर्ववत गर्न सकिँदैन।","btn-export-bk":"⬇ ब्याकअप निर्यात","btn-import-bk":"⬆ ब्याकअप आयात","btn-export-csv2":"⬇ CSV निर्यात","btn-nuke":"सबै मेटाउनुहोस्","lbl-settings-title":"सेटिङहरू","lbl-lang-title":"भाषा","lbl-lang-sub":"Display language / प्रदर्शन भाषा","lbl-theme-title":"थिम","lbl-theme-sub":"डार्क वा लाइट मोड र रङ प्यालेट","lbl-mode-title":"मोड","lbl-palette-title":"रङ प्यालेट","lbl-palette-sub":"डार्क र लाइट मोडका लागि रङ योजनाहरू","lbl-credits-title":"श्रेय र इजाजतपत्र","lbl-credits-sub":"रङ प्यालेट, फन्ट र लाइब्रेरीहरू","lbl-grp-general":"सामान्य","lbl-grp-money":"तलब र पैसा","lbl-grp-data":"डेटा","lbl-grp-about":"बारेमा","lbl-data-title":"डेटा र ब्याकअप","lbl-data-sub":"निर्यात, आयात र रिसेट","lbl-currency-title":"मुद्रा चिन्ह","lbl-currency-custom":"अनुकूलित","lbl-w-night-from":"रात्रि सुरु","lbl-w-night-to":"रात्रि अन्त्य","lbl-w-night-pct":"रात्रि भत्ता %","lbl-w-tax":"आयकर %","lbl-edit-night-from":"रात्रि सुरु","lbl-edit-night-to":"रात्रि अन्त्य","lbl-edit-night-pct":"रात्रि भत्ता %","lbl-edit-tax":"आयकर %","lbl-currency-sub":"सबै आम्दानी देखाउने ठाउँमा प्रयोग हुन्छ","lbl-night-title":"रात्रि भत्ता","lbl-night-sub":"रात्रिकालीन घण्टाका लागि समय सीमा र भत्ता % तोक्नुहोस्","lbl-night-from":"देखि","lbl-night-to":"सम्म","lbl-night-pct":"भत्ता %","lbl-edit-work-title":"काम सम्पादन गर्नुहोस्","lbl-edit-name":"कामको नाम","lbl-edit-rate":"प्रति घण्टा दर","lbl-edit-transport":"यातायात शुल्क / दिन","lbl-edit-color":"रङ","btn-cancel-edit":"रद्द गर्नुहोस्","btn-save-edit":"सेभ गर्नुहोस्","lbl-m-shifts":"सिफ्ट संख्या","lbl-m-hrs":"कार्य घण्टा","lbl-m-wages":"ज्याला","lbl-m-total":"जम्मा (यातायात सहित)","tab-works":"कामहरू","tab-shifts":"सिफ्टहरू","tab-monthly":"मासिक","tab-expenses":"खर्च","lbl-exp-title":"खर्च थप्नुहोस्","lbl-exp-cats":"वर्ग","lbl-exp-date":"मिति","lbl-exp-amount":"रकम","lbl-exp-note":"टिपोट (ऐच्छिक)","btn-add-exp":"+ खर्च थप्नुहोस्","lbl-exp-today":"आज","lbl-exp-month":"महिनाको जम्मा","lbl-exp-avg":"दैनिक औसत","tab-summary":"सारांश","tab-tax":"कर","tab-data":"डेटा","lbl-night-min":" रात्रि मिनेट","toast-work-added":"काम थपियो ✓","toast-work-updated":"काम अद्यावधिक भयो ✓","toast-work-deleted":"काम मेटियो","toast-shift-saved":"सिफ्ट सेभ भयो ✓","toast-shifts-saved":"वटा सिफ्ट सेभ भए ✓","toast-shift-deleted":"सिफ्ट मेटियो","toast-shifts-cleared":"सबै सिफ्ट हटाइयो","toast-backup-exported":"ब्याकअप निर्यात भयो ✓","toast-imported":"आयात भयो:","toast-works":"काम","toast-shifts":"सिफ्ट","toast-cancelled":"रद्द गरियो","toast-all-deleted":"सबै डेटा मेटियो","confirm-delete-work":"यो काम मेटाउने हो? सिफ्टको इतिहास रहिरहनेछ।","confirm-delete-shift":"यो सिफ्ट मेटाउने हो?","confirm-clear-all":"सबै सिफ्ट मेटाउने हो? यसलाई पूर्ववत गर्न सकिँदैन।","confirm-nuke":"⚠️ यसले सबै काम र सिफ्ट स्थायी रूपमा मेटाउनेछ।","confirm-nuke-type":"पुष्टि गर्न “delete” टाइप गर्नुहोस्:","confirm-import":"काम र सिफ्ट आयात गर्ने हो? यसले हालको सबै डेटा प्रतिस्थापन गर्नेछ।","alert-no-name":"कृपया कामको नाम लेख्नुहोस्।","alert-fill-date":"कृपया मिति, सुरु समय र समाप्ति समय भर्नुहोस्।","alert-select-work":"कृपया काम छान्नुहोस्।","alert-no-dates":"कृपया कम्तीमा एउटा मिति थप्नुहोस्।","alert-no-shifts":"निर्यात गर्न कुनै सिफ्ट छैन।","lbl-m-night-note":"★ रात्रि मिनेट × रात्रि भत्ता समावेश","lbl-break-display":"विश्राम:"},"X":{"Tap to change":"परिवर्तन गर्न ट्याप गर्नुहोस्","Currency Symbol":"मुद्रा चिन्ह","Custom":"अनुकूलित","Night hours":"रात्रिको समय","Income tax":"आयकर","Payday":"तलब पाउने दिन","Edit":"सम्पादन","Delete":"मेटाउनुहोस्","Pick a date":"मिति छान्नुहोस्","Today":"आज","Night bonus":"रात्रि भत्ता","All":"सबै","No shifts yet.":"अहिलेसम्म कुनै सिफ्ट छैन।","No shifts this month":"यस महिना कुनै सिफ्ट छैन","No shifts this month.":"यस महिना कुनै सिफ्ट छैन।","Date":"मिति","Expenses":"खर्च","Total":"जम्मा","more":"थप","Worked":"काम गरेको","Break":"विश्राम","Night":"रात्रि","Wages":"ज्याला","Transport":"यातायात","Day total":"दिनको जम्मा","Expenses total":"खर्चको जम्मा","Net (income − expenses)":"बचत (आम्दानी − खर्च)","Income Tax":"आयकर","Social Insurance":"सामाजिक बीमा","Take-Home":"हातमा पर्ने रकम","No data":"डेटा छैन","Enter a bill name":"बिलको नाम लेख्नुहोस्","Enter an amount":"रकम लेख्नुहोस्","Bill added ✓":"बिल थपियो ✓","Delete this bill?":"यो बिल मेटाउने हो?","Deleted":"मेटियो","No bills yet. Add your monthly expenses above.":"अहिलेसम्म कुनै बिल छैन। माथि आफ्ना मासिक खर्च थप्नुहोस्।","End of month":"महिनाको अन्त्य","Not set":"तोकिएको छैन","Same day":"सोही दिन","Next month":"अर्को महिना","Same month":"सोही महिना","No upcoming paydays yet.":"आगामी तलब दिन छैन।","Tomorrow":"भोलि","Amounts are before tax (wages + transport).":"रकम कर कट्टा गर्नुअघिको हो (ज्याला + यातायात)।"," No payday set for: ":" तलब दिन नतोकिएका कामहरू: ","Expense added ✓":"खर्च थपियो ✓","Delete this expense?":"यो खर्च मेटाउने हो?","e.g. Lunch":"जस्तै: खाजा","No expenses this month yet.":"यस महिना अहिलेसम्म कुनै खर्च छैन।","this month":"यस महिना","last month":"गत महिना","this year":"यस वर्ष","all time":"कुल","per work":"कामअनुसार","Expenses (period)":"खर्च (अवधि)","Gross Income":"कुल आम्दानी","Total Bills":"बिलको जम्मा","Total Expenses":"खर्चको जम्मा","Taxed months (wages ≥ 70,000)":"कर लाग्ने महिना (ज्याला ≥ 70,000)","No expenses in this period. Add them in the Expenses tab.":"यस अवधिमा कुनै खर्च छैन। “खर्च” ट्याबमा थप्न सक्नुहुन्छ।","No bills registered. Add bills in Settings (⚙).":"कुनै बिल दर्ता गरिएको छैन। सेटिङ (⚙) मा बिल थप्नुहोस्।","Total: ":"जम्मा: ","h":"घ","m":"मि","No break":"विश्राम छैन"," min":" मिनेट","min":"मिनेट","Break time":"विश्राम समय","Full circle = 1 hr · locks every 5 min":"एक पूरा घुमाइ = 1 घण्टा · प्रत्येक 5 मिनेटमा लक हुन्छ","Set":"तोक्नुहोस्","delete":"delete","shift":"सिफ्ट","shifts":"सिफ्ट","Registered users":"दर्ता भएका प्रयोगकर्ता"},"AT":{"account":"खाता","login":"लगइन","register":"दर्ता","email":"इमेल","password":"पासवर्ड","confirm":"पासवर्ड पुष्टि गर्नुहोस्","displayName":"देखिने नाम","forgot":"पासवर्ड बिर्सनुभयो?","createAcc":"खाता बनाउनुहोस्","loginNote":"तपाईंको डेटा यो यन्त्रमै रहन्छ। लगइन गरेपछि ब्याकअप हुन्छ र जुनसुकै यन्त्रमा प्रयोग गर्न सकिन्छ।","details":"खाताको विवरण","save":"सेभ गर्नुहोस्","since":"सदस्य भएको मिति","lastLogin":"पछिल्लो लगइन","uid":"प्रयोगकर्ता ID","cloud":"क्लाउड डेटा","lastSync":"पछिल्लो सिङ्क","onDevice":"यो यन्त्रमा रहेको डेटा","syncNow":"⟳ अहिले सिङ्क गर्नुहोस्","security":"सुरक्षा","newPass":"नयाँ पासवर्ड","update":"अद्यावधिक","logout":"लगआउट","works":"काम","shifts":"सिफ्ट","bills":"बिल","expenses":"खर्च","never":"कहिल्यै होइन","configMissing":"config.js लोड गर्न सकिएन। यसलाई index.html भएकै ठाउँमा अपलोड गरेर रिफ्रेस गर्नुहोस् (वा ब्राउजर क्यास खाली गर्नुहोस्)।","notConfigured":"क्लाउड लगइन अझै सेट गरिएको छैन — config.js मा Supabase URL र anon key राख्नुहोस्।","offline":"क्लाउड सेवा उपलब्ध छैन (अफलाइन हुनुहुन्छ?)","fillAll":"कृपया इमेल र पासवर्ड भर्नुहोस्।","passShort":"पासवर्ड कम्तीमा 8 अक्षरको हुनुपर्छ।","passMismatch":"पासवर्ड मेल खाएन।","checkEmail":"खाता बन्यो! इमेल हेरेर पुष्टि गर्नुहोस्, अनि लगइन गर्नुहोस्।","alreadyReg":"यो इमेल पहिले नै दर्ता भइसकेको छ — लगइन गरेर हेर्नुहोस्।","resetSent":"पासवर्ड रिसेट इमेल पठाइयो। इनबक्स हेर्नुहोस्।","enterEmail":"पहिले माथि इमेल लेख्नुहोस्।","nameSaved":"नाम अद्यावधिक भयो ✓","passSaved":"पासवर्ड अद्यावधिक भयो ✓","setNewPass":"तल नयाँ पासवर्ड लेख्नुहोस्।","confirmDel":"क्लाउड ब्याकअप मेटाउने हो? यो यन्त्रको डेटा रहिरहनेछ।","cloudDeleted":"क्लाउड डेटा मेटियो","loggedOut":"लगआउट भयो","pwShow":"पासवर्ड देखाउनुहोस्","pwHide":"पासवर्ड लुकाउनुहोस्","pwWeak":"कमजोर","pwFair":"ठीकै","pwGood":"राम्रो","pwStrong":"बलियो","pwRule":"कम्तीमा 8 अक्षर","pwMatch":"पासवर्ड मेल खायो","emailInvalid":"कृपया मान्य इमेल ठेगाना लेख्नुहोस्।","didYou":"के तपाईंको मतलब {e} हो?","caps":"Caps Lock चालु छ"},"TX":{"Add":"थप्नुहोस्","+ Add":"+ थप्नुहोस्","Add Shift":"सिफ्ट थप्नुहोस्","No break":"विश्राम छैन","15 min":"15 मिनेट","30 min":"30 मिनेट","45 min":"45 मिनेट","1 hour":"1 घण्टा","1.5 hours":"1.5 घण्टा","2 hours":"2 घण्टा","Tax Calculator":"कर गणना","Income Tax Rate":"आयकर दर","Social Insurance":"सामाजिक बीमा","Deductions":"कटौती","Calculate For":"गणना अवधि","All Time":"कुल","This Month":"यस महिना","This Year":"यस वर्ष","Custom":"अनुकूलित","From":"देखि","To":"सम्म","Tax Summary":"कर सारांश","Gross Income":"कुल आम्दानी","Total Tax":"कुल कर","Net (Take-Home)":"हातमा पर्ने रकम","Tax by Work":"कामअनुसार कर","Gross":"कर अघिको जम्मा","Tax":"कर","Net":"खुद","Total Income Summary":"आम्दानीको सारांश","Period":"अवधि","Last Month":"गत महिना","Custom Month":"महिना छान्नुहोस्","Month":"महिना","Year":"वर्ष","Filter by Work":"कामअनुसार फिल्टर","Tax rate is set in Settings (⚙). Applied per work when monthly wages exceed 70,000.":"कर दर सेटिङ (⚙) मा तोकिन्छ। मासिक ज्याला 70,000 भन्दा बढी भएमा प्रत्येक कामको लागि अलग लागू हुन्छ।","Bills (period)":"बिल (अवधि)","Expenses (period)":"खर्च (अवधि)","Final Take-Home":"अन्तिम हातमा पर्ने रकम","after tax & bills":"कर र बिल कटाएपछि","Breakdown":"विवरण","Bills Applied":"लागू गरिएका बिल","Expenses":"खर्च","Monthly Bills":"मासिक बिल","Bill Name":"बिलको नाम","Amount / Month":"रकम / महिना","Category":"वर्ग","Total / Month":"जम्मा / महिना","Total / Year":"जम्मा / वर्ष","Choose a setting on the left to see its options.":"विकल्पहरू हेर्न बायाँबाट कुनै सेटिङ छान्नुहोस्।","Break time":"विश्राम समय","Full circle = 1 hr · locks every 5 min":"एक पूरा घुमाइ = 1 घण्टा · प्रत्येक 5 मिनेटमा लक हुन्छ","Set":"तोक्नुहोस्","Work":"काम","Shifts":"सिफ्टहरू","Hours":"घण्टा","Wages":"ज्याला","Transport":"यातायात","Total":"जम्मा","🏠 Housing":"🏠 घर भाडा","⚡ Electric":"⚡ बिजुली","🔥 Gas":"🔥 ग्यास","💧 Water":"💧 पानी","🌐 Internet":"🌐 इन्टरनेट","📱 Phone":"📱 फोन","🛡 Insurance":"🛡 बीमा","📦 Other":"📦 अन्य","January":"जनवरी","February":"फेब्रुअरी","March":"मार्च","April":"अप्रिल","May":"मे","June":"जुन","July":"जुलाई","August":"अगस्ट","September":"सेप्टेम्बर","October":"अक्टोबर","November":"नोभेम्बर","December":"डिसेम्बर"},"ATT":{"Login / Account":"लगइन / खाता","Login or account":"लगइन वा खाता","Settings":"सेटिङहरू","e.g. Barista…":"जस्तै: क्याफे कर्मचारी…","Previous month":"अघिल्लो महिना","Next month":"अर्को महिना","Period":"अवधि","Close":"बन्द गर्नुहोस्","Monthly Bills":"मासिक बिल","Dark":"डार्क","Light":"लाइट","e.g. Rent, Electric…":"जस्तै: घर भाडा, बिजुली…","Export backup":"ब्याकअप निर्यात","Import backup":"ब्याकअप आयात","Export CSV":"CSV निर्यात","Delete all data":"सबै डेटा मेटाउनुहोस्","Break minutes":"विश्राम (मिनेट)"},"months":["जनवरी","फेब्रुअरी","मार्च","अप्रिल","मे","जुन","जुलाई","अगस्ट","सेप्टेम्बर","अक्टोबर","नोभेम्बर","डिसेम्बर"],"days":["आ","सो","मं","बु","बि","शु","श"],"PAY":{"none":"तोकिएको छैन","daily":"सोही दिन (दैनिक भुक्तानी)","same":"सोही महिना","next":"अर्को महिना"},"EXP":{"food":"खाना","transport":"यातायात","shopping":"किनमेल","fun":"मनोरञ्जन","health":"स्वास्थ्य","other":"अन्य"},"CAT":{"housing":"घर भाडा","electric":"बिजुली","gas":"ग्यास","water":"पानी","internet":"इन्टरनेट","phone":"फोन","insurance":"बीमा","other":"अन्य"},"S":{"datesSel":"{n} मिति छानिएको","inDays":"{n} दिनमा","payDayN":"{n} गते","finalSub":"कर, बिल र खर्च कटाएपछि ({p})","taxLbl":"कर ({r}, 70k भन्दा बढी भएका महिना)","payNote":"आम्दानी तलब पाइने महिनामा गणना गरिन्छ (प्रत्येक कामको तलब दिन सेटिङअनुसार)। तलब दिन नतोकिएका कामहरू काम गरिएकै महिनामा गणना हुन्छन्।","stats":"कामहरू: {w} · सिफ्टहरू: {s} · बिलहरू: {b} · खर्च: {e}<br>घण्टा: {h} · आम्दानी: {g}","monthYear":"{M} {y}"},"meta":{"name":"नेपाली","label":"भाषा","bcp":"ne","loc":"ne-NP-u-nu-latn","ogLocale":"ne_NP"}},"si":{"T":{"splash":"දේශීය දත්ත ගබඩාව පූරණය වෙමින්…","offline-badge":"උපාංගයේ සුරකින ලදී","user-count-lbl":"පරිශීලකයින්","lbl-create-work":"නව රැකියාවක් සාදන්න","lbl-work-name":"රැකියාවේ නම","lbl-hourly-rate":"පැයකට වැටුප","lbl-pay-timing":"වැටුප් දිනය","lbl-pay-day":"වැටුප් ගෙවන දිනය","lbl-edit-pay-timing":"වැටුප් දිනය","lbl-edit-pay-day":"වැටුප් ගෙවන දිනය","lbl-payday-title":"වැටුප් දිනය","lbl-transport":"ප්‍රවාහන ගාස්තු / දිනට","lbl-color":"වර්ණය","lbl-your-works":"ඔබේ රැකියා","lbl-add-shift":"+ මුරයක් එක් කරන්න","mode-single":"එක් දිනයක්","mode-multi":"දින කිහිපයක්","warn-no-works":"තවම රැකියා නැත.","warn-create-link":"මුලින්ම රැකියාවක් සාදන්න →","lbl-select-work":"රැකියාව තෝරන්න","lbl-date":"දිනය","lbl-start":"ආරම්භ වේලාව","lbl-end":"අවසන් වේලාව","lbl-break":"විවේකය","break-no":"විවේක නැත","lbl-work-time":"වැඩ කළ වේලාව","lbl-start-m":"ආරම්භ වේලාව","lbl-end-m":"අවසන් වේලාව","lbl-break-m":"විවේකය","lbl-work-time-m":"වැඩ කළ වේලාව","lbl-add-dates":"දින එක් කරන්න","btn-add-date":"+ දිනයක් එක් කරන්න","ep-lbl-hrs":"වැඩ පැය","ep-lbl-rate":"අනුපාතය","ep-lbl-wages":"වැටුප්","ep-lbl-trans":"ප්‍රවාහන","ep-lbl-total":"එකතුව","lbl-today":"අද","lbl-week-hrs":"මේ සතියේ පැය","lbl-all-hrs":"මුළු පැය","lbl-week-earn":"මේ සතියේ ආදායම","lbl-all-earn":"මුළු ආදායම","lbl-filter":"පෙරහන:","lbl-col-date":"දිනය","lbl-col-time":"වේලාව","lbl-col-work":"රැකියාව","lbl-col-hrs":"පැය","lbl-col-wages":"වැටුප්","lbl-col-trans":"ප්‍රවාහන","btn-export-csv":"CSV නිර්යාත කරන්න","btn-clear-shifts":"සියල්ල මකන්න","lbl-daily-overview":"දිනපතා සාරාංශය","gtog-earnings":"ආදායම","gtog-hours":"පැය","lbl-work-breakdown":"රැකියා අනුව විස්තරය","lbl-th-work":"රැකියාව","lbl-th-shifts":"මුර ගණන","lbl-th-hrs":"පැය","lbl-th-wages":"වැටුප්","lbl-th-trans":"ප්‍රවාහන","lbl-th-total":"එකතුව","cal-legend-shift":"මුරයක් ඇත","cal-legend-today":"අද","cal-legend-sel":"තෝරා ඇත","lbl-data-backup":"දත්ත සහ උපස්ථය","lbl-data-desc":"සියලු දත්ත ඔබගේ බ්‍රවුසරයේ IndexedDB හි ගබඩා වේ — මෙම උපාංගයේ ස්ථිරවම පවතින අතර සම්පූර්ණයෙන්ම ඔෆ්ලයින් ක්‍රියා කරයි.","lbl-export-bk":"උපස්ථය නිර්යාත කරන්න","lbl-export-bk-sub":"සියලු දත්ත JSON උපස්ථ ගොනුවක් ලෙස බාගන්න.","lbl-import-bk":"උපස්ථය ආනයනය කරන්න","lbl-import-bk-sub":"JSON උපස්ථයකින් ප්‍රතිස්ථාපනය කරන්න. සියලු දත්ත ප්‍රතිස්ථාපනය වේ.","lbl-export-csv":"CSV නිර්යාත කරන්න","lbl-export-csv-sub":"සියලු මුර ස්ප්‍රෙඩ්ෂීට් ගොනුවක් ලෙස.","lbl-delete-all":"සියලු දත්ත මකන්න","lbl-delete-all-sub":"සියල්ල ස්ථිරවම මැකේ. ආපසු හැරවිය නොහැක.","btn-export-bk":"⬇ උපස්ථය නිර්යාත","btn-import-bk":"⬆ උපස්ථය ආනයන","btn-export-csv2":"⬇ CSV නිර්යාත","btn-nuke":"සියල්ල මකන්න","lbl-settings-title":"සැකසුම්","lbl-lang-title":"භාෂාව","lbl-lang-sub":"Display language / සංදර්ශන භාෂාව","lbl-theme-title":"තේමාව","lbl-theme-sub":"අඳුරු හෝ ආලෝක ප්‍රකාරය සහ වර්ණ පැලට්ටුව","lbl-mode-title":"ප්‍රකාරය","lbl-palette-title":"වර්ණ පැලට්ටුව","lbl-palette-sub":"අඳුරු සහ ආලෝක ප්‍රකාර සඳහා වර්ණ යෝජනා ක්‍රම","lbl-credits-title":"ගෞරවය සහ බලපත්‍ර","lbl-credits-sub":"වර්ණ පැලට්ටු, අකුරු සහ පුස්තකාල","lbl-grp-general":"සාමාන්‍ය","lbl-grp-money":"වැටුප් සහ මුදල්","lbl-grp-data":"දත්ත","lbl-grp-about":"පිළිබඳව","lbl-data-title":"දත්ත සහ උපස්ථය","lbl-data-sub":"නිර්යාත, ආනයන සහ යළි පිහිටුවීම","lbl-currency-title":"මුදල් සංකේතය","lbl-currency-custom":"අභිරුචි","lbl-w-night-from":"රාත්‍රිය ආරම්භය","lbl-w-night-to":"රාත්‍රිය අවසානය","lbl-w-night-pct":"රාත්‍රී දීමනාව %","lbl-w-tax":"ආදායම් බදු %","lbl-edit-night-from":"රාත්‍රිය ආරම්භය","lbl-edit-night-to":"රාත්‍රිය අවසානය","lbl-edit-night-pct":"රාත්‍රී දීමනාව %","lbl-edit-tax":"ආදායම් බදු %","lbl-currency-sub":"සියලු ආදායම් සංදර්ශනවල භාවිතා වේ","lbl-night-title":"රාත්‍රී දීමනාව","lbl-night-sub":"රාත්‍රී පැය සඳහා කාල පරාසය සහ දීමනා % සකසන්න","lbl-night-from":"සිට","lbl-night-to":"දක්වා","lbl-night-pct":"දීමනාව %","lbl-edit-work-title":"රැකියාව සංස්කරණය","lbl-edit-name":"රැකියාවේ නම","lbl-edit-rate":"පැයකට වැටුප","lbl-edit-transport":"ප්‍රවාහන ගාස්තුව / දිනට","lbl-edit-color":"වර්ණය","btn-cancel-edit":"අවලංගු කරන්න","btn-save-edit":"සුරකින්න","lbl-m-shifts":"මුර ගණන","lbl-m-hrs":"වැඩ පැය","lbl-m-wages":"වැටුප්","lbl-m-total":"එකතුව (ප්‍රවාහන ඇතුළුව)","tab-works":"රැකියා","tab-shifts":"මුර","tab-monthly":"මාසික","tab-expenses":"වියදම්","lbl-exp-title":"වියදමක් එක් කරන්න","lbl-exp-cats":"ප්‍රවර්ගය","lbl-exp-date":"දිනය","lbl-exp-amount":"මුදල","lbl-exp-note":"සටහන (අත්‍යවශ්‍ය නොවේ)","btn-add-exp":"+ වියදමක් එක් කරන්න","lbl-exp-today":"අද","lbl-exp-month":"මාසික එකතුව","lbl-exp-avg":"දෛනික සාමාන්‍යය","tab-summary":"සාරාංශය","tab-tax":"බදු","tab-data":"දත්ත","lbl-night-min":" රාත්‍රී මිනිත්තු","toast-work-added":"රැකියාව එක් කරන ලදී ✓","toast-work-updated":"රැකියාව යාවත්කාලීන කරන ලදී ✓","toast-work-deleted":"රැකියාව මකන ලදී","toast-shift-saved":"මුරය සුරකින ලදී ✓","toast-shifts-saved":"මුර සුරකින ලදී ✓","toast-shift-deleted":"මුරය මකන ලදී","toast-shifts-cleared":"සියලු මුර මකන ලදී","toast-backup-exported":"උපස්ථය නිර්යාත කරන ලදී ✓","toast-imported":"ආනයනය කරන ලදී:","toast-works":"රැකියා","toast-shifts":"මුර","toast-cancelled":"අවලංගු කරන ලදී","toast-all-deleted":"සියලු දත්ත මකන ලදී","confirm-delete-work":"මෙම රැකියාව මකන්නද? මුර ඉතිහාසය තබා ගැනේ.","confirm-delete-shift":"මෙම මුරය මකන්නද?","confirm-clear-all":"සියලු මුර මකන්නද? මෙය ආපසු හැරවිය නොහැක.","confirm-nuke":"⚠️ මෙය සියලු රැකියා සහ මුර ස්ථිරවම මකා දමයි.","confirm-nuke-type":"තහවුරු කිරීමට “delete” ටයිප් කරන්න:","confirm-import":"රැකියා සහ මුර ආනයනය කරන්නද? මෙය වත්මන් සියලු දත්ත ප්‍රතිස්ථාපනය කරයි.","alert-no-name":"කරුණාකර රැකියාවේ නම ඇතුළත් කරන්න.","alert-fill-date":"කරුණාකර දිනය, ආරම්භ වේලාව සහ අවසන් වේලාව පුරවන්න.","alert-select-work":"කරුණාකර රැකියාවක් තෝරන්න.","alert-no-dates":"කරුණාකර අවම වශයෙන් එක් දිනයක් එක් කරන්න.","alert-no-shifts":"නිර්යාත කිරීමට මුර නොමැත.","lbl-m-night-note":"★ රාත්‍රී මිනිත්තු × රාත්‍රී දීමනාව ඇතුළත්","lbl-break-display":"විවේකය:"},"X":{"Tap to change":"වෙනස් කිරීමට තට්ටු කරන්න","Currency Symbol":"මුදල් සංකේතය","Custom":"අභිරුචි","Night hours":"රාත්‍රී පැය","Income tax":"ආදායම් බදු","Payday":"වැටුප් දිනය","Edit":"සංස්කරණය","Delete":"මකන්න","Pick a date":"දිනයක් තෝරන්න","Today":"අද","Night bonus":"රාත්‍රී දීමනාව","All":"සියල්ල","No shifts yet.":"තවම මුර නැත.","No shifts this month":"මෙම මාසයේ මුර නැත","No shifts this month.":"මෙම මාසයේ මුර නැත.","Date":"දිනය","Expenses":"වියදම්","Total":"එකතුව","more":"තවත්","Worked":"වැඩ කළ","Break":"විවේකය","Night":"රාත්‍රී","Wages":"වැටුප්","Transport":"ප්‍රවාහන","Day total":"දිනයේ එකතුව","Expenses total":"වියදම් එකතුව","Net (income − expenses)":"ශුද්ධ (ආදායම − වියදම්)","Income Tax":"ආදායම් බදු","Social Insurance":"සමාජ රක්ෂණය","Take-Home":"අතට ලැබෙන මුදල","No data":"දත්ත නැත","Enter a bill name":"බිල්පතේ නම ඇතුළත් කරන්න","Enter an amount":"මුදලක් ඇතුළත් කරන්න","Bill added ✓":"බිල්පත එක් කරන ලදී ✓","Delete this bill?":"මෙම බිල්පත මකන්නද?","Deleted":"මකන ලදී","No bills yet. Add your monthly expenses above.":"තවම බිල්පත් නැත. ඉහළින් ඔබේ මාසික වියදම් එක් කරන්න.","End of month":"මාසාවසානය","Not set":"සකසා නැත","Same day":"එදිනම","Next month":"ඊළඟ මාසය","Same month":"එම මාසයේම","No upcoming paydays yet.":"ඉදිරි වැටුප් දින නැත.","Tomorrow":"හෙට","Amounts are before tax (wages + transport).":"මුදල් බදු අඩු කිරීමට පෙරයි (වැටුප් + ප්‍රවාහන)."," No payday set for: ":" වැටුප් දිනය සකසා නැති රැකියා: ","Expense added ✓":"වියදම එක් කරන ලදී ✓","Delete this expense?":"මෙම වියදම මකන්නද?","e.g. Lunch":"උදා: දිවා ආහාරය","No expenses this month yet.":"මෙම මාසයේ තවම වියදම් නැත.","this month":"මෙම මාසය","last month":"පසුගිය මාසය","this year":"මෙම වසර","all time":"සියලු කාලය","per work":"රැකියාවක් අනුව","Expenses (period)":"වියදම් (කාල සීමාව)","Gross Income":"දළ ආදායම","Total Bills":"බිල්පත් එකතුව","Total Expenses":"වියදම් එකතුව","Taxed months (wages ≥ 70,000)":"බදු අය කළ මාස (වැටුප් ≥ 70,000)","No expenses in this period. Add them in the Expenses tab.":"මෙම කාල සීමාවේ වියදම් නැත. “වියදම්” ටැබයෙන් එක් කරන්න.","No bills registered. Add bills in Settings (⚙).":"බිල්පත් ලියාපදිංචි කර නැත. සැකසුම් (⚙) වෙතින් එක් කරන්න.","Total: ":"එකතුව: ","h":"පැ","m":"මි","No break":"විවේක නැත"," min":" මිනි","min":"මිනි","Break time":"විවේක කාලය","Full circle = 1 hr · locks every 5 min":"සම්පූර්ණ රවුම = පැය 1 · මිනිත්තු 5 පාසා ලොක් වේ","Set":"සකසන්න","delete":"delete","shift":"මුර","shifts":"මුර","Registered users":"ලියාපදිංචි පරිශීලකයින්"},"AT":{"account":"ගිණුම","login":"පිවිසෙන්න","register":"ලියාපදිංචි වන්න","email":"විද්‍යුත් තැපෑල","password":"මුරපදය","confirm":"මුරපදය තහවුරු කරන්න","displayName":"පෙන්වන නම","forgot":"මුරපදය අමතකද?","createAcc":"ගිණුමක් සාදන්න","loginNote":"ඔබගේ දත්ත මෙම උපාංගයේම පවතී. පිවිසීමෙන් උපස්ථ කර ඕනෑම උපාංගයක භාවිතා කළ හැක.","details":"ගිණුම් විස්තර","save":"සුරකින්න","since":"සාමාජිකත්වය ලැබූ දිනය","lastLogin":"අවසන් පිවිසුම","uid":"පරිශීලක ID","cloud":"ක්ලවුඩ් දත්ත","lastSync":"අවසන් සමමුහුර්තය","onDevice":"මෙම උපාංගයේ දත්ත","syncNow":"⟳ දැන් සමමුහුර්ත කරන්න","security":"ආරක්ෂාව","newPass":"නව මුරපදය","update":"යාවත්කාලීන කරන්න","logout":"ඉවත් වන්න","works":"රැකියා","shifts":"මුර","bills":"බිල්පත්","expenses":"වියදම්","never":"කිසි විටෙකත් නැත","configMissing":"config.js පූරණය කළ නොහැකි විය. එය index.html ඇති තැනටම උඩුගත කර පිටුව නැවුම් කරන්න (හෝ බ්‍රවුසර කෑෂ් මකන්න).","notConfigured":"ක්ලවුඩ් පිවිසුම තවම සකසා නැත — config.js හි Supabase URL සහ anon key ඇතුළත් කරන්න.","offline":"ක්ලවුඩ් සේවාව ලබා ගත නොහැක (ඔබ ඔෆ්ලයින් ද?)","fillAll":"කරුණාකර විද්‍යුත් තැපෑල සහ මුරපදය පුරවන්න.","passShort":"මුරපදය අවම වශයෙන් අක්ෂර 8ක් විය යුතුය.","passMismatch":"මුරපද නොගැළපේ.","checkEmail":"ගිණුම සාදන ලදී! තහවුරු කිරීමට ඔබගේ විද්‍යුත් තැපෑල පරීක්ෂා කර පිවිසෙන්න.","alreadyReg":"මෙම විද්‍යුත් තැපෑල දැනටමත් ලියාපදිංචි වී ඇත — පිවිසීමට උත්සාහ කරන්න.","resetSent":"මුරපදය යළි සැකසීමේ ඊමේල් පණිවිඩය යවන ලදී. ඔබේ එන ලිපි පරීක්ෂා කරන්න.","enterEmail":"කරුණාකර මුලින්ම ඉහළින් විද්‍යුත් තැපෑල ඇතුළත් කරන්න.","nameSaved":"නම යාවත්කාලීන කරන ලදී ✓","passSaved":"මුරපදය යාවත්කාලීන කරන ලදී ✓","setNewPass":"පහළින් නව මුරපදයක් ඇතුළත් කරන්න.","confirmDel":"ක්ලවුඩ් උපස්ථය මකන්නද? මෙම උපාංගයේ දත්ත තබා ගැනේ.","cloudDeleted":"ක්ලවුඩ් දත්ත මකන ලදී","loggedOut":"ඉවත් විය","pwShow":"මුරපදය පෙන්වන්න","pwHide":"මුරපදය සඟවන්න","pwWeak":"දුර්වල","pwFair":"සාමාන්‍ය","pwGood":"හොඳයි","pwStrong":"ශක්තිමත්","pwRule":"අවම වශයෙන් අක්ෂර 8ක්","pwMatch":"මුරපද ගැළපේ","emailInvalid":"කරුණාකර වලංගු විද්‍යුත් තැපැල් ලිපිනයක් ඇතුළත් කරන්න.","didYou":"ඔබ අදහස් කළේ {e} ද?","caps":"Caps Lock ක්‍රියාත්මකයි"},"TX":{"Add":"එක් කරන්න","+ Add":"+ එක් කරන්න","Add Shift":"මුරයක් එක් කරන්න","No break":"විවේක නැත","15 min":"මිනිත්තු 15","30 min":"මිනිත්තු 30","45 min":"මිනිත්තු 45","1 hour":"පැය 1","1.5 hours":"පැය 1.5","2 hours":"පැය 2","Tax Calculator":"බදු ගණකය","Income Tax Rate":"ආදායම් බදු අනුපාතය","Social Insurance":"සමාජ රක්ෂණය","Deductions":"අඩු කිරීම්","Calculate For":"ගණනය කළ යුතු කාලය","All Time":"සියලු කාලය","This Month":"මෙම මාසය","This Year":"මෙම වසර","Custom":"අභිරුචි","From":"සිට","To":"දක්වා","Tax Summary":"බදු සාරාංශය","Gross Income":"දළ ආදායම","Total Tax":"මුළු බදු","Net (Take-Home)":"අතට ලැබෙන මුදල","Tax by Work":"රැකියා අනුව බදු","Gross":"දළ","Tax":"බදු","Net":"ශුද්ධ","Total Income Summary":"ආදායම් සාරාංශය","Period":"කාල සීමාව","Last Month":"පසුගිය මාසය","Custom Month":"මාසය තෝරන්න","Month":"මාසය","Year":"වසර","Filter by Work":"රැකියාව අනුව පෙරන්න","Tax rate is set in Settings (⚙). Applied per work when monthly wages exceed 70,000.":"බදු අනුපාතය සැකසුම් (⚙) හි සකසයි. මාසික වැටුප 70,000 ඉක්මවන විට එක් එක් රැකියාවට වෙන වෙනම යෙදේ.","Bills (period)":"බිල්පත් (කාල සීමාව)","Expenses (period)":"වියදම් (කාල සීමාව)","Final Take-Home":"අවසන් අතට ලැබෙන මුදල","after tax & bills":"බදු සහ බිල්පත් අඩු කළ පසු","Breakdown":"විස්තරය","Bills Applied":"ඇතුළත් කළ බිල්පත්","Expenses":"වියදම්","Monthly Bills":"මාසික බිල්පත්","Bill Name":"බිල්පතේ නම","Amount / Month":"මුදල / මාසයකට","Category":"ප්‍රවර්ගය","Total / Month":"එකතුව / මාසයකට","Total / Year":"එකතුව / වසරකට","Choose a setting on the left to see its options.":"විකල්ප බැලීමට වම් පසින් සැකසුමක් තෝරන්න.","Break time":"විවේක කාලය","Full circle = 1 hr · locks every 5 min":"සම්පූර්ණ රවුම = පැය 1 · මිනිත්තු 5 පාසා ලොක් වේ","Set":"සකසන්න","Work":"රැකියාව","Shifts":"මුර","Hours":"පැය","Wages":"වැටුප්","Transport":"ප්‍රවාහන","Total":"එකතුව","🏠 Housing":"🏠 නිවාස කුලිය","⚡ Electric":"⚡ විදුලිය","🔥 Gas":"🔥 ගෑස්","💧 Water":"💧 ජලය","🌐 Internet":"🌐 අන්තර්ජාලය","📱 Phone":"📱 දුරකථන","🛡 Insurance":"🛡 රක්ෂණය","📦 Other":"📦 වෙනත්","January":"ජනවාරි","February":"පෙබරවාරි","March":"මාර්තු","April":"අප්‍රේල්","May":"මැයි","June":"ජූනි","July":"ජූලි","August":"අගෝස්තු","September":"සැප්තැම්බර්","October":"ඔක්තෝබර්","November":"නොවැම්බර්","December":"දෙසැම්බර්"},"ATT":{"Login / Account":"පිවිසුම / ගිණුම","Login or account":"පිවිසුම හෝ ගිණුම","Settings":"සැකසුම්","e.g. Barista…":"උදා: කැෆේ සේවකයා…","Previous month":"පෙර මාසය","Next month":"ඊළඟ මාසය","Period":"කාල සීමාව","Close":"වසන්න","Monthly Bills":"මාසික බිල්පත්","Dark":"අඳුරු","Light":"ආලෝක","e.g. Rent, Electric…":"උදා: කුලිය, විදුලිය…","Export backup":"උපස්ථය නිර්යාත","Import backup":"උපස්ථය ආනයන","Export CSV":"CSV නිර්යාත","Delete all data":"සියලු දත්ත මකන්න","Break minutes":"විවේක මිනිත්තු"},"months":["ජනවාරි","පෙබරවාරි","මාර්තු","අප්‍රේල්","මැයි","ජූනි","ජූලි","අගෝස්තු","සැප්තැම්බර්","ඔක්තෝබර්","නොවැම්බර්","දෙසැම්බර්"],"days":["ඉ","ස","අ","බ","බ්‍ර","සි","සෙ"],"PAY":{"none":"සකසා නැත","daily":"එදිනම (දෛනික ගෙවීම)","same":"එම මාසයේම","next":"ඊළඟ මාසයේ"},"EXP":{"food":"ආහාර","transport":"ප්‍රවාහන","shopping":"සාප්පු සවාරි","fun":"විනෝදය","health":"සෞඛ්‍ය","other":"වෙනත්"},"CAT":{"housing":"නිවාස කුලිය","electric":"විදුලිය","gas":"ගෑස්","water":"ජලය","internet":"අන්තර්ජාලය","phone":"දුරකථන","insurance":"රක්ෂණය","other":"වෙනත්"},"S":{"datesSel":"දින {n} ක් තෝරා ඇත","inDays":"දින {n} කින්","payDayN":"{n} වන දින","finalSub":"බදු, බිල්පත් සහ වියදම් අඩු කළ පසු ({p})","taxLbl":"බදු ({r}, 70k ඉක්මවූ මාස)","payNote":"ආදායම ගණනය කරනුයේ වැටුප් ලැබෙන මාසයටය (එක් එක් රැකියාවේ වැටුප් දින සැකසුම අනුව). වැටුප් දිනය සකසා නැති රැකියා වැඩ කළ මාසයට ගණන් ගැනේ.","stats":"රැකියා: {w} · මුර: {s} · බිල්පත්: {b} · වියදම්: {e}<br>පැය: {h} · ආදායම: {g}","monthYear":"{M} {y}"},"meta":{"name":"සිංහල","label":"භාෂාව","bcp":"si","loc":"si-LK","ogLocale":"si_LK"}},"vi":{"T":{"splash":"Đang tải cơ sở dữ liệu trên máy…","offline-badge":"Đã lưu trên máy","user-count-lbl":"Người dùng","lbl-create-work":"Tạo công việc mới","lbl-work-name":"Tên công việc","lbl-hourly-rate":"Lương theo giờ","lbl-pay-timing":"Ngày lĩnh lương","lbl-pay-day":"Ngày trả lương","lbl-edit-pay-timing":"Ngày lĩnh lương","lbl-edit-pay-day":"Ngày trả lương","lbl-payday-title":"Ngày lĩnh lương","lbl-transport":"Phí đi lại / ngày","lbl-color":"Màu sắc","lbl-your-works":"Công việc của bạn","lbl-add-shift":"+ Thêm ca làm","mode-single":"Một ngày","mode-multi":"Nhiều ngày","warn-no-works":"Chưa có công việc nào.","warn-create-link":"Hãy tạo công việc trước →","lbl-select-work":"Chọn công việc","lbl-date":"Ngày","lbl-start":"Giờ bắt đầu","lbl-end":"Giờ kết thúc","lbl-break":"Nghỉ giải lao","break-no":"Không nghỉ","lbl-work-time":"Thời gian làm","lbl-start-m":"Giờ bắt đầu","lbl-end-m":"Giờ kết thúc","lbl-break-m":"Nghỉ giải lao","lbl-work-time-m":"Thời gian làm","lbl-add-dates":"Thêm ngày","btn-add-date":"+ Thêm ngày","ep-lbl-hrs":"Giờ làm","ep-lbl-rate":"Mức lương","ep-lbl-wages":"Tiền lương","ep-lbl-trans":"Đi lại","ep-lbl-total":"Tổng","lbl-today":"Hôm nay","lbl-week-hrs":"Giờ làm tuần này","lbl-all-hrs":"Tổng giờ làm","lbl-week-earn":"Thu nhập tuần này","lbl-all-earn":"Tổng thu nhập","lbl-filter":"Lọc:","lbl-col-date":"Ngày","lbl-col-time":"Giờ","lbl-col-work":"Công việc","lbl-col-hrs":"Số giờ","lbl-col-wages":"Tiền lương","lbl-col-trans":"Đi lại","btn-export-csv":"Xuất CSV","btn-clear-shifts":"Xóa tất cả","lbl-daily-overview":"Tổng quan theo ngày","gtog-earnings":"Thu nhập","gtog-hours":"Số giờ","lbl-work-breakdown":"Chi tiết theo công việc","lbl-th-work":"Công việc","lbl-th-shifts":"Số ca","lbl-th-hrs":"Số giờ","lbl-th-wages":"Tiền lương","lbl-th-trans":"Đi lại","lbl-th-total":"Tổng","cal-legend-shift":"Có ca làm","cal-legend-today":"Hôm nay","cal-legend-sel":"Đã chọn","lbl-data-backup":"Dữ liệu & Sao lưu","lbl-data-desc":"Toàn bộ dữ liệu được lưu trong IndexedDB của trình duyệt — lưu vĩnh viễn trên thiết bị này và hoạt động hoàn toàn offline.","lbl-export-bk":"Xuất bản sao lưu","lbl-export-bk-sub":"Tải toàn bộ dữ liệu về dưới dạng tệp sao lưu JSON.","lbl-import-bk":"Nhập bản sao lưu","lbl-import-bk-sub":"Khôi phục từ bản sao lưu JSON. Sẽ thay thế toàn bộ dữ liệu.","lbl-export-csv":"Xuất CSV","lbl-export-csv-sub":"Tất cả ca làm dưới dạng tệp bảng tính.","lbl-delete-all":"Xóa toàn bộ dữ liệu","lbl-delete-all-sub":"Xóa vĩnh viễn mọi thứ. Không thể hoàn tác.","btn-export-bk":"⬇ Xuất bản sao lưu","btn-import-bk":"⬆ Nhập bản sao lưu","btn-export-csv2":"⬇ Xuất CSV","btn-nuke":"Xóa tất cả","lbl-settings-title":"Cài đặt","lbl-lang-title":"Ngôn ngữ","lbl-lang-sub":"Display language / Ngôn ngữ hiển thị","lbl-theme-title":"Giao diện","lbl-theme-sub":"Chế độ tối hoặc sáng và bảng màu","lbl-mode-title":"Chế độ","lbl-palette-title":"Bảng màu","lbl-palette-sub":"Bảng màu cho chế độ tối và sáng","lbl-credits-title":"Ghi công & giấy phép","lbl-credits-sub":"Bảng màu, phông chữ và thư viện","lbl-grp-general":"Chung","lbl-grp-money":"Lương & tiền bạc","lbl-grp-data":"Dữ liệu","lbl-grp-about":"Giới thiệu","lbl-data-title":"Dữ liệu & Sao lưu","lbl-data-sub":"Xuất, nhập và đặt lại","lbl-currency-title":"Ký hiệu tiền tệ","lbl-currency-custom":"Tùy chỉnh","lbl-w-night-from":"Ca đêm từ","lbl-w-night-to":"Ca đêm đến","lbl-w-night-pct":"Phụ cấp ca đêm %","lbl-w-tax":"Thuế thu nhập %","lbl-edit-night-from":"Ca đêm từ","lbl-edit-night-to":"Ca đêm đến","lbl-edit-night-pct":"Phụ cấp ca đêm %","lbl-edit-tax":"Thuế thu nhập %","lbl-currency-sub":"Dùng cho mọi phần hiển thị thu nhập","lbl-night-title":"Phụ cấp ca đêm","lbl-night-sub":"Đặt khung giờ và % phụ cấp cho giờ làm ban đêm","lbl-night-from":"Từ","lbl-night-to":"Đến","lbl-night-pct":"Phụ cấp %","lbl-edit-work-title":"Sửa công việc","lbl-edit-name":"Tên công việc","lbl-edit-rate":"Lương theo giờ","lbl-edit-transport":"Phí đi lại / ngày","lbl-edit-color":"Màu sắc","btn-cancel-edit":"Hủy","btn-save-edit":"Lưu","lbl-m-shifts":"Số ca","lbl-m-hrs":"Số giờ làm","lbl-m-wages":"Tiền lương","lbl-m-total":"Tổng (gồm phí đi lại)","tab-works":"Công việc","tab-shifts":"Ca làm","tab-monthly":"Hàng tháng","tab-expenses":"Chi tiêu","lbl-exp-title":"Thêm chi tiêu","lbl-exp-cats":"Danh mục","lbl-exp-date":"Ngày","lbl-exp-amount":"Số tiền","lbl-exp-note":"Ghi chú (tùy chọn)","btn-add-exp":"+ Thêm chi tiêu","lbl-exp-today":"Hôm nay","lbl-exp-month":"Tổng tháng","lbl-exp-avg":"Trung bình ngày","tab-summary":"Tổng hợp","tab-tax":"Thuế","tab-data":"Dữ liệu","lbl-night-min":" phút đêm","toast-work-added":"Đã thêm công việc ✓","toast-work-updated":"Đã cập nhật công việc ✓","toast-work-deleted":"Đã xóa công việc","toast-shift-saved":"Đã lưu ca làm ✓","toast-shifts-saved":"ca làm đã được lưu ✓","toast-shift-deleted":"Đã xóa ca làm","toast-shifts-cleared":"Đã xóa tất cả ca làm","toast-backup-exported":"Đã xuất bản sao lưu ✓","toast-imported":"Đã nhập:","toast-works":"công việc","toast-shifts":"ca làm","toast-cancelled":"Đã hủy","toast-all-deleted":"Đã xóa toàn bộ dữ liệu","confirm-delete-work":"Xóa công việc này? Lịch sử ca làm vẫn được giữ lại.","confirm-delete-shift":"Xóa ca làm này?","confirm-clear-all":"Xóa TẤT CẢ ca làm? Không thể hoàn tác.","confirm-nuke":"⚠️ Thao tác này sẽ xóa vĩnh viễn TẤT CẢ công việc và ca làm.","confirm-nuke-type":"Gõ “xóa” để xác nhận:","confirm-import":"Nhập công việc và ca làm? Thao tác này sẽ THAY THẾ toàn bộ dữ liệu hiện tại.","alert-no-name":"Vui lòng nhập tên công việc.","alert-fill-date":"Vui lòng điền ngày, giờ bắt đầu và giờ kết thúc.","alert-select-work":"Vui lòng chọn công việc.","alert-no-dates":"Vui lòng thêm ít nhất một ngày.","alert-no-shifts":"Không có ca làm nào để xuất.","lbl-m-night-note":"★ đã tính phút ca đêm × phụ cấp ca đêm","lbl-break-display":"Nghỉ:"},"X":{"Tap to change":"Chạm để thay đổi","Currency Symbol":"Ký hiệu tiền tệ","Custom":"Tùy chỉnh","Night hours":"Giờ ca đêm","Income tax":"Thuế thu nhập","Payday":"Ngày lĩnh lương","Edit":"Sửa","Delete":"Xóa","Pick a date":"Chọn ngày","Today":"Hôm nay","Night bonus":"Phụ cấp ca đêm","All":"Tất cả","No shifts yet.":"Chưa có ca làm nào.","No shifts this month":"Tháng này chưa có ca làm","No shifts this month.":"Tháng này chưa có ca làm.","Date":"Ngày","Expenses":"Chi tiêu","Total":"Tổng","more":"nữa","Worked":"Đã làm","Break":"Nghỉ","Night":"Đêm","Wages":"Tiền lương","Transport":"Đi lại","Day total":"Tổng trong ngày","Expenses total":"Tổng chi tiêu","Net (income − expenses)":"Chênh lệch (thu nhập − chi tiêu)","Income Tax":"Thuế thu nhập","Social Insurance":"Bảo hiểm xã hội","Take-Home":"Thực nhận","No data":"Không có dữ liệu","Enter a bill name":"Hãy nhập tên hóa đơn","Enter an amount":"Hãy nhập số tiền","Bill added ✓":"Đã thêm hóa đơn ✓","Delete this bill?":"Xóa hóa đơn này?","Deleted":"Đã xóa","No bills yet. Add your monthly expenses above.":"Chưa có hóa đơn nào. Hãy thêm các khoản chi hàng tháng ở trên.","End of month":"Cuối tháng","Not set":"Chưa đặt","Same day":"Trong ngày","Next month":"Tháng sau","Same month":"Trong tháng","No upcoming paydays yet.":"Chưa có ngày lĩnh lương sắp tới.","Tomorrow":"Ngày mai","Amounts are before tax (wages + transport).":"Số tiền chưa trừ thuế (lương + phí đi lại)."," No payday set for: ":" Chưa đặt ngày lĩnh lương cho: ","Expense added ✓":"Đã thêm chi tiêu ✓","Delete this expense?":"Xóa khoản chi này?","e.g. Lunch":"VD: Bữa trưa","No expenses this month yet.":"Tháng này chưa có chi tiêu.","this month":"tháng này","last month":"tháng trước","this year":"năm nay","all time":"tất cả","per work":"theo công việc","Expenses (period)":"Chi tiêu (kỳ này)","Gross Income":"Tổng thu nhập","Total Bills":"Tổng hóa đơn","Total Expenses":"Tổng chi tiêu","Taxed months (wages ≥ 70,000)":"Các tháng bị tính thuế (lương ≥ 70,000)","No expenses in this period. Add them in the Expenses tab.":"Kỳ này chưa có chi tiêu. Hãy thêm ở thẻ Chi tiêu.","No bills registered. Add bills in Settings (⚙).":"Chưa đăng ký hóa đơn nào. Hãy thêm trong Cài đặt (⚙).","Total: ":"Tổng: ","h":"h","m":"p","No break":"Không nghỉ"," min":" phút","min":"phút","Break time":"Thời gian nghỉ","Full circle = 1 hr · locks every 5 min":"Một vòng = 1 giờ · khóa mỗi 5 phút","Set":"Xong","delete":"xóa","shift":"ca","shifts":"ca","Registered users":"Số người dùng đã đăng ký"},"AT":{"account":"Tài khoản","login":"Đăng nhập","register":"Đăng ký","email":"Email","password":"Mật khẩu","confirm":"Xác nhận mật khẩu","displayName":"Tên hiển thị","forgot":"Quên mật khẩu?","createAcc":"Tạo tài khoản","loginNote":"Dữ liệu của bạn nằm trên thiết bị này. Đăng nhập để sao lưu và dùng trên mọi thiết bị.","details":"Thông tin tài khoản","save":"Lưu","since":"Thành viên từ","lastLogin":"Đăng nhập gần nhất","uid":"ID người dùng","cloud":"Dữ liệu đám mây","lastSync":"Đồng bộ gần nhất","onDevice":"Trên thiết bị này","syncNow":"⟳ Đồng bộ ngay","security":"Bảo mật","newPass":"Mật khẩu mới","update":"Cập nhật","logout":"Đăng xuất","works":"công việc","shifts":"ca làm","bills":"hóa đơn","expenses":"chi tiêu","never":"Chưa bao giờ","configMissing":"Không tải được config.js. Hãy tải tệp lên cùng thư mục với index.html rồi làm mới trang (hoặc xóa bộ nhớ đệm trình duyệt).","notConfigured":"Chưa thiết lập đăng nhập đám mây — hãy nhập Supabase URL và anon key vào config.js.","offline":"Không kết nối được dịch vụ đám mây (có thể bạn đang offline?)","fillAll":"Vui lòng nhập email và mật khẩu.","passShort":"Mật khẩu phải có ít nhất 8 ký tự.","passMismatch":"Mật khẩu không khớp.","checkEmail":"Đã tạo tài khoản! Hãy kiểm tra email để xác nhận rồi đăng nhập.","alreadyReg":"Email này đã được đăng ký — hãy thử đăng nhập.","resetSent":"Đã gửi email đặt lại mật khẩu. Hãy kiểm tra hộp thư.","enterEmail":"Hãy nhập email ở phía trên trước.","nameSaved":"Đã cập nhật tên ✓","passSaved":"Đã cập nhật mật khẩu ✓","setNewPass":"Hãy nhập mật khẩu mới bên dưới.","confirmDel":"Xóa bản sao lưu trên đám mây? Dữ liệu trên thiết bị này vẫn được giữ lại.","cloudDeleted":"Đã xóa dữ liệu đám mây","loggedOut":"Đã đăng xuất","pwShow":"Hiện mật khẩu","pwHide":"Ẩn mật khẩu","pwWeak":"Yếu","pwFair":"Trung bình","pwGood":"Tốt","pwStrong":"Mạnh","pwRule":"Ít nhất 8 ký tự","pwMatch":"Mật khẩu khớp nhau","emailInvalid":"Hãy nhập địa chỉ email hợp lệ.","didYou":"Có phải ý bạn là {e}?","caps":"Caps Lock đang bật"},"TX":{"Add":"Thêm","+ Add":"+ Thêm","Add Shift":"Thêm ca làm","No break":"Không nghỉ","15 min":"15 phút","30 min":"30 phút","45 min":"45 phút","1 hour":"1 giờ","1.5 hours":"1,5 giờ","2 hours":"2 giờ","Tax Calculator":"Tính thuế","Income Tax Rate":"Thuế suất thu nhập","Social Insurance":"Bảo hiểm xã hội","Deductions":"Các khoản khấu trừ","Calculate For":"Tính cho kỳ","All Time":"Tất cả","This Month":"Tháng này","This Year":"Năm nay","Custom":"Tùy chỉnh","From":"Từ","To":"Đến","Tax Summary":"Tóm tắt thuế","Gross Income":"Tổng thu nhập","Total Tax":"Tổng thuế","Net (Take-Home)":"Thực nhận","Tax by Work":"Thuế theo công việc","Gross":"Trước thuế","Tax":"Thuế","Net":"Thực nhận","Total Income Summary":"Tóm tắt thu nhập","Period":"Kỳ","Last Month":"Tháng trước","Custom Month":"Chọn tháng","Month":"Tháng","Year":"Năm","Filter by Work":"Lọc theo công việc","Tax rate is set in Settings (⚙). Applied per work when monthly wages exceed 70,000.":"Thuế suất được đặt trong Cài đặt (⚙). Áp dụng riêng cho từng công việc khi lương tháng vượt 70,000.","Bills (period)":"Hóa đơn (kỳ này)","Expenses (period)":"Chi tiêu (kỳ này)","Final Take-Home":"Thực nhận cuối cùng","after tax & bills":"sau thuế & hóa đơn","Breakdown":"Chi tiết","Bills Applied":"Hóa đơn được tính","Expenses":"Chi tiêu","Monthly Bills":"Hóa đơn hàng tháng","Bill Name":"Tên hóa đơn","Amount / Month":"Số tiền / tháng","Category":"Danh mục","Total / Month":"Tổng / tháng","Total / Year":"Tổng / năm","Choose a setting on the left to see its options.":"Chọn một mục cài đặt ở bên trái để xem các tùy chọn.","Break time":"Thời gian nghỉ","Full circle = 1 hr · locks every 5 min":"Một vòng = 1 giờ · khóa mỗi 5 phút","Set":"Xong","Work":"Công việc","Shifts":"Ca làm","Hours":"Số giờ","Wages":"Tiền lương","Transport":"Đi lại","Total":"Tổng","🏠 Housing":"🏠 Tiền nhà","⚡ Electric":"⚡ Tiền điện","🔥 Gas":"🔥 Tiền gas","💧 Water":"💧 Tiền nước","🌐 Internet":"🌐 Internet","📱 Phone":"📱 Điện thoại","🛡 Insurance":"🛡 Bảo hiểm","📦 Other":"📦 Khác","January":"Tháng 1","February":"Tháng 2","March":"Tháng 3","April":"Tháng 4","May":"Tháng 5","June":"Tháng 6","July":"Tháng 7","August":"Tháng 8","September":"Tháng 9","October":"Tháng 10","November":"Tháng 11","December":"Tháng 12"},"ATT":{"Login / Account":"Đăng nhập / Tài khoản","Login or account":"Đăng nhập hoặc tài khoản","Settings":"Cài đặt","e.g. Barista…":"VD: Nhân viên pha chế…","Previous month":"Tháng trước","Next month":"Tháng sau","Period":"Kỳ","Close":"Đóng","Monthly Bills":"Hóa đơn hàng tháng","Dark":"Tối","Light":"Sáng","e.g. Rent, Electric…":"VD: Tiền nhà, tiền điện…","Export backup":"Xuất bản sao lưu","Import backup":"Nhập bản sao lưu","Export CSV":"Xuất CSV","Delete all data":"Xóa toàn bộ dữ liệu","Break minutes":"Phút nghỉ"},"months":["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"],"days":["CN","T2","T3","T4","T5","T6","T7"],"PAY":{"none":"Chưa đặt","daily":"Trả trong ngày (lương ngày)","same":"Trả trong tháng","next":"Trả tháng sau"},"EXP":{"food":"Ăn uống","transport":"Đi lại","shopping":"Mua sắm","fun":"Giải trí","health":"Y tế","other":"Khác"},"CAT":{"housing":"Tiền nhà","electric":"Tiền điện","gas":"Tiền gas","water":"Tiền nước","internet":"Internet","phone":"Điện thoại","insurance":"Bảo hiểm","other":"Khác"},"S":{"datesSel":"Đã chọn {n} ngày","inDays":"sau {n} ngày","payDayN":"ngày {n}","finalSub":"sau thuế, hóa đơn & chi tiêu ({p})","taxLbl":"Thuế ({r}, các tháng trên 70k)","payNote":"Thu nhập được tính vào tháng nhận lương (theo ngày lĩnh lương của từng công việc). Công việc chưa đặt ngày lĩnh lương được tính vào tháng làm việc.","stats":"Công việc: {w} · Ca làm: {s} · Hóa đơn: {b} · Chi tiêu: {e}<br>Số giờ: {h} · Thu nhập: {g}","monthYear":"{M} năm {y}"},"meta":{"name":"Tiếng Việt","label":"Ngôn ngữ","bcp":"vi","loc":"vi-VN","ogLocale":"vi_VN"}},"zh":{"T":{"splash":"正在加载本地数据库…","offline-badge":"已保存在本机","user-count-lbl":"用户","lbl-create-work":"新建工作","lbl-work-name":"工作名称","lbl-hourly-rate":"时薪","lbl-pay-timing":"发薪日","lbl-pay-day":"发薪日期","lbl-edit-pay-timing":"发薪日","lbl-edit-pay-day":"发薪日期","lbl-payday-title":"发薪日","lbl-transport":"交通费（每天）","lbl-color":"颜色","lbl-your-works":"我的工作","lbl-add-shift":"+ 添加班次","mode-single":"单日","mode-multi":"多日","warn-no-works":"还没有工作。","warn-create-link":"请先创建工作 →","lbl-select-work":"选择工作","lbl-date":"日期","lbl-start":"开始时间","lbl-end":"结束时间","lbl-break":"休息","break-no":"无休息","lbl-work-time":"工作时间","lbl-start-m":"开始时间","lbl-end-m":"结束时间","lbl-break-m":"休息","lbl-work-time-m":"工作时间","lbl-add-dates":"添加日期","btn-add-date":"+ 添加日期","ep-lbl-hrs":"工时","ep-lbl-rate":"时薪","ep-lbl-wages":"工资","ep-lbl-trans":"交通费","ep-lbl-total":"合计","lbl-today":"今天","lbl-week-hrs":"本周工时","lbl-all-hrs":"累计工时","lbl-week-earn":"本周收入","lbl-all-earn":"累计收入","lbl-filter":"筛选：","lbl-col-date":"日期","lbl-col-time":"时间","lbl-col-work":"工作","lbl-col-hrs":"工时","lbl-col-wages":"工资","lbl-col-trans":"交通费","btn-export-csv":"导出 CSV","btn-clear-shifts":"全部清除","lbl-daily-overview":"每日概览","gtog-earnings":"收入","gtog-hours":"工时","lbl-work-breakdown":"按工作统计","lbl-th-work":"工作","lbl-th-shifts":"班次数","lbl-th-hrs":"工时","lbl-th-wages":"工资","lbl-th-trans":"交通费","lbl-th-total":"合计","cal-legend-shift":"有班次","cal-legend-today":"今天","cal-legend-sel":"已选","lbl-data-backup":"数据与备份","lbl-data-desc":"所有数据都保存在浏览器的 IndexedDB 中，永久保存在此设备上，完全离线可用。","lbl-export-bk":"导出备份","lbl-export-bk-sub":"将所有数据下载为 JSON 备份文件。","lbl-import-bk":"导入备份","lbl-import-bk-sub":"从 JSON 备份恢复。将替换所有现有数据。","lbl-export-csv":"导出 CSV","lbl-export-csv-sub":"将所有班次导出为电子表格文件。","lbl-delete-all":"删除所有数据","lbl-delete-all-sub":"永久删除所有内容，无法撤销。","btn-export-bk":"⬇ 导出备份","btn-import-bk":"⬆ 导入备份","btn-export-csv2":"⬇ 导出 CSV","btn-nuke":"全部删除","lbl-settings-title":"设置","lbl-lang-title":"语言","lbl-lang-sub":"Display language / 显示语言","lbl-theme-title":"主题","lbl-theme-sub":"深色或浅色模式及配色","lbl-mode-title":"模式","lbl-palette-title":"配色方案","lbl-palette-sub":"适用于深色和浅色模式的配色","lbl-credits-title":"致谢与许可","lbl-credits-sub":"配色、字体和代码库","lbl-grp-general":"通用","lbl-grp-money":"工资与金钱","lbl-grp-data":"数据","lbl-grp-about":"关于","lbl-data-title":"数据与备份","lbl-data-sub":"导出、导入和重置","lbl-currency-title":"货币符号","lbl-currency-custom":"自定义","lbl-w-night-from":"夜班开始","lbl-w-night-to":"夜班结束","lbl-w-night-pct":"夜班加成 %","lbl-w-tax":"所得税 %","lbl-edit-night-from":"夜班开始","lbl-edit-night-to":"夜班结束","lbl-edit-night-pct":"夜班加成 %","lbl-edit-tax":"所得税 %","lbl-currency-sub":"用于所有收入显示","lbl-night-title":"夜班加成","lbl-night-sub":"设置夜班时间段和加成比例","lbl-night-from":"从","lbl-night-to":"至","lbl-night-pct":"加成 %","lbl-edit-work-title":"编辑工作","lbl-edit-name":"工作名称","lbl-edit-rate":"时薪","lbl-edit-transport":"交通费（每天）","lbl-edit-color":"颜色","btn-cancel-edit":"取消","btn-save-edit":"保存","lbl-m-shifts":"班次数","lbl-m-hrs":"工时","lbl-m-wages":"工资","lbl-m-total":"合计（含交通费）","tab-works":"工作","tab-shifts":"班次","tab-monthly":"月度","tab-expenses":"支出","lbl-exp-title":"添加支出","lbl-exp-cats":"类别","lbl-exp-date":"日期","lbl-exp-amount":"金额","lbl-exp-note":"备注（可选）","btn-add-exp":"+ 添加支出","lbl-exp-today":"今天","lbl-exp-month":"本月合计","lbl-exp-avg":"日均","tab-summary":"收支","tab-tax":"税金","tab-data":"数据","lbl-night-min":"分钟（夜班）","toast-work-added":"已添加工作 ✓","toast-work-updated":"工作已更新 ✓","toast-work-deleted":"工作已删除","toast-shift-saved":"班次已保存 ✓","toast-shifts-saved":"个班次已保存 ✓","toast-shift-deleted":"班次已删除","toast-shifts-cleared":"已清除所有班次","toast-backup-exported":"备份已导出 ✓","toast-imported":"导入完成：","toast-works":"个工作","toast-shifts":"个班次","toast-cancelled":"已取消","toast-all-deleted":"已删除所有数据","confirm-delete-work":"删除此工作？班次记录将保留。","confirm-delete-shift":"删除此班次？","confirm-clear-all":"删除所有班次？此操作无法撤销。","confirm-nuke":"⚠️ 这将永久删除所有工作和班次。","confirm-nuke-type":"请输入“删除”以确认：","confirm-import":"导入工作和班次？这将替换当前所有数据。","alert-no-name":"请输入工作名称。","alert-fill-date":"请填写日期、开始时间和结束时间。","alert-select-work":"请选择工作。","alert-no-dates":"请至少添加一个日期。","alert-no-shifts":"没有可导出的班次。","lbl-m-night-note":"★ 已计入夜班分钟 × 夜班加成","lbl-break-display":"休息："},"X":{"Tap to change":"点按更改","Currency Symbol":"货币符号","Custom":"自定义","Night hours":"夜班时段","Income tax":"所得税","Payday":"发薪日","Edit":"编辑","Delete":"删除","Pick a date":"选择日期","Today":"今天","Night bonus":"夜班加成","All":"全部","No shifts yet.":"还没有班次。","No shifts this month":"本月没有班次","No shifts this month.":"本月没有班次。","Date":"日期","Expenses":"支出","Total":"合计","more":"项","Worked":"工作","Break":"休息","Night":"夜班","Wages":"工资","Transport":"交通费","Day total":"当日合计","Expenses total":"支出合计","Net (income − expenses)":"结余（收入 − 支出）","Income Tax":"所得税","Social Insurance":"社会保险","Take-Home":"实发","No data":"暂无数据","Enter a bill name":"请输入账单名称","Enter an amount":"请输入金额","Bill added ✓":"已添加账单 ✓","Delete this bill?":"删除此账单？","Deleted":"已删除","No bills yet. Add your monthly expenses above.":"还没有账单。请在上方添加每月固定支出。","End of month":"月底","Not set":"未设置","Same day":"当日付","Next month":"次月发放","Same month":"当月发放","No upcoming paydays yet.":"暂无即将到来的发薪日。","Tomorrow":"明天","Amounts are before tax (wages + transport).":"金额为税前（工资＋交通费）。"," No payday set for: ":" 未设置发薪日的工作：","Expense added ✓":"已添加支出 ✓","Delete this expense?":"删除此支出？","e.g. Lunch":"例：午餐","No expenses this month yet.":"本月还没有支出。","this month":"本月","last month":"上月","this year":"今年","all time":"累计","per work":"按工作","Expenses (period)":"支出（期间）","Gross Income":"总收入","Total Bills":"账单合计","Total Expenses":"支出合计","Taxed months (wages ≥ 70,000)":"应税月份（工资 ≥ 70,000）","No expenses in this period. Add them in the Expenses tab.":"此期间没有支出。可在“支出”标签中添加。","No bills registered. Add bills in Settings (⚙).":"尚未登记账单。可在设置（⚙）中添加。","Total: ":"合计：","h":"小时","m":"分","No break":"无休息"," min":"分钟","min":"分钟","Break time":"休息时间","Full circle = 1 hr · locks every 5 min":"转一圈＝1小时 · 每5分钟锁定","Set":"确定","delete":"删除","shift":"个班次","shifts":"个班次","Registered users":"注册用户数"},"AT":{"account":"账户","login":"登录","register":"注册","email":"电子邮箱","password":"密码","confirm":"确认密码","displayName":"显示名称","forgot":"忘记密码？","createAcc":"创建账户","loginNote":"数据保存在此设备上。登录后可备份，并在任何设备上使用。","details":"账户信息","save":"保存","since":"注册时间","lastLogin":"上次登录","uid":"用户 ID","cloud":"云端数据","lastSync":"上次同步","onDevice":"此设备上的数据","syncNow":"⟳ 立即同步","security":"安全","newPass":"新密码","update":"更新","logout":"退出登录","works":"工作","shifts":"班次","bills":"账单","expenses":"支出","never":"从未","configMissing":"无法加载 config.js。请将其上传到 index.html 所在位置，然后刷新（或清除浏览器缓存）。","notConfigured":"尚未设置云端登录 — 请在 config.js 中填写 Supabase 的 URL 和 anon key。","offline":"无法连接云服务（是否处于离线状态？）","fillAll":"请填写邮箱和密码。","passShort":"密码至少需要 8 个字符。","passMismatch":"两次输入的密码不一致。","checkEmail":"账户已创建！请查收邮件完成验证，然后登录。","alreadyReg":"该邮箱已注册 — 请直接登录。","resetSent":"密码重置邮件已发送，请查收。","enterEmail":"请先在上方输入邮箱。","nameSaved":"名称已更新 ✓","passSaved":"密码已更新 ✓","setNewPass":"请在下方输入新密码。","confirmDel":"删除云端备份？此设备上的数据将保留。","cloudDeleted":"云端数据已删除","loggedOut":"已退出登录","pwShow":"显示密码","pwHide":"隐藏密码","pwWeak":"弱","pwFair":"一般","pwGood":"良好","pwStrong":"强","pwRule":"至少 8 个字符","pwMatch":"两次输入的密码一致","emailInvalid":"请输入有效的邮箱地址。","didYou":"您是想输入 {e} 吗？","caps":"大写锁定已开启"},"TX":{"Add":"添加","+ Add":"+ 添加","Add Shift":"添加班次","No break":"无休息","15 min":"15分钟","30 min":"30分钟","45 min":"45分钟","1 hour":"1小时","1.5 hours":"1.5小时","2 hours":"2小时","Tax Calculator":"税金计算","Income Tax Rate":"所得税率","Social Insurance":"社会保险","Deductions":"扣除项","Calculate For":"计算期间","All Time":"累计","This Month":"本月","This Year":"今年","Custom":"自定义","From":"开始","To":"结束","Tax Summary":"税金汇总","Gross Income":"总收入","Total Tax":"税金合计","Net (Take-Home)":"实发收入","Tax by Work":"各工作税金","Gross":"税前总额","Tax":"税金","Net":"实发","Total Income Summary":"收入汇总","Period":"期间","Last Month":"上月","Custom Month":"指定月份","Month":"月","Year":"年","Filter by Work":"按工作筛选","Tax rate is set in Settings (⚙). Applied per work when monthly wages exceed 70,000.":"税率在设置（⚙）中指定。当月工资超过 70,000 时，按每份工作分别计税。","Bills (period)":"账单（期间）","Expenses (period)":"支出（期间）","Final Take-Home":"最终实发","after tax & bills":"扣除税金和账单后","Breakdown":"明细","Bills Applied":"已计入的账单","Expenses":"支出","Monthly Bills":"每月账单","Bill Name":"账单名称","Amount / Month":"金额／月","Category":"类别","Total / Month":"每月合计","Total / Year":"每年合计","Choose a setting on the left to see its options.":"请从左侧选择一项设置以查看选项。","Break time":"休息时间","Full circle = 1 hr · locks every 5 min":"转一圈＝1小时 · 每5分钟锁定","Set":"确定","Work":"工作","Shifts":"班次","Hours":"工时","Wages":"工资","Transport":"交通费","Total":"合计","🏠 Housing":"🏠 房租","⚡ Electric":"⚡ 电费","🔥 Gas":"🔥 燃气费","💧 Water":"💧 水费","🌐 Internet":"🌐 网络","📱 Phone":"📱 手机费","🛡 Insurance":"🛡 保险","📦 Other":"📦 其他","January":"1月","February":"2月","March":"3月","April":"4月","May":"5月","June":"6月","July":"7月","August":"8月","September":"9月","October":"10月","November":"11月","December":"12月"},"ATT":{"Login / Account":"登录／账户","Login or account":"登录或账户","Settings":"设置","e.g. Barista…":"例：咖啡店店员…","Previous month":"上个月","Next month":"下个月","Period":"期间","Close":"关闭","Monthly Bills":"每月账单","Dark":"深色","Light":"浅色","e.g. Rent, Electric…":"例：房租、电费…","Export backup":"导出备份","Import backup":"导入备份","Export CSV":"导出 CSV","Delete all data":"删除所有数据","Break minutes":"休息（分钟）"},"months":["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],"days":["日","一","二","三","四","五","六"],"PAY":{"none":"未设置","daily":"当日付（日结）","same":"当月发放","next":"次月发放"},"EXP":{"food":"餐饮","transport":"交通","shopping":"购物","fun":"娱乐","health":"医疗","other":"其他"},"CAT":{"housing":"房租","electric":"电费","gas":"燃气费","water":"水费","internet":"网络","phone":"手机费","insurance":"保险","other":"其他"},"S":{"datesSel":"已选择 {n} 个日期","inDays":"{n}天后","payDayN":"{n}日","finalSub":"扣除税金、账单和支出后（{p}）","taxLbl":"所得税（{r}，工资超过7万的月份）","payNote":"收入按发放工资的月份统计（依据每份工作的发薪日设置）。未设置发薪日的工作按工作当月统计。","stats":"工作：{w} · 班次：{s} · 账单：{b} · 支出：{e}<br>累计工时：{h} · 累计收入：{g}","monthYear":"{y}年{M}"},"meta":{"name":"中文","label":"语言","bcp":"zh-Hans","loc":"zh-CN","ogLocale":"zh_CN"}}};
+const LANGS=['en','ja','mm','ne','si','vi','zh'];
+const LANG_NAME={en:'EN',ja:'日本語',mm:'မြန်မာ',ne:'नेपाली',si:'සිංහල',vi:'Tiếng Việt',zh:'中文'};
+const LANG_BCP={en:'en',ja:'ja',mm:'my',ne:'ne',si:'si',vi:'vi',zh:'zh-Hans'};
+Object.keys(XL).forEach(c=>{T[c]=XL[c].T;});
+// XS(key,vars): sentence template for the extra languages; XMY(y,m0): "month year" label
+function XS(key,vars){const s=(XL[lang]&&XL[lang].S&&XL[lang].S[key])||'';return s.replace(/\{(\w+)\}/g,(m,k)=>(vars&&vars[k]!=null)?vars[k]:m);}
+function XMY(y,m0){return XS('monthYear',{y:y,M:XL[lang].months[m0],m:m0+1});}
+// L(ja,en): pick the JA / EN / MM / NE / SI / VI / ZH text for an inline string (looks the English text up in MM_X / XL[lang].X)
+function L(ja,en){return lang==='ja'?ja:(lang==='mm'?(MM_X[en]||en):(XL[lang]?(XL[lang].X[en]||en):en));}
 // L3(ja,en,mm): same, with an explicit Burmese string (for texts with variables)
-function L3(ja,en,mm){return lang==='ja'?ja:(lang==='mm'?mm:en);}
+function L3(ja,en,mm){return lang==='ja'?ja:(lang==='mm'?mm:(XL[lang]?(XL[lang].X[en]||en):en));}
 // Locale for Intl date formatting (Burmese uses Latin digits to match the rest of the UI)
-function LOC(){return lang==='ja'?'ja-JP':(lang==='mm'?'my-MM-u-nu-latn':'en-US');}
-function DAYS_SHORT(){return lang==='ja'?['日','月','火','水','木','金','土']:(lang==='mm'?DAY_MM:['Su','Mo','Tu','We','Th','Fr','Sa']);}
+function LOC(){return lang==='ja'?'ja-JP':(lang==='mm'?'my-MM-u-nu-latn':(XL[lang]?XL[lang].meta.loc:'en-US'));}
+function DAYS_SHORT(){return lang==='ja'?['日','月','火','水','木','金','土']:(lang==='mm'?DAY_MM:(XL[lang]?XL[lang].days:['Su','Mo','Tu','We','Th','Fr','Sa']));}
 
 function t(key){return (T[lang]&&T[lang][key])||T['en'][key]||key;}
 function applyLang(rerender){
@@ -2834,13 +2861,8 @@ function applyLang(rerender){
   });
   if(typeof applyAccountLang==='function')applyAccountLang();
   // Lang toggle highlight
-  const el_en=document.getElementById('lang-en');
-  const el_ja=document.getElementById('lang-ja');
-  const el_mm=document.getElementById('lang-mm');
-  if(el_en) el_en.classList.toggle('active',lang==='en');
-  if(el_ja) el_ja.classList.toggle('active',lang==='ja');
-  if(el_mm) el_mm.classList.toggle('active',lang==='mm');
-  document.documentElement.lang=lang==='ja'?'ja':(lang==='mm'?'my':'en');
+  LANGS.forEach(c=>{const b=document.getElementById('lang-'+c);if(b)b.classList.toggle('active',lang===c);});
+  document.documentElement.lang=LANG_BCP[lang]||'en';
   // Only re-render dynamic UI if explicitly requested (not during initial load)
   if(rerender){
     renderWorks(); renderWorkPicker(); renderFilterRow();
@@ -3022,7 +3044,7 @@ function applyCurrency(v){
   try{renderExpenses();}catch(e){}
   try{recalcSummary();}catch(e){}
 }
-function refreshLangSummary(){const v=document.getElementById('st-lang-val');if(v)v.textContent=(lang==='ja'?'日本語':(lang==='mm'?'မြန်မာ':'EN'))+' · '+(settings.currency||'円');}
+function refreshLangSummary(){const v=document.getElementById('st-lang-val');if(v)v.textContent=(LANG_NAME[lang]||'EN')+' · '+(settings.currency||'円');}
 
 // ════════════════════════════════════════════════
 // Works
@@ -3154,7 +3176,7 @@ function updateMultiCountNote(){
   const note=document.getElementById('multi-count-note');
   if(!note)return;
   note.textContent=multiDates.length>0
-    ?(lang==='ja'?`${multiDates.length}日分を選択中`:(lang==='mm'?`ရက်စွဲ ${multiDates.length} ခု ရွေးထားသည်`:`${multiDates.length} date${multiDates.length>1?'s':''} selected`))
+    ?(lang==='ja'?`${multiDates.length}日分を選択中`:(lang==='mm'?`ရက်စွဲ ${multiDates.length} ခု ရွေးထားသည်`:(XL[lang]?XS('datesSel',{n:multiDates.length}):`${multiDates.length} date${multiDates.length>1?'s':''} selected`)))
     :'';
 }
 
@@ -3165,8 +3187,8 @@ function renderMiniCal(){
   const MONTHS_JA=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   const DAY_EN=['Su','Mo','Tu','We','Th','Fr','Sa'];
   const DAY_JA=['日','月','火','水','木','金','土'];
-  const dayNames=lang==='ja'?DAY_JA:(lang==='mm'?DAY_MM:DAY_EN);
-  const monthLabel=lang==='ja'?`${miniCalYear}年 ${MONTHS_JA[miniCalMonth]}`:`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[miniCalMonth]} ${miniCalYear}`;
+  const dayNames=lang==='ja'?DAY_JA:(lang==='mm'?DAY_MM:(XL[lang]?XL[lang].days:DAY_EN));
+  const monthLabel=lang==='ja'?`${miniCalYear}年 ${MONTHS_JA[miniCalMonth]}`:(XL[lang]?XMY(miniCalYear,miniCalMonth):`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[miniCalMonth]} ${miniCalYear}`);
   const lbl=document.getElementById('mc-month-label');
   if(lbl)lbl.textContent=monthLabel;
 
@@ -3238,7 +3260,7 @@ function sdBuild(){
 function sdRender(){
   const MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
   const names=DAYS_SHORT();
-  document.getElementById('sd-month').textContent=lang==='ja'?`${sdYear}年 ${sdMonth+1}月`:`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[sdMonth]} ${sdYear}`;
+  document.getElementById('sd-month').textContent=lang==='ja'?`${sdYear}年 ${sdMonth+1}月`:(XL[lang]?XMY(sdYear,sdMonth):`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[sdMonth]} ${sdYear}`);
   document.getElementById('sd-today').textContent=L('今日','Today');
   const days=new Date(sdYear,sdMonth+1,0).getDate(),first=new Date(sdYear,sdMonth,1).getDay();
   const sel=sdInput().value,todayStr=today();
@@ -3525,7 +3547,7 @@ function toggleMonth(key){
 function monthKeyOf(ts){const d=new Date(ts);return d.getFullYear()+'-'+d.getMonth();}
 function monthLabelOf(ts){
   const d=new Date(ts);
-  return lang==='ja'?`${d.getFullYear()}年${d.getMonth()+1}月`:(lang==='mm'?`${MONTHS_MM[d.getMonth()]} ${d.getFullYear()}`:d.toLocaleString('en',{month:'long',year:'numeric'}));
+  return lang==='ja'?`${d.getFullYear()}年${d.getMonth()+1}月`:(lang==='mm'?`${MONTHS_MM[d.getMonth()]} ${d.getFullYear()}`:(XL[lang]?XMY(d.getFullYear(),d.getMonth()):d.toLocaleString('en',{month:'long',year:'numeric'})));
 }
 
 function shiftRowHTML(s,isLast,isMobile){
@@ -3533,13 +3555,13 @@ function shiftRowHTML(s,isLast,isMobile){
     return `<div style="background:var(--surface);${!isLast?'border-bottom:1px solid var(--border)':''}animation:slideIn .22s ease">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;gap:10px">
               <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0">
-                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--muted)">${fmtDate(s.clockIn)} · ${fmtTime(s.clockIn)} – ${fmtTime(s.clockOut)}</div>
+                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--muted)">${fmtDate(s.clockIn)} · ${fmtTime(s.clockIn)} – ${fmtTime(s.clockOut)}</div>
                 ${s.breakMin>0?`<div style="font-size:11px;color:var(--muted)">${t('lbl-break-display')} ${s.breakMin}m</div>`:''}
                 ${s.nightMin>0?`<div style="font-size:11px;color:var(--purple)">★ ${s.nightMin}${t('lbl-night-min')}</div>`:''}
               </div>
               <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
-                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;color:var(--accent)">${fmtDur(s.duration)}</div>
-                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--green)">${s.wages?fmtMoney(s.wages):'—'}</div>
+                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;color:var(--accent)">${fmtDur(s.duration)}</div>
+                <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--green)">${s.wages?fmtMoney(s.wages):'—'}</div>
                 ${s.transport?`<div style="font-size:11px;color:var(--yellow)">+${fmtMoney(s.transport)}</div>`:''}
               </div>
               <button class="del-btn" onclick="deleteShift('${safeId(s.id)}')" style="color:var(--muted);background:none;border:none;cursor:pointer;font-size:15px;padding:4px 2px">✕</button>
@@ -3597,9 +3619,9 @@ function renderShifts(){
       " onmouseenter="this.style.borderColor='${safeColor(g.workColor)}'" onmouseleave="this.style.borderColor='var(--border)'">
         <span style="width:11px;height:11px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
         <span style="font-size:14px;font-weight:800;flex:1">${esc(g.workName)}</span>
-        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--muted)">${count} ${L3('件','shift'+(count>1?'s':''),'ဆိုင်း')}</span>
-        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:12px;color:var(--accent)">${fmtDur(totalHours)}</span>
-        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--green);font-weight:700">${fmtMoney(totalWages+totalTransport)}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--muted)">${count} ${L3('件','shift'+(count>1?'s':''),'ဆိုင်း')}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:12px;color:var(--accent)">${fmtDur(totalHours)}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;color:var(--green);font-weight:700">${fmtMoney(totalWages+totalTransport)}</span>
         <span style="color:var(--muted);font-size:14px;transition:transform .2s;display:inline-block;transform:rotate(${collapsed?'0':'90'}deg)">›</span>
       </div>`;
 
@@ -3636,9 +3658,9 @@ function renderShifts(){
           const lastMonth=mi===months.length-1;
           html+=`<div class="month-fold-head" onclick="toggleMonth('${ek}')" style="display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(--surface2);border-bottom:${(lastMonth&&!open)?'none':'1px solid var(--border)'};cursor:pointer;user-select:none;opacity:${open?1:.8};">
             <span style="font-size:12px;font-weight:700;flex:1;color:var(--muted)">${m.label}</span>
-            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:10px;color:var(--muted)">${m.shifts.length} ${L3('件','shift'+(m.shifts.length>1?'s':''),'ဆိုင်း')}</span>
-            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--accent)">${fmtDur(mHours)}</span>
-            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:11px;color:var(--green)">${fmtMoney(mMoney)}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:10px;color:var(--muted)">${m.shifts.length} ${L3('件','shift'+(m.shifts.length>1?'s':''),'ဆိုင်း')}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--accent)">${fmtDur(mHours)}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:11px;color:var(--green)">${fmtMoney(mMoney)}</span>
             <span style="color:var(--muted);font-size:13px;transition:transform .2s;display:inline-block;transform:rotate(${open?'90':'0'}deg)">›</span>
           </div>`;
           if(open){
@@ -3689,7 +3711,7 @@ function setGraph(mode){graphMode=mode;document.getElementById('gtog-earnings').
 function renderMonthly(){
   const MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
   const MONTHS_JA=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
-  const mLabel=(lang==='ja'?`${currentYear}年 ${MONTHS_JA[currentMonth]}`:`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[currentMonth]} ${currentYear}`);
+  const mLabel=(lang==='ja'?`${currentYear}年 ${MONTHS_JA[currentMonth]}`:(XL[lang]?XMY(currentYear,currentMonth):`${(lang==='mm'?MONTHS_MM:MONTHS_EN)[currentMonth]} ${currentYear}`));
   document.getElementById('month-title').textContent=mLabel;
   document.getElementById('cal-month-lbl').textContent=mLabel;
 
@@ -3959,7 +3981,7 @@ function recalcTax(){
       <div>
         <div style="display:flex;justify-content:space-between;margin-bottom:5px">
           <span style="font-size:12px;font-weight:600">${item.label}</span>
-          <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:${safeColor(item.color)}">${fmtMoney(item.val)} <span style="font-size:10px;color:var(--muted)">(${item.pct.toFixed(1)}%)</span></span>
+          <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;color:${safeColor(item.color)}">${fmtMoney(item.val)} <span style="font-size:10px;color:var(--muted)">(${item.pct.toFixed(1)}%)</span></span>
         </div>
         <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden">
           <div style="height:100%;width:${Math.min(100,item.pct)}%;background:${safeColor(item.color)};border-radius:4px;transition:width .4s ease"></div>
@@ -4061,7 +4083,7 @@ function renderBills(){
     <div style="margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">
         <span>${catIcon(cat)}</span>
-        <span>${(lang==='ja'?catNameJa(cat):(lang==='mm'?(CAT_MM[cat]||cat):catName(cat)))}</span>
+        <span>${(lang==='ja'?catNameJa(cat):(lang==='mm'?(CAT_MM[cat]||cat):(XL[lang]?(XL[lang].CAT[cat]||cat):catName(cat))))}</span>
       </div>
       ${items.map(b=>`
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px">
@@ -4069,7 +4091,7 @@ function renderBills(){
           <div style="display:flex;align-items:center;gap:4px">
             <span style="color:var(--muted);font-size:13px">${sym()}</span>
             <input type="number" value="${b.amount.toFixed(2)}" min="0" step="0.01"
-              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:14px;font-weight:600;color:var(--red);width:90px;text-align:right;background:transparent;border:none;outline:none;border-bottom:1px solid var(--border);padding:2px 4px"
+              style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:14px;font-weight:600;color:var(--red);width:90px;text-align:right;background:transparent;border:none;outline:none;border-bottom:1px solid var(--border);padding:2px 4px"
               onchange="updateBillAmount('${safeId(b.id)}',this.value)">
             <span style="color:var(--muted);font-size:11px">/mo</span>
           </div>
@@ -4101,8 +4123,9 @@ const PAY_TIMINGS=[
   {k:'same', en:'Same month',            ja:'当月払い',mm:'ထိုလအတွင်းပေး'},
   {k:'next', en:'Next month',            ja:'翌月払い',mm:'နောက်လပေး'}
 ];
+PAY_TIMINGS.forEach(o=>{Object.keys(XL).forEach(c=>{o[c]=XL[c].PAY[o.k];});});
 const ordEn=n=>{const v=n%100;if(v>=11&&v<=13)return n+'th';return n+({1:'st',2:'nd',3:'rd'}[n%10]||'th');};
-const payDayText=n=>n===0?L('月末','End of month'):(lang==='ja'?n+'日':(lang==='mm'?n+' ရက်':ordEn(n)));
+const payDayText=n=>n===0?L('月末','End of month'):(lang==='ja'?n+'日':(lang==='mm'?n+' ရက်':(XL[lang]?XS('payDayN',{n:n}):ordEn(n))));
 function fillPaySelects(){
   [['w-pay-timing','w-pay-day'],['edit-pay-timing','edit-pay-day']].forEach(([tid,did])=>{
     const ts=document.getElementById(tid),ds=document.getElementById(did);if(!ts||!ds)return;
@@ -4200,7 +4223,7 @@ function pdGo(page,instant){
   }
   const mi=pdMonthInfo(page);
   const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('pd-title').textContent=lang==='ja'?`${mi.y}年 ${mi.m+1}月`:`${(lang==='mm'?MONTHS_MM:MON)[mi.m]} ${mi.y}`;
+  document.getElementById('pd-title').textContent=lang==='ja'?`${mi.y}年 ${mi.m+1}月`:(XL[lang]?XMY(mi.y,mi.m):`${(lang==='mm'?MONTHS_MM:MON)[mi.m]} ${mi.y}`);
   document.getElementById('pd-cap').textContent=page?(L('翌月払い','Next month')):(L('当月払い','Same month'));
   document.getElementById('pd-dot0').classList.toggle('on',page===0);
   document.getElementById('pd-dot1').classList.toggle('on',page===1);
@@ -4286,7 +4309,7 @@ function renderPayday(){
   }else{
     list.innerHTML=upcoming.map(e=>{
       const days=Math.round((e.date-t0)/86400000);
-      const when=days===0?(L('今日','Today')):days===1?(L('明日','Tomorrow')):(lang==='ja'?`${days}日後`:(lang==='mm'?`${days} ရက်အတွင်း`:`in ${days} days`));
+      const when=days===0?(L('今日','Today')):days===1?(L('明日','Tomorrow')):(lang==='ja'?`${days}日後`:(lang==='mm'?`${days} ရက်အတွင်း`:(XL[lang]?XS('inDays',{n:days}):`in ${days} days`)));
       const label=e.date.toLocaleDateString(loc,{month:'short',day:'numeric',weekday:'short'});
       const dots=Object.values(e.parts).map(p=>`<span class="pay-work"><span class="pay-dot" style="background:${safeColor(p.color)}"></span>${esc(p.name)}</span>`).join('');
       return `<div class="pay-row"><div class="pay-main"><div class="pay-date">${label}</div><div class="pay-when">${when}</div></div><div class="pay-works">${dots}</div><div class="pay-amt">${s}${e.total.toFixed(2)}</div></div>`;
@@ -4313,6 +4336,7 @@ const EXP_CATS=[
   {k:'health',icon:'🏥',en:'Health',ja:'医療',mm:'ကျန်းမာရေး'},
   {k:'other',icon:'📦',en:'Other',ja:'その他',mm:'အခြား'}
 ];
+EXP_CATS.forEach(o=>{Object.keys(XL).forEach(c=>{o[c]=XL[c].EXP[o.k];});});
 const expCatInfo=k=>EXP_CATS.find(c=>c.k===k)||EXP_CATS[EXP_CATS.length-1];
 const localToday=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const escHtml=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -4544,7 +4568,7 @@ function recalcSummary(){
   else if(sumPeriod==='custom-month'){
     const cm=parseInt(document.getElementById('sump-cm-month')?.value??new Date().getMonth());
     const cy=document.getElementById('sump-cm-year')?.value??new Date().getFullYear();
-    periodLabel=lang==='ja'?`${cy}年${MONTHS_JA[cm]}`:`${(lang==='mm'?MONTHS_MM:MONTHS)[cm]} ${cy}`;
+    periodLabel=lang==='ja'?`${cy}年${MONTHS_JA[cm]}`:(XL[lang]?XMY(cy,cm):`${(lang==='mm'?MONTHS_MM:MONTHS)[cm]} ${cy}`);
   } else periodLabel=L('累計','all time');
 
   // Group shifts by work × month, compute gross per group, apply tax if over threshold
@@ -4590,14 +4614,14 @@ function recalcSummary(){
   if(el('lbl-sum-exp-detail'))el('lbl-sum-exp-detail').textContent=L('支出','Expenses');
   if(el('sum-final'))    el('sum-final').textContent=fmtMoney(finalNet);
   if(el('sum-final'))    el('sum-final').style.color=finalNet>=0?'var(--green)':'var(--red)';
-  if(el('sum-final-sub')) el('sum-final-sub').textContent=lang==='ja'?`税金・請求書・支出控除後 (${periodLabel})`:(lang==='mm'?`အခွန်၊ ဘီလ်နှင့် အသုံးစရိတ် နုတ်ပြီး (${periodLabel})`:`after tax, bills & expenses (${periodLabel})`);
+  if(el('sum-final-sub')) el('sum-final-sub').textContent=lang==='ja'?`税金・請求書・支出控除後 (${periodLabel})`:(lang==='mm'?`အခွန်၊ ဘီလ်နှင့် အသုံးစရိတ် နုတ်ပြီး (${periodLabel})`:(XL[lang]?XS('finalSub',{p:periodLabel}):`after tax, bills & expenses (${periodLabel})`));
 
   // Waterfall breakdown
   const wf=el('sum-waterfall');
   if(wf){
     const steps=[
       {label:L('総収入','Gross Income'),val:gross,color:'var(--green)',sign:''},
-      {label:lang==='ja'?`所得税 (${rateTxt}, 7万超の月)`:(lang==='mm'?`အခွန် (${rateTxt}, ၇ သောင်းကျော်သောလများ)`:`Tax (${rateTxt}, months over 70k)`),val:-totalTax,color:'var(--red)',sign:'−'},
+      {label:lang==='ja'?`所得税 (${rateTxt}, 7万超の月)`:(lang==='mm'?`အခွန် (${rateTxt}, ၇ သောင်းကျော်သောလများ)`:(XL[lang]?XS('taxLbl',{r:rateTxt}):`Tax (${rateTxt}, months over 70k)`)),val:-totalTax,color:'var(--red)',sign:'−'},
       {label:L('請求書合計','Total Bills'),val:-billsAmt,color:'var(--yellow)',sign:'−'},
       {label:L('支出合計','Total Expenses'),val:-expAmt,color:'var(--red)',sign:'−'},
       {label:L('手取り','Take-Home'),val:finalNet,color:finalNet>=0?'var(--green)':'var(--red)',sign:'=',bold:true},
@@ -4608,7 +4632,7 @@ function recalcSummary(){
         <div style="width:22px;text-align:center;font-size:14px;color:var(--muted);font-weight:800;flex-shrink:0">${step.sign}</div>
         <div style="flex:1;font-size:${step.bold?'14px':'13px'};font-weight:${step.bold?'800':'600'}">${step.label}</div>
         <div style="height:6px;flex:0 0 ${Math.round(Math.abs(step.val)/maxAbs*100)}px;max-width:100px;background:${safeColor(step.color)};border-radius:3px;opacity:.7"></div>
-        <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:${step.bold?'15px':'13px'};color:${safeColor(step.color)};font-weight:${step.bold?'800':'600'};min-width:80px;text-align:right">${fmtMoney(Math.abs(step.val))}</div>
+        <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:${step.bold?'15px':'13px'};color:${safeColor(step.color)};font-weight:${step.bold?'800':'600'};min-width:80px;text-align:right">${fmtMoney(Math.abs(step.val))}</div>
       </div>`).join('');
 
     // Tax detail: show which work×months were taxed
@@ -4620,8 +4644,8 @@ function recalcSummary(){
             <span style="width:8px;height:8px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
             <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
             <span style="color:var(--muted);font-size:11px">${g.monthKey}</span>
-            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--text)">${fmtMoney(g.wages)}</span>
-            <span style="color:var(--red);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">−${fmtMoney(g.tax)}</span>
+            <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--text)">${fmtMoney(g.wages)}</span>
+            <span style="color:var(--red);font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">−${fmtMoney(g.tax)}</span>
           </div>`).join('')}
       </div>`;
     }
@@ -4630,18 +4654,18 @@ function recalcSummary(){
   // Payday basis: show which worked months are being paid in the selected period
   const basis=el('sum-pay-basis');
   if(basis){
-    const mLbl=k=>{const [y,m]=k.split('-').map(Number);return lang==='ja'?`${y}年${m}月`:(lang==='mm'?`${MONTHS_MM[m-1]} ${y}`:`${MONTHS[m-1].slice(0,3)} ${y}`);};
+    const mLbl=k=>{const [y,m]=k.split('-').map(Number);return lang==='ja'?`${y}年${m}月`:(lang==='mm'?`${MONTHS_MM[m-1]} ${y}`:(XL[lang]?XMY(y,m-1):`${MONTHS[m-1].slice(0,3)} ${y}`));};
     const moved=Object.values(groups).filter(g=>[...g.from].some(f=>f!==g.monthKey)).sort((a,b)=>a.monthKey<b.monthKey?-1:1);
     let h=`<div class="pay-note">${lang==='ja'
       ?'収入は給料が支払われる月で集計します（各仕事の給料日設定に基づく）。給料日が未設定の仕事は勤務した月で集計します。'
       :(lang==='mm'?'ဝင်ငွေကို လစာရရှိသောလအလိုက် ရေတွက်ပါသည် (အလုပ်တစ်ခုစီ၏ လစာရက်ဆက်တင်အရ)။ လစာရက် မသတ်မှတ်ထားသော အလုပ်များကို အလုပ်လုပ်သည့်လအလိုက် ရေတွက်ပါသည်။'
-      :'Income is counted in the month it is paid (from each work\'s payday setting). Works with no payday set are counted in the month worked.')}</div>`;
+      :(XL[lang]?XS('payNote'):'Income is counted in the month it is paid (from each work\'s payday setting). Works with no payday set are counted in the month worked.'))}</div>`;
     if(moved.length){
       h+=moved.map(g=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px solid var(--border)">
         <span style="width:8px;height:8px;border-radius:50%;background:${safeColor(g.workColor)};display:inline-block;flex-shrink:0"></span>
         <span style="flex:1;font-weight:600">${esc(g.workName)}</span>
         <span style="color:var(--muted);font-size:11px">${[...g.from].sort().map(mLbl).join(', ')} → ${mLbl(g.monthKey)}</span>
-        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace">${fmtMoney(g.wages+g.transport)}</span>
+        <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace">${fmtMoney(g.wages+g.transport)}</span>
       </div>`).join('');
     }
     basis.innerHTML=h;
@@ -4660,9 +4684,9 @@ function recalcSummary(){
         return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:16px">${c.icon}</span>
           <span style="flex:1;font-size:13px;font-weight:600">${esc((c[lang]||c.en))} <span style="color:var(--muted);font-weight:400;font-size:11px">× ${v.n}</span></span>
-          <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--red)">-${fmtMoney(v.sum)}</span>
+          <span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;color:var(--red)">-${fmtMoney(v.sum)}</span>
         </div>`;}).join('')
-        +`<div style="display:flex;justify-content:space-between;padding:10px 0 2px;font-size:13px;font-weight:800"><span>${L('合計','Total')}</span><span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;color:var(--red)">-${fmtMoney(expAmt)}</span></div>`;
+        +`<div style="display:flex;justify-content:space-between;padding:10px 0 2px;font-size:13px;font-weight:800"><span>${L('合計','Total')}</span><span style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;color:var(--red)">-${fmtMoney(expAmt)}</span></div>`;
     }
   }
 
@@ -4677,9 +4701,9 @@ function recalcSummary(){
         <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
           <span style="font-size:16px">${catIcon(b.cat)}</span>
           <div style="flex:1;font-size:13px;font-weight:600">${esc(b.name)}</div>
-          <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
+          <div style="font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;color:var(--yellow)">${fmtMoney(b.amount*(sumPeriod==='month'||sumPeriod==='last-month'||sumPeriod==='custom-month'?1:sumPeriod==='year'?12:multiplier))}</div>
         </div>`).join('')+
-        `<div style="display:flex;justify-content:flex-end;padding-top:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text',monospace;font-size:13px;font-weight:700;color:var(--yellow)">${L('合計：','Total: ')}${fmtMoney(billsAmt)}</div>`;
+        `<div style="display:flex;justify-content:flex-end;padding-top:8px;font-family:'JetBrains Mono','Noto Sans Myanmar','Myanmar Text','Noto Sans Devanagari','Noto Sans Sinhala','Noto Sans','Nirmala UI',monospace;font-size:13px;font-weight:700;color:var(--yellow)">${L('合計：','Total: ')}${fmtMoney(billsAmt)}</div>`;
     }
   }
 }
@@ -4694,7 +4718,7 @@ function updateDataStats(){
     ?`仕事：${works.length}件 · シフト：${shifts.length}件 · 請求書：${bills.length}件 · 支出：${expenses.length}件<br>累計時間：${fmtDur(th)} · 累計収入：${fmtMoney(te)}`
     :lang==='mm'
     ?`အလုပ်: ${works.length} · ဆိုင်း: ${shifts.length} · ဘီလ်: ${bills.length} · အသုံးစရိတ်: ${expenses.length}<br>နာရီ: ${fmtDur(th)} · ဝင်ငွေ: ${fmtMoney(te)}`
-    :`Works: ${works.length} · Shifts: ${shifts.length} · Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th)} · Earnings: ${fmtMoney(te)}`;
+    :(XL[lang]?XS('stats',{w:works.length,s:shifts.length,b:bills.length,e:expenses.length,h:fmtDur(th),g:fmtMoney(te)}):`Works: ${works.length} · Shifts: ${shifts.length} · Bills: ${bills.length} · Expenses: ${expenses.length}<br>Hours: ${fmtDur(th)} · Earnings: ${fmtMoney(te)}`);
   const el=document.getElementById('data-stats');
   if(el) el.innerHTML=statsHtml;
   const els=document.getElementById('data-stats-s');
@@ -4760,6 +4784,7 @@ const AT={
     confirmDel:'クラウドのバックアップを削除しますか？この端末のデータは残ります。',cloudDeleted:'クラウドデータを削除しました',loggedOut:'ログアウトしました'},
   mm:{pwShow:'စကားဝှက်ကို ပြမည်',pwHide:'စကားဝှက်ကို ဖျောက်မည်',pwWeak:'အားနည်း',pwFair:'ပျမ်းမျှ',pwGood:'ကောင်း',pwStrong:'ခိုင်မာ',pwRule:'အနည်းဆုံး ၈ လုံး',pwMatch:'စကားဝှက်များ ကိုက်ညီပါသည်',emailInvalid:'မှန်ကန်သော အီးမေးလ်လိပ်စာ ထည့်ပါ။',didYou:'{e} ကို ဆိုလိုပါသလား?',caps:'Caps Lock ဖွင့်ထားသည်',account:'အကောင့်',login:'ဝင်ရောက်မည်',register:'စာရင်းသွင်းမည်',email:'အီးမေးလ်',password:'စကားဝှက်',confirm:'စကားဝှက် အတည်ပြုပါ',displayName:'ပြသမည့်အမည်',forgot:'စကားဝှက် မေ့နေပါသလား?',createAcc:'အကောင့်ဖန်တီးမည်',loginNote:'သင့်ဒေတာသည် ဤစက်ထဲတွင်သာ ရှိပါသည်။ ဝင်ရောက်ပါက အရန်သိမ်းပြီး မည်သည့်စက်တွင်မဆို အသုံးပြုနိုင်ပါသည်။',details:'အကောင့်အချက်အလက်',save:'သိမ်းမည်',since:'အဖွဲ့ဝင်ဖြစ်သည့်ရက်',lastLogin:'နောက်ဆုံးဝင်ရောက်ချိန်',uid:'အသုံးပြုသူ ID',cloud:'ကလောက်ဒေတာ',lastSync:'နောက်ဆုံး ထပ်တူကျချိန်',onDevice:'ဤစက်ပေါ်ရှိ ဒေတာ',syncNow:'⟳ ယခု ထပ်တူကျစေမည်',security:'လုံခြုံရေး',newPass:'စကားဝှက်အသစ်',update:'ပြင်မည်',logout:'ထွက်မည်',works:'အလုပ်',shifts:'ဆိုင်း',bills:'ဘီလ်',expenses:'အသုံးစရိတ်',never:'မရှိသေးပါ',configMissing:'config.js ကို ဖွင့်၍မရပါ။ index.html နှင့် တူညီသောနေရာတွင် တင်ပြီး ပြန်လည်ဖွင့်ပါ (သို့မဟုတ် ဘရောက်ဇာ cache ကို ရှင်းပါ)။',notConfigured:'ကလောက်ဝင်ရောက်မှုကို မသတ်မှတ်ရသေးပါ — config.js တွင် Supabase URL နှင့် anon key ကို ထည့်ပါ။',offline:'ကလောက်ဝန်ဆောင်မှုကို မရနိုင်ပါ (အင်တာနက်ပြတ်နေပါသလား?)',fillAll:'အီးမေးလ်နှင့် စကားဝှက် ဖြည့်ပါ။',passShort:'စကားဝှက်သည် အနည်းဆုံး ၈ လုံး ရှိရမည်။',passMismatch:'စကားဝှက်များ မတူညီပါ။',checkEmail:'အကောင့်ဖန်တီးပြီးပါပြီ! အီးမေးလ်ကို စစ်ပြီး အတည်ပြုကာ ဝင်ရောက်ပါ။',alreadyReg:'ဤအီးမေးလ်ကို စာရင်းသွင်းပြီးသားဖြစ်သည် — ဝင်ရောက်ကြည့်ပါ။',resetSent:'စကားဝှက်ပြန်လည်သတ်မှတ်ရန် အီးမေးလ် ပို့ပြီးပါပြီ။ ဝင်စာဘူးကို စစ်ပါ။',enterEmail:'အပေါ်တွင် အီးမေးလ်ကို အရင်ထည့်ပါ။',nameSaved:'အမည် ပြင်ပြီးပါပြီ ✓',passSaved:'စကားဝှက် ပြင်ပြီးပါပြီ ✓',setNewPass:'အောက်တွင် စကားဝှက်အသစ် ထည့်ပါ။',confirmDel:'သင့်ကလောက်အရန်ဖိုင်ကို ဖျက်မလား? ဤစက်ပေါ်ရှိ ဒေတာကို ဆက်ထားပါမည်။',cloudDeleted:'ကလောက်ဒေတာ ဖျက်ပြီးပါပြီ',loggedOut:'ထွက်ပြီးပါပြီ'}
 };
+Object.keys(XL).forEach(c=>{AT[c]=XL[c].AT;});
 function at(k){return ((AT[lang]||AT.en)[k])||AT.en[k]||k;}
 function applyAccountLang(){
   document.querySelectorAll('#account-modal [data-ai]').forEach(el=>{el.textContent=at(el.dataset.ai);});
@@ -5271,7 +5296,7 @@ async function nukeAll(){
   if(!confirm(t('confirm-nuke')))return;
   const typed=prompt(t('confirm-nuke-type'));
   const confirmWord=L('削除','delete');
-  if(typed!==confirmWord){toast(t('toast-cancelled'));return;}
+  if(String(typed==null?'':typed).normalize('NFC')!==String(confirmWord).normalize('NFC')){toast(t('toast-cancelled'));return;}
   loading(true);
   await dbClear('works');await dbClear('shifts');await dbClear('bills');await dbClear('expenses');
   works=[];shifts=[];bills=[];expenses=[];
@@ -5999,30 +6024,36 @@ function closeBreakDial(apply){
 /* Static page text without translation keys (JA / MM). English stays the source text; JA or MM is swapped in/out. */
 (function(){
   var TX={"Add": {"mm": "ထည့်မည်", "ja": "追加"}, "+ Add": {"mm": "+ ထည့်မည်", "ja": "+ 追加"}, "Add Shift": {"mm": "ဆိုင်းထည့်မည်", "ja": "シフトを追加"}, "No break": {"mm": "နားချိန်မရှိ", "ja": "休憩なし"}, "15 min": {"mm": "15 မိနစ်", "ja": "15分"}, "30 min": {"mm": "30 မိနစ်", "ja": "30分"}, "45 min": {"mm": "45 မိနစ်", "ja": "45分"}, "1 hour": {"mm": "1 နာရီ", "ja": "1時間"}, "1.5 hours": {"mm": "1.5 နာရီ", "ja": "1.5時間"}, "2 hours": {"mm": "2 နာရီ", "ja": "2時間"}, "Tax Calculator": {"mm": "အခွန်တွက်ချက်ကိရိယာ", "ja": "税金計算"}, "Income Tax Rate": {"mm": "ဝင်ငွေခွန်နှုန်း", "ja": "所得税率"}, "Social Insurance": {"mm": "လူမှုဖူလုံရေးအာမခံ", "ja": "社会保険"}, "Deductions": {"mm": "နုတ်ယူငွေများ", "ja": "控除"}, "Calculate For": {"mm": "တွက်ချက်မည့်ကာလ", "ja": "計算期間"}, "All Time": {"mm": "စုစုပေါင်း", "ja": "累計"}, "This Month": {"mm": "ဤလ", "ja": "今月"}, "This Year": {"mm": "ဤနှစ်", "ja": "今年"}, "Custom": {"mm": "စိတ်ကြိုက်", "ja": "カスタム"}, "From": {"mm": "မှ", "ja": "開始"}, "To": {"mm": "အထိ", "ja": "終了"}, "Tax Summary": {"mm": "အခွန်အနှစ်ချုပ်", "ja": "税金サマリー"}, "Gross Income": {"mm": "စုစုပေါင်းဝင်ငွေ", "ja": "総収入"}, "Total Tax": {"mm": "အခွန်စုစုပေါင်း", "ja": "税金合計"}, "Net (Take-Home)": {"mm": "အသားတင် (လက်ထဲရောက်ငွေ)", "ja": "手取り"}, "Tax by Work": {"mm": "အလုပ်အလိုက် အခွန်", "ja": "仕事別の税金"}, "Gross": {"mm": "စုစုပေါင်း (အခွန်မနုတ်မီ)", "ja": "総額"}, "Tax": {"mm": "အခွန်", "ja": "税金"}, "Net": {"mm": "အသားတင်", "ja": "手取り"}, "Total Income Summary": {"mm": "ဝင်ငွေစုစုပေါင်း အနှစ်ချုပ်", "ja": "収入サマリー"}, "Period": {"mm": "ကာလ", "ja": "期間"}, "Last Month": {"mm": "ပြီးခဲ့သောလ", "ja": "先月"}, "Custom Month": {"mm": "လရွေးမည်", "ja": "月を指定"}, "Month": {"mm": "လ", "ja": "月"}, "Year": {"mm": "နှစ်", "ja": "年"}, "Filter by Work": {"mm": "အလုပ်အလိုက် စစ်ထုတ်ရန်", "ja": "仕事で絞り込み"}, "Tax rate is set in Settings (⚙). Applied per work when monthly wages exceed 70,000.": {"mm": "အခွန်နှုန်းကို ဆက်တင် (⚙) တွင် သတ်မှတ်ပါသည်။ လစဉ်လုပ်ခ 70,000 ကျော်လျှင် အလုပ်တစ်ခုချင်းစီအလိုက် ကောက်ခံပါသည်။", "ja": "所得税率は設定（⚙）で指定します。月給が70,000を超えた場合に、仕事ごとに適用されます。"}, "Bills (period)": {"mm": "ဘီလ် (ကာလအတွင်း)", "ja": "請求書（期間）"}, "Expenses (period)": {"mm": "အသုံးစရိတ် (ကာလအတွင်း)", "ja": "支出（期間）"}, "Final Take-Home": {"mm": "နောက်ဆုံး လက်ထဲရောက်ငွေ", "ja": "最終手取り"}, "after tax & bills": {"mm": "အခွန်နှင့် ဘီလ် နုတ်ပြီး", "ja": "税金・請求書控除後"}, "Breakdown": {"mm": "အသေးစိတ်ခွဲခြမ်းချက်", "ja": "内訳"}, "Bills Applied": {"mm": "ထည့်သွင်းထားသော ဘီလ်များ", "ja": "適用された請求書"}, "Expenses": {"mm": "အသုံးစရိတ်", "ja": "支出"}, "Monthly Bills": {"mm": "လစဉ်ဘီလ်များ", "ja": "月々の請求書"}, "Bill Name": {"mm": "ဘီလ်အမည်", "ja": "請求書名"}, "Amount / Month": {"mm": "ပမာဏ / လ", "ja": "金額／月"}, "Category": {"mm": "အမျိုးအစား", "ja": "カテゴリ"}, "Total / Month": {"mm": "စုစုပေါင်း / လ", "ja": "月合計"}, "Total / Year": {"mm": "စုစုပေါင်း / နှစ်", "ja": "年合計"}, "Choose a setting on the left to see its options.": {"mm": "ရွေးချယ်စရာများကို ကြည့်ရန် ဘယ်ဘက်မှ ဆက်တင်တစ်ခုကို ရွေးပါ။", "ja": "左から設定を選ぶと、オプションが表示されます。"}, "Break time": {"mm": "နားချိန်", "ja": "休憩時間"}, "Full circle = 1 hr · locks every 5 min": {"mm": "တစ်ပတ်ပြည့် = ၁ နာရီ · ၅ မိနစ်စီ လော့ခ်ကျသည်", "ja": "1周＝1時間・5分ごとにロック"}, "Set": {"mm": "သတ်မှတ်မည်", "ja": "決定"}, "Work": {"mm": "အလုပ်", "ja": "仕事"}, "Shifts": {"mm": "ဆိုင်းများ", "ja": "シフト"}, "Hours": {"mm": "နာရီ", "ja": "時間"}, "Wages": {"mm": "လုပ်ခ", "ja": "給与"}, "Transport": {"mm": "ခရီးစရိတ်", "ja": "交通費"}, "Total": {"mm": "စုစုပေါင်း", "ja": "合計"}, "🏠 Housing": {"mm": "🏠 အိမ်လခ", "ja": "🏠 家賃"}, "⚡ Electric": {"mm": "⚡ မီးဖိုး", "ja": "⚡ 電気代"}, "🔥 Gas": {"mm": "🔥 ဂတ်စ်ခ", "ja": "🔥 ガス代"}, "💧 Water": {"mm": "💧 ရေခ", "ja": "💧 水道代"}, "🌐 Internet": {"mm": "🌐 အင်တာနက်", "ja": "🌐 インターネット"}, "📱 Phone": {"mm": "📱 ဖုန်းဘီလ်", "ja": "📱 携帯電話"}, "🛡 Insurance": {"mm": "🛡 အာမခံ", "ja": "🛡 保険"}, "📦 Other": {"mm": "📦 အခြား", "ja": "📦 その他"}, "January": {"mm": "ဇန်နဝါရီ", "ja": "1月"}, "February": {"mm": "ဖေဖော်ဝါရီ", "ja": "2月"}, "March": {"mm": "မတ်", "ja": "3月"}, "April": {"mm": "ဧပြီ", "ja": "4月"}, "May": {"mm": "မေ", "ja": "5月"}, "June": {"mm": "ဇွန်", "ja": "6月"}, "July": {"mm": "ဇူလိုင်", "ja": "7月"}, "August": {"mm": "ဩဂုတ်", "ja": "8月"}, "September": {"mm": "စက်တင်ဘာ", "ja": "9月"}, "October": {"mm": "အောက်တိုဘာ", "ja": "10月"}, "November": {"mm": "နိုဝင်ဘာ", "ja": "11月"}, "December": {"mm": "ဒီဇင်ဘာ", "ja": "12月"}}, AT_={"Login / Account": {"mm": "ဝင်ရောက်ရန် / အကောင့်", "ja": "ログイン／アカウント"}, "Login or account": {"mm": "ဝင်ရောက်ရန် သို့မဟုတ် အကောင့်", "ja": "ログインまたはアカウント"}, "Settings": {"mm": "ဆက်တင်များ", "ja": "設定"}, "e.g. Barista…": {"mm": "ဥပမာ - ဘားရစ်စတာ…", "ja": "例：カフェ店員…"}, "Previous month": {"mm": "ယခင်လ", "ja": "前の月"}, "Next month": {"mm": "နောက်လ", "ja": "次の月"}, "Period": {"mm": "ကာလ", "ja": "期間"}, "Close": {"mm": "ပိတ်မည်", "ja": "閉じる"}, "Monthly Bills": {"mm": "လစဉ်ဘီလ်များ", "ja": "月々の請求書"}, "Dark": {"mm": "အမှောင်", "ja": "ダーク"}, "Light": {"mm": "အလင်း", "ja": "ライト"}, "e.g. Rent, Electric…": {"mm": "ဥပမာ - အိမ်လခ၊ မီးဖိုး…", "ja": "例：家賃、電気代…"}, "Export backup": {"mm": "အရန်ဖိုင် ထုတ်မည်", "ja": "バックアップを出力"}, "Import backup": {"mm": "အရန်ဖိုင် ပြန်သွင်းမည်", "ja": "バックアップを読込"}, "Export CSV": {"mm": "CSV ထုတ်မည်", "ja": "CSV 出力"}, "Delete all data": {"mm": "ဒေတာအားလုံး ဖျက်မည်", "ja": "全データ削除"}, "Break minutes": {"mm": "နားမိနစ်", "ja": "休憩（分）"}}, items=[];
+  Object.keys(XL).forEach(function(c){
+    Object.keys(XL[c].TX).forEach(function(k){if(TX[k])TX[k][c]=XL[c].TX[k];});
+    Object.keys(XL[c].ATT).forEach(function(k){if(AT_[k])AT_[k][c]=XL[c].ATT[k];});
+  });
+  function variants(raw,tr,tbl){var v={en:raw};LANGS.forEach(function(c){if(c!=='en'&&tbl[c]!=null)v[c]=raw.replace(tr,tbl[c]);});return v;}
   var has=function(o,k){return Object.prototype.hasOwnProperty.call(o,k);};
   var skip={SCRIPT:1,STYLE:1,NOSCRIPT:1};
   var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n;
   while((n=w.nextNode())){
     var p=n.parentElement;if(!p||skip[p.tagName]||p.closest('#sd-credits'))continue;
     var raw=n.textContent,tr=raw.replace(/\s+/g,' ').trim();
-    if(has(TX,tr))items.push({node:n,en:raw,ja:raw.replace(tr,TX[tr].ja),mm:raw.replace(tr,TX[tr].mm)});
+    if(has(TX,tr))items.push({node:n,v:variants(raw,tr,TX[tr])});
   }
   document.querySelectorAll('[title],[aria-label],[placeholder]').forEach(function(el){
     ['title','aria-label','placeholder'].forEach(function(a){
       var v=el.getAttribute(a);
-      if(v&&has(AT_,v))items.push({el:el,attr:a,en:v,ja:AT_[v].ja,mm:AT_[v].mm});
+      if(v&&has(AT_,v))items.push({el:el,attr:a,v:variants(v,v,AT_[v])});
     });
   });
   function swap(){
     items.forEach(function(i){
-      var target=lang==='mm'?i.mm:(lang==='ja'?i.ja:i.en),cur;
+      var target=i.v[lang]!=null?i.v[lang]:i.v.en,cur;
+      var known=function(x){for(var k in i.v){if(i.v[k]===x)return true;}return false;};
       if(i.node){
         if(!i.node.isConnected)return;
         cur=i.node.textContent;
-        if(cur!==target&&(cur===i.en||cur===i.ja||cur===i.mm))i.node.textContent=target;
+        if(cur!==target&&known(cur))i.node.textContent=target;
       }else{
         cur=i.el.getAttribute(i.attr);
-        if(cur!==target&&(cur===i.en||cur===i.ja||cur===i.mm))i.el.setAttribute(i.attr,target);
+        if(cur!==target&&known(cur))i.el.setAttribute(i.attr,target);
       }
     });
   }
