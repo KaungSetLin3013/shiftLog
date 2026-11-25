@@ -1223,7 +1223,30 @@ body.scroll-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .theme-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 /* language picker: drop-down */
 #sd-lang .theme-top{flex-direction:column;align-items:stretch;gap:10px}
-.lang-select{width:100%;min-height:48px;padding:10px 40px 10px 14px;font-size:15px;font-weight:600;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a39cab' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px}
+/* ---- Language picker: custom listbox, each language introduced by its own script ---- */
+.lp-trigger{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:8px 14px 8px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;color:var(--text);font-family:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:border-color 150ms,transform 400ms var(--spring)}
+.lp-trigger:hover,.lp-trigger[aria-expanded="true"]{border-color:var(--accent)}
+.lp-trigger:active{transform:scale(.985);transition-duration:80ms}
+.lp-badge{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:700;line-height:1;color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,transparent);transition:background-color 150ms,color 150ms}
+.lp-badge.on,.lp-opt[aria-selected="true"] .lp-badge{background:var(--accent);color:var(--surface)}
+.lp-badge.bump{animation:pop 320ms var(--spring)}
+.lp-text{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.lp-name{font-size:15px;font-weight:700;line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-sub{font-size:12px;line-height:1.4;color:color-mix(in srgb,var(--text) 74%,var(--surface));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-sub:empty{display:none}
+.lp-chev{flex:none;width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform 250ms var(--out),stroke 150ms}
+.lp-trigger[aria-expanded="true"] .lp-chev{transform:rotate(180deg);stroke:var(--accent)}
+.lp-pop{position:fixed;z-index:900;box-sizing:border-box;margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:0 18px 48px var(--shadow),inset 0 1px 0 rgba(255,255,255,.05);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;outline:0;visibility:hidden;opacity:0;transform:scale(.95);transition:opacity 120ms ease-out,transform 120ms ease-out,visibility 0s 120ms}
+.lp-pop[data-open]{visibility:visible;opacity:1;transform:none;transition:opacity 150ms ease-out,transform 200ms var(--out),visibility 0s}
+.lp-opt{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 10px;border-radius:12px;cursor:pointer;color:var(--text);-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background-color 120ms,transform 400ms var(--spring)}
+.lp-opt:active{transform:scale(.98);transition-duration:80ms}
+@media (hover:hover){.lp-opt:hover{background:var(--surface2)}}
+.lp-opt[aria-selected="true"]{background:var(--nav-tint)}
+.lp-opt[aria-selected="true"] .lp-name{color:color-mix(in srgb,var(--accent) 55%,var(--text))}
+.lp-pop[data-kb] .lp-opt.is-active{box-shadow:inset 0 0 0 2px var(--accent)}
+.lp-check{flex:none;width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.6);transition:opacity 150ms,transform 250ms var(--spring)}
+.lp-opt[aria-selected="true"] .lp-check{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.lp-pop,.lp-chev,.lp-check,.lp-trigger,.lp-opt{transition:none}.lp-badge.bump{animation:none}}
 .set-subhead{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 
 /* ---- Settings: icon rail on the left, details on the right ---- */
@@ -2218,16 +2241,11 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       </button>
       <div class="setting-detail" id="sd-lang" style="flex-direction:column;gap:18px">
         <div class="theme-top">
-          <span class="setting-label">Language / 言語 / ဘာသာစကား / भाषा / භාෂාව / Ngôn ngữ / 语言</span>
-          <select id="lang-select" class="lang-select" aria-label="Language" onchange="setLang(this.value)">
-              <option value="en">English</option>
-              <option value="ja">日本語</option>
-              <option value="mm">မြန်မာ</option>
-              <option value="ne">नेपाली</option>
-              <option value="si">සිංහල</option>
-              <option value="vi">Tiếng Việt</option>
-              <option value="zh">中文</option>
-          </select>
+          <button type="button" class="lp-trigger" id="lp-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="lp-list" aria-label="Language" onclick="lpToggle(event)" onkeydown="lpTriggerKey(event)">
+            <span class="lp-badge on" id="lp-t-badge" aria-hidden="true" lang="en">A</span>
+            <span class="lp-text"><span class="lp-name" id="lp-t-name" lang="en">English</span><span class="lp-sub" id="lp-t-sub"></span></span>
+            <svg class="lp-chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
         </div>
         <div>
           <div class="set-subhead" id="lbl-currency-title">Currency Symbol</div>
@@ -2861,7 +2879,7 @@ function applyLang(rerender){
   if(typeof applyAccountLang==='function')applyAccountLang();
   // Lang toggle highlight
   LANGS.forEach(c=>{const b=document.getElementById('lang-'+c);if(b)b.classList.toggle('active',lang===c);});
-  const lsel=document.getElementById('lang-select');if(lsel&&lsel.value!==lang)lsel.value=lang;
+  if(typeof syncLangPicker==='function')syncLangPicker();
   document.documentElement.lang=LANG_BCP[lang]||'en';
   // Only re-render dynamic UI if explicitly requested (not during initial load)
   if(rerender){
@@ -2877,6 +2895,116 @@ function setLang(l){
   applyLang(true);
   refreshLangSummary();renderCurrencyChips();syncSDBtn();
 }
+
+/* ---- Language picker (custom listbox) ---- */
+var LANG_PICK=[
+  {c:'en',g:'A',n:'English',e:'',l:'en'},
+  {c:'ja',g:'あ',n:'日本語',e:'Japanese',l:'ja'},
+  {c:'mm',g:'က',n:'မြန်မာ',e:'Burmese',l:'my'},
+  {c:'ne',g:'अ',n:'नेपाली',e:'Nepali',l:'ne'},
+  {c:'si',g:'අ',n:'සිංහල',e:'Sinhala',l:'si'},
+  {c:'vi',g:'Đ',n:'Tiếng Việt',e:'Vietnamese',l:'vi'},
+  {c:'zh',g:'文',n:'中文',e:'Chinese (Simplified)',l:'zh-Hans'}
+];
+var lpPop=null,lpActive=-1,lpIsOpen=false;
+function lpCur(){return LANG_PICK.find(function(o){return o.c===lang;})||LANG_PICK[0];}
+function lpSyncOptions(){
+  if(!lpPop)return;
+  lpPop.querySelectorAll('.lp-opt').forEach(function(li){li.setAttribute('aria-selected',li.dataset.c===lang?'true':'false');});
+}
+function syncLangPicker(){
+  var o=lpCur(),b=document.getElementById('lp-t-badge'),n=document.getElementById('lp-t-name'),s=document.getElementById('lp-t-sub'),tr=document.getElementById('lp-trigger');
+  if(!b||!n||!s)return;
+  b.textContent=o.g;b.lang=o.l;n.textContent=o.n;n.lang=o.l;s.textContent=o.e;
+  var title=t('lbl-lang-title')||'Language';
+  if(tr)tr.setAttribute('aria-label',title+': '+o.n+(o.e?' ('+o.e+')':''));
+  if(lpPop){lpPop.setAttribute('aria-label',title);lpSyncOptions();}
+}
+function lpBuild(){
+  if(lpPop)return;
+  lpPop=document.createElement('ul');
+  lpPop.className='lp-pop';lpPop.id='lp-list';lpPop.tabIndex=-1;
+  lpPop.setAttribute('role','listbox');
+  lpPop.innerHTML=LANG_PICK.map(function(o){
+    return '<li class="lp-opt" role="option" id="lp-o-'+o.c+'" data-c="'+o.c+'" aria-selected="false">'
+      +'<span class="lp-badge" aria-hidden="true" lang="'+o.l+'">'+o.g+'</span>'
+      +'<span class="lp-text"><span class="lp-name" lang="'+o.l+'">'+o.n+'</span>'+(o.e?'<span class="lp-sub">'+o.e+'</span>':'')+'</span>'
+      +'<svg class="lp-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></li>';
+  }).join('');
+  document.body.appendChild(lpPop);
+  lpPop.addEventListener('click',function(e){var li=e.target.closest('.lp-opt');if(li)lpChoose(li.dataset.c);});
+  lpPop.addEventListener('keydown',lpKey);
+  syncLangPicker();
+}
+function lpPlace(){
+  if(!lpPop||!lpIsOpen)return;
+  var tr=document.getElementById('lp-trigger');if(!tr)return;
+  var r=tr.getBoundingClientRect(),m=12,gap=8;
+  var w=Math.min(Math.max(r.width,248),420,window.innerWidth-2*m);
+  var left=Math.max(m,Math.min(r.left,window.innerWidth-w-m));
+  var natural=lpPop.scrollHeight+2;
+  var below=window.innerHeight-r.bottom-gap-m,above=r.top-gap-m;
+  var up=natural>below&&above>below;
+  var h=Math.min(natural,Math.max(140,up?above:below));
+  lpPop.style.width=w+'px';lpPop.style.left=left+'px';lpPop.style.maxHeight=h+'px';
+  lpPop.style.top=(up?r.top-gap-h:r.bottom+gap)+'px';
+  lpPop.style.transformOrigin=Math.round(r.left+r.width/2-left)+'px '+(up?h:0)+'px';
+}
+function lpSetActive(i,kb){
+  if(!lpPop)return;
+  var items=lpPop.querySelectorAll('.lp-opt');if(!items.length)return;
+  lpActive=Math.max(0,Math.min(items.length-1,i));
+  items.forEach(function(el,n){el.classList.toggle('is-active',n===lpActive);});
+  lpPop.setAttribute('aria-activedescendant',items[lpActive].id);
+  if(kb)lpPop.setAttribute('data-kb','');
+  items[lpActive].scrollIntoView({block:'nearest'});
+}
+function lpOpen(kb){
+  lpBuild();
+  var tr=document.getElementById('lp-trigger');if(!tr)return;
+  lpIsOpen=true;lpSyncOptions();lpPlace();
+  if(kb)lpPop.setAttribute('data-kb','');else lpPop.removeAttribute('data-kb');
+  lpPop.setAttribute('data-open','');
+  tr.setAttribute('aria-expanded','true');
+  lpSetActive(LANG_PICK.findIndex(function(o){return o.c===lang;}),!!kb);
+  lpPop.focus({preventScroll:true});
+}
+function lpClose(refocus){
+  if(!lpPop||!lpIsOpen)return;
+  lpIsOpen=false;
+  lpPop.removeAttribute('data-open');lpPop.removeAttribute('data-kb');
+  var tr=document.getElementById('lp-trigger');
+  if(tr){tr.setAttribute('aria-expanded','false');if(refocus)tr.focus({preventScroll:true});}
+}
+function lpToggle(e){if(lpIsOpen)lpClose();else lpOpen(!!e&&e.detail===0);}
+function lpTriggerKey(e){
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!lpIsOpen)lpOpen(true);}
+}
+function lpKey(e){
+  var k=e.key;
+  if(k==='ArrowDown'){e.preventDefault();lpSetActive(lpActive+1,true);}
+  else if(k==='ArrowUp'){e.preventDefault();lpSetActive(lpActive-1,true);}
+  else if(k==='Home'){e.preventDefault();lpSetActive(0,true);}
+  else if(k==='End'){e.preventDefault();lpSetActive(LANG_PICK.length-1,true);}
+  else if(k==='Enter'||k===' '){e.preventDefault();if(lpActive>=0)lpChoose(LANG_PICK[lpActive].c);}
+  else if(k==='Tab'){e.preventDefault();lpClose(true);}
+}
+function lpChoose(c){
+  var changed=c!==lang;
+  lpClose(true);
+  if(!changed)return;
+  setLang(c);
+  var b=document.getElementById('lp-t-badge');
+  if(b){b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');}
+}
+document.addEventListener('pointerdown',function(e){
+  if(lpIsOpen&&lpPop&&!lpPop.contains(e.target)&&!e.target.closest('#lp-trigger'))lpClose();
+},true);
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&lpIsOpen){e.stopPropagation();lpClose(true);}
+},true);
+window.addEventListener('resize',lpPlace);
+window.addEventListener('scroll',function(e){if(lpIsOpen&&lpPop&&!lpPop.contains(e.target))lpPlace();},true);
 
 const PALETTES=[{"id": "default", "label": "Default", "colors": ["#121016", "#ffc233", "#f6efe2", "#7fd1ae"], "lc": ["#f5efe3", "#b85c00", "#2a2118", "#2f7d57"], "lbg": "#f5efe3"}, {"id": "indigo", "label": "Deep Indigo", "colors": ["#04102a", "#97acc8", "#d3d9da", "#96d1aa"], "lbg": "#eaeef4", "lc": ["#eaeef4", "#5c697a", "#040e26", "#2f7d57"]}, {"id": "mint", "label": "Slate Mint", "colors": ["#0d1113", "#b5decc", "#d3ebe0", "#96d1aa"], "lbg": "#f0f8f5", "lc": ["#f0f8f5", "#596d64", "#0c0f11", "#2f7d57"]}, {"id": "olive", "label": "Olive Cream", "colors": ["#0e120c", "#eeb480", "#f9f4da", "#96d1aa"], "lbg": "#fcf0e6", "lc": ["#fcf0e6", "#836346", "#0d100b", "#2f7d57"]}, {"id": "plum", "label": "Plum Lavender", "colors": ["#20081b", "#c0a9b3", "#fed9a4", "#96d1aa"], "lbg": "#f2eef0", "lc": ["#f2eef0", "#6f6268", "#1d0718", "#2f7d57"]}, {"id": "wine", "label": "Wine Pink", "colors": ["#250611", "#f9c1ce", "#d3d9da", "#96d1aa"], "lbg": "#fef3f5", "lc": ["#fef3f5", "#81646b", "#21050f", "#2f7d57"]}, {"id": "teal", "label": "Teal Naples", "colors": ["#071312", "#fbe6a0", "#fdf0c6", "#96d1aa"], "lbg": "#fefaec", "lc": ["#fefaec", "#736a4a", "#061110", "#2f7d57"]}, {"id": "poel", "label": "Poel's Blue", "colors": ["#01131a", "#a7d4e4", "#dacebe", "#96d1aa"], "lbg": "#edf6fa", "lc": ["#edf6fa", "#576e77", "#011117", "#2f7d57"]}, {"id": "violet", "label": "Violet Nile", "colors": ["#120e1d", "#bce4e5", "#d7efef", "#62c6bf"], "lbg": "#f2fafa", "lc": ["#f2fafa", "#5c7070", "#100d1a", "#2f7d57"]}, {"id": "ember", "label": "Forest Ember", "colors": ["#091a18", "#f37420", "#d6b43e", "#96d1aa"], "lbg": "#fde3d2", "lc": ["#fde3d2", "#9c4a14", "#081716", "#2f7d57"]}, {"id": "grenadine", "label": "Grenadine", "colors": ["#091a18", "#f48067", "#fbe6a0", "#96d1aa"], "lbg": "#fde6e1", "lc": ["#fde6e1", "#954e3f", "#081716", "#2f7d57"]}, {"id": "lemonmoss", "label": "Lemon Moss", "colors": ["#121811", "#62c6bf", "#f8ed43", "#62c6bf"], "lbg": "#e0f4f2", "lc": ["#e0f4f2", "#366d69", "#10160f", "#2f7d57"]}, {"id": "english", "label": "English Red", "colors": ["#0e1011", "#d96629", "#ebd3a2", "#96d1aa"], "lbg": "#faede5", "lc": ["#faede5", "#a54e1f", "#0d0e0f", "#2f7d57"]}, {"id": "cotinga", "label": "Cotinga", "colors": ["#280a23", "#f68c50", "#f8ed43", "#96d1aa"], "lbg": "#fde8dc", "lc": ["#fde8dc", "#965531", "#240920", "#2f7d57"]}, {"id": "calamine", "label": "Calamine", "colors": ["#0e1011", "#bb7125", "#78cdd0", "#78cdd0"], "lbg": "#f7eee5", "lc": ["#f7eee5", "#94591d", "#0d0e0f", "#2f7d57"]}, {"id": "rosenight", "label": "Old Rose Night", "colors": ["#110823", "#d46d7a", "#ffdd00", "#96d1aa"], "lbg": "#faedef", "lc": ["#faedef", "#9b5059", "#0f0720", "#2f7d57"]}, {"id": "springshell", "label": "Spring Shell", "colors": ["#0e1011", "#afd472", "#fdd4bd", "#afd472"], "lbg": "#eff6e3", "lc": ["#eff6e3", "#5b6e3b", "#0d0e0f", "#2f7d57"]}, {"id": "salvia", "label": "Salvia Olive", "colors": ["#121811", "#97acc8", "#f5ecc2", "#96d1aa"], "lbg": "#eaeef4", "lc": ["#eaeef4", "#5c697a", "#10160f", "#2f7d57"]}, {"id": "glaucous", "label": "Glaucous", "colors": ["#121811", "#f48067", "#a5c8d1", "#96d1aa"], "lbg": "#fde6e1", "lc": ["#fde6e1", "#954e3f", "#10160f", "#2f7d57"]}, {"id": "aconite", "label": "Aconite", "colors": ["#0e1011", "#a36aa5", "#fdc57e", "#96d1aa"], "lbg": "#f4edf4", "lc": ["#f4edf4", "#865787", "#0d0e0f", "#2f7d57"]}, {"id": "citron", "label": "Citron", "colors": ["#0e1011", "#b2b73e", "#fdc57e", "#b2b73e"], "lbg": "#f0f1d8", "lc": ["#f0f1d8", "#676a24", "#0d0e0f", "#2f7d57"]}];
 function syncThemeColor(){
@@ -2975,7 +3103,7 @@ function openSettings(){
   document.getElementById('settings-modal').classList.add('open');
   if(_setMQ.matches&&window.selectSettingKey)window.selectSettingKey();
 }
-function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
+function closeSettings(){try{lpClose();}catch(e){}document.getElementById('settings-modal').classList.remove('open');}
 
 // Currency: starts with 円; tap it to open a table of symbols (Settings → Language)
 const CURRENCIES=[['円','JPY'],['¥','JPY·CNY'],['$','USD'],['€','EUR'],['£','GBP'],['₩','KRW'],['₹','INR'],['฿','THB'],['₱','PHP'],['₫','VND'],['₪','ILS'],['₺','TRY'],['₽','RUB'],['R$','BRL'],['A$','AUD'],['C$','CAD'],['S$','SGD'],['HK$','HKD'],['NT$','TWD'],['RM','MYR'],['Rp','IDR'],['CHF','CHF']];
