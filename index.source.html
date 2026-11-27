@@ -1669,14 +1669,8 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
 
   <!-- ═══ SHIFTS ═══ -->
   <div class="page" id="page-shifts">
-    <div class="panel">
+    <div class="panel is-multi">
       <div class="panel-label" id="lbl-add-shift">+ Add Shift</div>
-
-      <!-- Mode toggle: single / multi-date -->
-      <div class="mode-toggle">
-        <button class="mode-btn active" id="mode-single" onclick="setShiftMode('single')" data-i18n="mode-single">Single Date</button>
-        <button class="mode-btn"        id="mode-multi"  onclick="setShiftMode('multi')"  data-i18n="mode-multi">Multiple Dates</button>
-      </div>
 
       <div id="no-works-warn" class="warn-box" style="display:none">
         <span id="warn-no-works">No works yet.</span> <a onclick="switchTab('works')" id="warn-create-link">Create a work first →</a>
@@ -1687,49 +1681,8 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
         <div class="wp-row" id="work-picker"></div>
       </div>
 
-      <!-- Single date row -->
-      <div id="single-date-row" class="row">
-        <div class="field" style="max-width:155px">
-          <label id="lbl-date">Date</label>
-          <button type="button" class="sd-btn" id="sd-btn" aria-haspopup="dialog" aria-expanded="false" onclick="sdToggle()">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
-            <span id="sd-text"></span>
-          </button>
-          <input type="date" id="shift-date" class="sr-only" tabindex="-1" aria-hidden="true">
-        </div>
-        <div class="field" style="max-width:94px">
-          <label id="lbl-work-time">Work Time</label>
-          <div class="dur-box" id="dur-box">—</div>
-        </div>
-      </div>
-      <div id="single-time-line">
-        <div class="time-line">
-          <div class="field">
-            <label id="lbl-start">Start Time</label>
-            <input type="time" id="shift-start" oninput="recalcPreview()">
-          </div>
-          <div class="field tl-break" role="group" aria-labelledby="lbl-break">
-            <span class="sr-only" id="lbl-break">Break</span>
-            <button type="button" class="brk-dial-btn" data-select="shift-break" aria-haspopup="dialog" aria-label="Break time"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9.5 2.5h5M12 2.5V5"/></svg><span class="brk-val">0</span></button>
-            <select id="shift-break" onchange="recalcPreview()" hidden>
-              <option value="0">No break</option>
-              <option value="15">15 min</option>
-              <option value="30">30 min</option>
-              <option value="45">45 min</option>
-              <option value="60">1 hour</option>
-              <option value="90">1.5 hours</option>
-              <option value="120">2 hours</option>
-            </select>
-          </div>
-          <div class="field">
-            <label id="lbl-end">End Time</label>
-            <input type="time" id="shift-end" oninput="recalcPreview()">
-          </div>
-        </div>
-      </div>
-
       <!-- Multi-date rows -->
-      <div id="multi-date-section" style="display:none">
+      <div id="multi-date-section">
         <div class="md-layout">
           <div class="md-left">
         <div style="margin-bottom:10px">
@@ -3048,7 +3001,7 @@ function setTheme(th){
 let works=[], shifts=[], settings={currency:'円',lang:'en'};
 let selectedWorkId=null, filterWorkId=null, monthlyFilterId=null;
 let graphMode='earnings', currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear();
-let shiftMode='single', multiDates=[], calSelectedDay=null;
+let shiftMode='multi', multiDates=[], calSelectedDay=null;
 
 const sym=()=>_cur(settings.currency||'円')||'円';
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
@@ -3253,23 +3206,15 @@ function closeModal(){document.getElementById('edit-modal').classList.remove('op
 // ════════════════════════════════════════════════
 // Shift mode toggle
 // ════════════════════════════════════════════════
-function setShiftMode(mode){
-  shiftMode=mode;
-  const _fp=document.querySelector('#page-shifts>.panel'); if(_fp) _fp.classList.toggle('is-multi',mode==='multi');
-  document.getElementById('mode-single').classList.toggle('active',mode==='single');
-  document.getElementById('mode-multi').classList.toggle('active',mode==='multi');
-  document.getElementById('single-date-row').style.display=mode==='single'?'':'none';
-  document.getElementById('single-time-line').style.display=mode==='single'?'':'none';
-  document.getElementById('multi-date-section').style.display=mode==='multi'?'':'none';
+function setShiftMode(){
+  shiftMode='multi';
+  const _fp=document.querySelector('#page-shifts>.panel'); if(_fp) _fp.classList.add('is-multi');
+  document.getElementById('multi-date-section').style.display='';
   document.getElementById('earn-preview').style.display='none';
-  document.getElementById('dur-box').textContent='—';
   document.getElementById('m-dur-box').textContent='—';
   const addRow=document.querySelector('.add-shift-btn-row');
-  if(addRow){
-    if(mode==='multi')document.getElementById('md-add-slot').appendChild(addRow);
-    else document.getElementById('earn-preview').insertAdjacentElement('afterend',addRow);
-  }
-  if(mode==='single') recalcPreview(); else {renderMiniCal();recalcMultiPreview();}
+  if(addRow) document.getElementById('md-add-slot').appendChild(addRow);
+  renderMiniCal();recalcMultiPreview();
 }
 
 // ════════════════════════════════════════════════
@@ -3433,7 +3378,6 @@ function sdToggle(k){k=k||'shift';(sdPop&&!sdPop.hidden&&sdFor===k)?sdClose():sd
 function sdPick(v){
   const i=sdInput();i.value=v;
   i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));
-  if(sdFor==='shift'&&typeof recalcPreview==='function'&&shiftMode==='single')recalcPreview();
   sdClose(true);
 }
 document.addEventListener('pointerdown',e=>{
@@ -3484,7 +3428,7 @@ function renderWorkPicker(){
     <div class="wp-btn ${selectedWorkId===w.id?'sel':''}" onclick="selectWork('${safeId(w.id)}')">
       <span class="wp-name"><span class="wp-dot" style="background:${safeColor(w.color)}"></span>${esc(w.name)}</span>
     </div>`).join('');
-  if(shiftMode==='single')recalcPreview();else recalcMultiPreview();
+  recalcMultiPreview();
 }
 function selectWork(id){selectedWorkId=id;renderWorkPicker();}
 function getWork(){return works.find(w=>w.id===selectedWorkId)||null;}
@@ -3577,23 +3521,7 @@ async function addShift(){
   const btn=document.getElementById('btn-add-shift');
   btn.disabled=true;loading(true);
 
-  if(shiftMode==='single'){
-    const dv=document.getElementById('shift-date').value;
-    const start=document.getElementById('shift-start').value;
-    const end=document.getElementById('shift-end').value;
-    if(!dv||!start||!end){alert(t('alert-fill-date'));btn.disabled=false;loading(false);return;}
-    const brk=parseInt(document.getElementById('shift-break').value)||0;
-    let ci=new Date(`${dv}T${start}`).getTime(),co=new Date(`${dv}T${end}`).getTime();
-    if(co<=ci)co+=86400000;
-    const workMs=Math.max(0,(co-ci)-brk*60000),workEnd=co-brk*60000;
-    const sh={id:genId(),workId:w?w.id:null,workName:w?w.name:'Unknown',workColor:w?w.color:'#888',rate:w?w.rate:0,clockIn:ci,clockOut:co,breakMin:brk,duration:workMs,wages:w?calcWages(ci,workEnd,w.rate,w):0,transport:w?w.transport:0,nightMin:w?nightMinutes(ci,workEnd,w):0,createdAt:Date.now()};
-    await dbPut('shifts',sh);shifts.unshift(sh);
-    toast(t('toast-shift-saved'));
-    document.getElementById('shift-start').value='';document.getElementById('shift-end').value='';
-    document.getElementById('shift-break').value='0';syncBreakChips();document.getElementById('dur-box').textContent='—';
-    document.getElementById('earn-preview').style.display='none';
-    document.getElementById('shift-date').value=today();
-  } else {
+  {
     if(multiDates.length===0){alert(t('alert-no-dates'));btn.disabled=false;loading(false);return;}
     const start=document.getElementById('m-start').value,end=document.getElementById('m-end').value;
     if(!start||!end){alert(t('alert-fill-date'));btn.disabled=false;loading(false);return;}
@@ -3609,7 +3537,7 @@ async function addShift(){
     shifts.unshift(...newShifts);
     shifts.sort((a,b)=>b.clockIn-a.clockIn);
     toast(`${newShifts.length} ${t('toast-shifts-saved')}`);
-    multiDates=[];renderMiniCal();updateMultiCountNote();
+    multiDates=[today()];renderMiniCal();updateMultiCountNote();recalcMultiPreview();
     document.getElementById('m-start').value='';document.getElementById('m-end').value='';
     document.getElementById('m-break').value='0';syncBreakChips();document.getElementById('m-dur-box').textContent='—';
     document.getElementById('earn-preview').style.display='none';
@@ -5501,8 +5429,7 @@ window.addEventListener('resize',()=>{
     splash.classList.add('hide');
     setTimeout(()=>splash.style.display='none',450);
 
-    document.getElementById('shift-date').value=today();
-    renderMiniCal(); // initialize mini calendar
+    multiDates=[today()]; setShiftMode('multi'); // multi-date is the only mode; today pre-selected
 
     // Apply i18n labels (no re-render flag, we do that manually below)
     applyLang(false);
