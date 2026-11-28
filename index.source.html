@@ -1567,11 +1567,11 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
   </header>
 
   <div class="tab-nav">
-    <button class="tab-btn"         onclick="switchTab('works')"  id="tab-works">Works <span class="tab-badge" id="badge-w">0</span></button>
+    <button class="tab-btn"         onclick="switchTab('works')"  id="tab-works">Jobs <span class="tab-badge" id="badge-w">0</span></button>
     <button class="tab-btn"         onclick="switchTab('shifts')" id="tab-shifts">Shifts <span class="tab-badge" id="badge-s">0</span></button>
     <button class="tab-btn active"  onclick="switchTab('monthly')"id="tab-monthly">Monthly</button>
     <button class="tab-btn"         onclick="switchTab('expenses')" id="tab-expenses">Expenses</button>
-    <button class="tab-btn"         onclick="switchTab('summary')"id="tab-summary">Summary</button>
+    <button class="tab-btn"         onclick="switchTab('summary')"id="tab-summary">Pay</button>
   </div>
 
   <!-- Mobile bottom nav -->
@@ -1585,7 +1585,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     </span>
     <button class="bn-item" id="bn-works" onclick="switchTab('works')">
       <span class="bn-icon">💼</span>
-      <span id="bn-lbl-works">Works</span>
+      <span id="bn-lbl-works">Jobs</span>
       <span class="bn-badge" id="bn-badge-w" style="display:none">0</span>
     </button>
     <button class="bn-item" id="bn-shifts" onclick="switchTab('shifts')">
@@ -1603,7 +1603,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
     </button>
     <button class="bn-item" id="bn-summary" onclick="switchTab('summary')">
       <span class="bn-icon">💰</span>
-      <span id="bn-lbl-summary">Summary</span>
+      <span id="bn-lbl-summary">Pay</span>
     </button>
   </nav>
 
@@ -1673,7 +1673,7 @@ body.light-theme .cur-chip.sel small{color:rgba(255,255,255,.8)}
       <div class="panel-label" id="lbl-add-shift">+ Add Shift</div>
 
       <div id="no-works-warn" class="warn-box" style="display:none">
-        <span id="warn-no-works">No works yet.</span> <a onclick="switchTab('works')" id="warn-create-link">Create a work first →</a>
+        <span id="warn-no-works">No works yet.</span> <button type="button" class="btn btn-primary nx-cta" onclick="switchTab('works')" id="warn-create-link">Add your job first →</button>
       </div>
 
       <div class="wp-wrap">
@@ -2506,22 +2506,22 @@ const T={
   en:{
     'splash':'Loading local database…',
     'offline-badge':'Saved Locally','user-count-lbl':'Users',
-    'lbl-create-work':'Create New Work','lbl-work-name':'Work Name','lbl-hourly-rate':'Hourly Rate','lbl-pay-timing':'Payday','lbl-pay-day':'Pay day','lbl-edit-pay-timing':'Payday','lbl-edit-pay-day':'Pay day','lbl-payday-title':'Payday',
+    'lbl-create-work':'Add a New Job','lbl-work-name':'Job Name','lbl-hourly-rate':'Hourly Rate','lbl-pay-timing':'Payday','lbl-pay-day':'Pay day','lbl-edit-pay-timing':'Payday','lbl-edit-pay-day':'Pay day','lbl-payday-title':'Payday',
     'lbl-transport':'Transport / Day','lbl-color':'Color',
-    'lbl-your-works':'Your Works','lbl-add-shift':'+ Add Shift',
+    'lbl-your-works':'Your Jobs','lbl-add-shift':'+ Add Shift',
     'mode-single':'Single Date','mode-multi':'Multiple Dates',
-    'warn-no-works':'No works yet.','warn-create-link':'Create a work first →',
-    'lbl-select-work':'Select Work','lbl-date':'Date','lbl-start':'Start Time','lbl-end':'End Time',
+    'warn-no-works':'No jobs yet.','warn-create-link':'Add your job first →',
+    'lbl-select-work':'Select Job','lbl-date':'Date','lbl-start':'Start Time','lbl-end':'End Time',
     'lbl-break':'Break','break-no':'No break','lbl-work-time':'Work Time',
     'lbl-start-m':'Start Time','lbl-end-m':'End Time','lbl-break-m':'Break','lbl-work-time-m':'Work Time',
     'lbl-add-dates':'Add Dates','btn-add-date':'+ Add Date',
     'ep-lbl-hrs':'Work Hrs','ep-lbl-rate':'Rate','ep-lbl-wages':'Wages','ep-lbl-trans':'Transport','ep-lbl-total':'Total',
     'lbl-today':'Today','lbl-week-hrs':'Week Hours','lbl-all-hrs':'All Time','lbl-week-earn':'Week Earnings','lbl-all-earn':'Total Earnings',
-    'lbl-filter':'Filter:','lbl-col-date':'Date','lbl-col-time':'Time','lbl-col-work':'Work',
+    'lbl-filter':'Filter:','lbl-col-date':'Date','lbl-col-time':'Time','lbl-col-work':'Job',
     'lbl-col-hrs':'Hours','lbl-col-wages':'Wages','lbl-col-trans':'Transport',
     'btn-export-csv':'Export CSV','btn-clear-shifts':'Clear All',
     'lbl-daily-overview':'Daily Overview','gtog-earnings':'Earnings','gtog-hours':'Hours',
-    'lbl-work-breakdown':'Work Breakdown','lbl-th-work':'Work','lbl-th-shifts':'Shifts',
+    'lbl-work-breakdown':'Breakdown by Job','lbl-th-work':'Job','lbl-th-shifts':'Shifts',
     'lbl-th-hrs':'Hours','lbl-th-wages':'Wages','lbl-th-trans':'Transport','lbl-th-total':'Total',
     'cal-legend-shift':'Has shift','cal-legend-today':'Today','cal-legend-sel':'Selected',
     'lbl-data-backup':'Data & Backup','lbl-data-desc':'All data is saved in your browser\'s IndexedDB — stays on this device permanently, works completely offline.',
@@ -2535,24 +2535,24 @@ const T={
     'lbl-currency-title':'Currency Symbol','lbl-currency-custom':'Custom','lbl-w-night-from':'Night from','lbl-w-night-to':'Night to','lbl-w-night-pct':'Night bonus %','lbl-w-tax':'Income tax %','lbl-edit-night-from':'Night from','lbl-edit-night-to':'Night to','lbl-edit-night-pct':'Night bonus %','lbl-edit-tax':'Income tax %','lbl-currency-sub':'Used in all earnings displays',
     'lbl-night-title':'Night Bonus','lbl-night-sub':'Set the time range and bonus % for night hours',
     'lbl-night-from':'From','lbl-night-to':'To','lbl-night-pct':'Bonus %',
-    'lbl-edit-work-title':'Edit Work','lbl-edit-name':'Work Name','lbl-edit-rate':'Hourly Rate',
+    'lbl-edit-work-title':'Edit Job','lbl-edit-name':'Job Name','lbl-edit-rate':'Hourly Rate',
     'lbl-edit-transport':'Transport Fee / Day','lbl-edit-color':'Color',
     'btn-cancel-edit':'Cancel','btn-save-edit':'Save',
     'lbl-m-shifts':'Shifts','lbl-m-hrs':'Work Hours','lbl-m-wages':'Wages','lbl-m-total':'Total inc. Transport',
-    'tab-works':'Works','tab-shifts':'Shifts','tab-monthly':'Monthly','tab-expenses':'Expenses','lbl-exp-title':'Add Expense','lbl-exp-cats':'Category','lbl-exp-date':'Date','lbl-exp-amount':'Amount','lbl-exp-note':'Note (optional)','btn-add-exp':'+ Add Expense','lbl-exp-today':'Today','lbl-exp-month':'Month total','lbl-exp-avg':'Daily average','tab-summary':'Summary','tab-tax':'Tax','tab-data':'Data',
-    'lbl-night-min':'night min','toast-work-added':'Work added ✓','toast-work-updated':'Work updated ✓',
-    'toast-work-deleted':'Work deleted','toast-shift-saved':'Shift saved ✓','toast-shifts-saved':'shifts saved ✓',
+    'tab-works':'Jobs','tab-shifts':'Shifts','tab-monthly':'Monthly','tab-expenses':'Expenses','lbl-exp-title':'Add Expense','lbl-exp-cats':'Category','lbl-exp-date':'Date','lbl-exp-amount':'Amount','lbl-exp-note':'Note (optional)','btn-add-exp':'+ Add Expense','lbl-exp-today':'Today','lbl-exp-month':'Month total','lbl-exp-avg':'Daily average','tab-summary':'Pay','tab-tax':'Tax','tab-data':'Data',
+    'lbl-night-min':'night min','toast-work-added':'Job added ✓','toast-work-updated':'Job updated ✓',
+    'toast-work-deleted':'Job deleted','toast-shift-saved':'Shift saved ✓','toast-shifts-saved':'shifts saved ✓',
     'toast-shift-deleted':'Shift deleted','toast-shifts-cleared':'All shifts cleared',
-    'toast-backup-exported':'Backup exported ✓','toast-imported':'Imported','toast-works':'works',
+    'toast-backup-exported':'Backup exported ✓','toast-imported':'Imported','toast-works':'jobs',
     'toast-shifts':'shifts','toast-cancelled':'Cancelled','toast-all-deleted':'All data deleted',
-    'confirm-delete-work':'Delete this work? Shift history is kept.',
+    'confirm-delete-work':'Delete this job? Shift history is kept.',
     'confirm-delete-shift':'Delete this shift?',
     'confirm-clear-all':'Delete ALL shifts? This cannot be undone.',
-    'confirm-nuke':'⚠️ This will permanently delete ALL works and shifts.',
+    'confirm-nuke':'⚠️ This will permanently delete ALL jobs and shifts.',
     'confirm-nuke-type':'Type "delete" to confirm:',
-    'confirm-import':'Import works and shifts? This will REPLACE all current data.',
-    'alert-no-name':'Please enter a work name.','alert-fill-date':'Please fill in date, start and end time.',
-    'alert-select-work':'Please select a work.','alert-no-dates':'Please add at least one date.',
+    'confirm-import':'Import jobs and shifts? This will REPLACE all current data.',
+    'alert-no-name':'Please enter a job name.','alert-fill-date':'Please fill in date, start and end time.',
+    'alert-select-work':'Please select a job.','alert-no-dates':'Please add at least one date.',
     'alert-no-shifts':'No shifts to export.',
     'lbl-m-night-note':'★ night min × night bonus included',
     'lbl-break-display':'Break:',
@@ -6275,6 +6275,202 @@ function closeBreakDial(apply){
     regUiRefresh();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<style id="nx-style">
+/* ===== ShiftLog onboarding + clearer tabs (nx) ===== */
+/* -- Bottom nav: labels always visible (11px+), plainer icons -- */
+.bottom-nav .bn-item{min-height:60px;padding:6px 2px;gap:2px;justify-content:flex-end}
+.bottom-nav .bn-item.active{padding-top:6px}
+.bottom-nav .bn-item,
+.bottom-nav .bn-item.active,
+.bottom-nav .bn-item:not(.active){font-size:11px;line-height:1.15;letter-spacing:.1px}
+.bottom-nav .bn-item.active{font-weight:800}
+.bottom-nav .bn-item:not(.active){opacity:1}
+.bottom-nav .bn-item>span:not(.bn-icon):not(.bn-badge){
+  position:static!important;width:auto!important;height:auto!important;max-width:100%;
+  margin:0!important;padding:0!important;border:0!important;clip:auto!important;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.bottom-nav .bn-icon{display:block;line-height:1}
+.bottom-nav .bn-item:not(.active) .bn-icon{transform:scale(1.05)}
+.bottom-nav .bn-item.active .bn-icon{color:#000;animation:nxBump 480ms var(--spring) forwards}
+.bottom-nav .bn-item.active:active .bn-icon{animation:none;transform:translateY(calc(var(--s) * -.39 - 6px)) scale(1)}
+@keyframes nxBump{
+  0%{transform:translateY(0) scale(.8)}
+  60%{transform:translateY(calc(var(--s) * -.48 - 6px)) scale(1.3)}
+  100%{transform:translateY(calc(var(--s) * -.39 - 6px)) scale(1.18)}}
+@media (prefers-reduced-motion:reduce){
+  .bottom-nav .bn-item.active .bn-icon{animation:none;transform:translateY(calc(var(--s) * -.39 - 6px)) scale(1.18)}}
+
+/* -- Pulsing dot on the tab to tap next -- */
+.nx-dot{display:none;position:absolute;top:12px;right:calc(50% - 20px);width:10px;height:10px;
+  border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface);pointer-events:none}
+.nx-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--accent);
+  animation:nxPulse 1.6s ease-out infinite}
+.bottom-nav .bn-item[data-nx="1"]>.nx-dot{display:block}
+@keyframes nxPulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.8);opacity:0}}
+@media (prefers-reduced-motion:reduce){.nx-dot::after{animation:none;display:none}}
+
+/* -- Tabs that are not useful yet -- */
+.bottom-nav .bn-item.nx-dim:not(.active){opacity:.45}
+
+/* -- First-steps card -- */
+.nx-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:12px 14px 14px;margin:0 0 14px;animation:nxIn .35s ease-out both}
+.nx-h{font-size:12px;font-weight:700;letter-spacing:.3px;color:var(--muted);margin-bottom:10px}
+.nx-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.nx-arrow{color:var(--muted);font-size:14px}
+.nx-step{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:4px 14px 4px 6px;
+  border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);
+  font:inherit;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.nx-n{flex:none;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:800;background:var(--surface2);color:var(--text)}
+.nx-step.cur{border-color:var(--accent);color:var(--text)}
+.nx-step.cur .nx-n,.nx-step.done .nx-n{background:var(--accent);color:#000}
+.nx-step.done{color:var(--muted)}
+.nx-step:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@keyframes nxIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (max-width:480px){
+  .nx-steps{flex-direction:column;align-items:stretch;gap:6px}
+  .nx-arrow{display:none}
+  .nx-step{width:100%}}
+@media (prefers-reduced-motion:reduce){.nx-card{animation:none}}
+
+/* -- "Add your job first" as a real button on the Shifts tab -- */
+#no-works-warn .nx-cta{display:block;width:100%;min-height:48px;margin-top:10px}
+
+/* -- Room for the taller nav bar -- */
+@media(max-width:640px){
+  .container{padding-bottom:calc(132px + env(safe-area-inset-bottom,0px))}
+  #toast{bottom:calc(124px + env(safe-area-inset-bottom,0px))}}
+@media(min-width:641px){
+  .container{padding-bottom:160px}
+  #toast{bottom:136px}}
+</style>
+<script id="nx-script">
+/* ShiftLog: first steps, next-tab dot, dimmed tabs, clearer nav icons */
+(function(){
+  var ORDER=['works','shifts','monthly','expenses','summary'];
+  var LOCKED=['monthly','expenses','summary'];
+  var K={done:'sl_onb_done',started:'sl_onb_started',p1:'sl_onb_p1',p2:'sl_onb_p2',p3:'sl_onb_p3'};
+  function get(k){try{return localStorage.getItem(k)==='1';}catch(e){return false;}}
+  function set(k){try{localStorage.setItem(k,'1');}catch(e){}}
+  var done=get(K.done),started=get(K.started),p1=get(K.p1),p2=get(K.p2),p3=get(K.p3);
+  var inited=false,firstCall=true;
+
+  var TXT={
+    en:{title:'Get started',s1:'Add your job',s2:'Add a shift',s3:'See your pay',hint:'Add a job first'},
+    ja:{title:'はじめの3ステップ',s1:'仕事を追加',s2:'シフトを追加',s3:'給料を見る',hint:'先に仕事を追加してください'}
+  };
+  function tx(k){var l=(typeof lang==='string'&&lang)||'en';return (TXT[l]&&TXT[l][k])||TXT.en[k];}
+  function nW(){try{return works.length;}catch(e){return 0;}}
+  function nS(){try{return shifts.length;}catch(e){return 0;}}
+
+  /* ---- distinct icons (stroke = currentColor, so they follow the theme) ---- */
+  var SVG='<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="display:block">';
+  var ICON={
+    works:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+    shifts:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    monthly:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v4M16 2v4M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>',
+    expenses:'<path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+    summary:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v.01M18 14v.01"/>'
+  };
+  ORDER.forEach(function(t){
+    var b=document.getElementById('bn-'+t);if(!b)return;
+    var ic=b.querySelector('.bn-icon');if(ic)ic.innerHTML=SVG+ICON[t]+'</svg>';
+    if(t==='works'||t==='shifts'||t==='summary'){
+      var d=document.createElement('i');d.className='nx-dot';d.setAttribute('aria-hidden','true');b.appendChild(d);
+    }
+  });
+
+  function activeTab(){var a=document.querySelector('.bn-item.active');return a?a.id.replace('bn-',''):'';}
+  function nextTab(){if(done)return '';if(!p1)return 'works';if(!p2)return 'shifts';if(!p3)return 'summary';return '';}
+
+  function syncNav(tab){
+    var nav=document.getElementById('bottom-nav');
+    if(nav)nav.style.setProperty('--i',ORDER.indexOf(tab));
+    ORDER.forEach(function(t){var el=document.getElementById('bn-'+t);if(el)el.classList.toggle('active',t===tab);});
+  }
+
+  function renderCard(){
+    var host=document.getElementById('page-works');
+    if(!host||!host.parentNode)return;
+    var c=document.getElementById('nx-card');
+    if(done){if(c&&c.parentNode)c.parentNode.removeChild(c);return;}
+    if(!c){
+      c=document.createElement('section');c.id='nx-card';c.className='nx-card';
+      host.parentNode.insertBefore(c,host);
+      c.addEventListener('click',function(e){
+        var b=e.target.closest&&e.target.closest('[data-go]');
+        if(b)window.switchTab(b.getAttribute('data-go'));
+      });
+    }
+    c.setAttribute('aria-label',tx('title'));
+    var steps=[[p1,'works','s1'],[p2,'shifts','s2'],[p3,'summary','s3']];
+    var cur=-1,i;for(i=0;i<3;i++){if(!steps[i][0]){cur=i;break;}}
+    var h='<div class="nx-h">'+tx('title')+'</div><div class="nx-steps">';
+    for(i=0;i<3;i++){
+      var s=steps[i];
+      h+=(i?'<span class="nx-arrow" aria-hidden="true">→</span>':'')
+        +'<button type="button" class="nx-step'+(s[0]?' done':(i===cur?' cur':''))+'" data-go="'+s[1]+'"'+(i===cur?' aria-current="step"':'')+'>'
+        +'<span class="nx-n">'+(s[0]?'✓':(i+1))+'</span><span class="nx-t">'+tx(s[2])+'</span></button>';
+    }
+    c.innerHTML=h+'</div>';
+  }
+
+  function renderNav(){
+    var nxt=nextTab(),act=activeTab(),lock=!done&&nW()===0;
+    ORDER.forEach(function(t){
+      var b=document.getElementById('bn-'+t);if(!b)return;
+      b.setAttribute('data-nx',(t===nxt&&t!==act)?'1':'0');
+      var l=lock&&LOCKED.indexOf(t)>-1;
+      b.classList.toggle('nx-dim',l);
+      if(l){b.setAttribute('title',tx('hint'));b.setAttribute('aria-disabled','true');}
+      else{b.removeAttribute('title');b.removeAttribute('aria-disabled');}
+    });
+  }
+
+  function refresh(){
+    var app=document.getElementById('main-app');
+    if(!app||app.style.display!=='block')return;      /* wait until saved data is loaded */
+    var w=nW(),s=nS();
+    if(!inited){
+      inited=true;
+      if(!done&&!started){
+        if(w>0&&s>0){done=true;set(K.done);}           /* existing user: nothing to teach */
+        else{started=true;set(K.started);}
+      }
+    }
+    if(w>0&&!p1){p1=true;set(K.p1);}
+    if(s>0&&!p2){p2=true;set(K.p2);}
+    if(!done&&p1&&p2&&p3){done=true;set(K.done);}
+    renderCard();renderNav();
+  }
+
+  function wrap(name){
+    var o=window[name];if(typeof o!=='function')return;
+    window[name]=function(){var r=o.apply(this,arguments);try{refresh();}catch(e){}return r;};
+  }
+  wrap('updateBadges');wrap('applyLang');
+
+  var oSw=window.switchTab;
+  if(typeof oSw==='function'){
+    window.switchTab=function(tab){
+      var initial=firstCall,redirected=false;firstCall=false;
+      if(!done){
+        if(initial){if(tab==='monthly'&&nW()===0){tab='works';redirected=true;}}
+        else if(nW()===0&&LOCKED.indexOf(tab)>-1){
+          try{toast(tx('hint'));}catch(e){}
+          tab='works';redirected=true;
+        }
+      }
+      var r=oSw.call(this,tab);
+      if(tab==='summary'&&nS()>0&&!p3){p3=true;set(K.p3);}
+      if(redirected)setTimeout(function(){syncNav(tab);refresh();},0);
+      try{refresh();}catch(e){}
+      return r;
+    };
+  }
 })();
 </script>
 </body>
